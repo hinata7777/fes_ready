@@ -127,3 +127,7 @@ FES READY では、過去フェスのセットリストを収集・分析し、�
 「フェスに行く前から、もう楽しい。」  
 FES READY は、初めてのフェス参加者が不安を解消し、当日までのワクワク感を最大化するアプリです。  
 すべての音楽好きが安心してフェスを楽しめるようにサポートします。  
+
+## **画面遷移図**
+
+https://www.figma.com/design/kpkzJnx15fiFkZp8c7443Y/FES-READY_%E7%94%BB%E9%9D%A2%E9%81%B7%E7%A7%BB%E5%9B%B3?node-id=0-1&t=9VuZg5rnCI83EjAK-1
