@@ -1,0 +1,26 @@
+app = "fes-ready"
+
+[build]
+
+[deploy]
+  release_command = "./bin/rails db:prepare"
+
+[[services]]
+  internal_port = 3000
+  protocol = "tcp"
+
+  [[services.ports]]
+    port = 80
+    handlers = ["http"]
+
+  [[services.ports]]
+    port = 443
+    handlers = ["tls", "http"]
+
+  [[services.http_checks]]
+    interval = "10s"
+    timeout = "2s"
+    method = "GET"
+    path = "/up"
+    protocol = "http"
+    grace_period = "30s"
