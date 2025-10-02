@@ -105,6 +105,8 @@ GEM
     debug (1.11.0)
       irb (~> 1.10)
       reline (>= 0.3.8)
+    dockerfile-rails (1.7.10)
+      rails (>= 3.0.0)
     dotenv (3.1.8)
     drb (2.2.3)
     ed25519 (1.4.0)
@@ -376,6 +378,7 @@ DEPENDENCIES
   capybara
   cssbundling-rails
   debug
+  dockerfile-rails (>= 1.7)
   jbuilder
   jsbundling-rails
   kamal
@@ -394,5 +397,8 @@ DEPENDENCIES
   tzinfo-data
   web-console
 
+RUBY VERSION
+   ruby 3.3.6p108
+
 BUNDLED WITH
-   2.7.1
+   2.7.2
