@@ -1,5 +1,35 @@
-<div class="min-h-screen flex items-center justify-center bg-white">
-  <h1 class="text-5xl font-extrabold tracking-tight text-red-600">
-    FESREADY
-  </h1>
-</div>
+<main class="min-h-screen bg-gradient-to-b from-sky-200 via-sky-100 to-white text-center">
+  <!-- メインビジュアル -->
+  <div class="relative w-full min-h-[75vh]">
+    <%= image_tag(
+      "fes.png",
+      alt: "FES READY ステージ",
+      class: "absolute inset-0 h-full w-full object-cover"
+    ) %>
+    <h1 class="absolute left-1/2 top-[22%] -translate-x-1/2 -translate-y-1/2 text-4xl md:text-6xl font-black tracking-tight text-black drop-shadow-[0_4px_12px_rgba(255,255,255,0.8)]">
+      FES READY
+    </h1>
+  </div>
+
+  <!-- 説明ブロック -->
+  <section class="mx-auto w-full max-w-screen-md px-6 py-10">
+    <p class="text-sm md:text-base leading-relaxed text-slate-900">
+      最高のフェス体験を、これ１つで。
+    </p>
+
+    <!-- 使い方（下向き矢印） -->
+    <div class="mt-6">
+      <p class="text-base font-semibold text-slate-900">使い方</p>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="2"
+        stroke="currentColor"
+        class="size-10 mx-auto text-slate-700 animate-bounce motion-reduce:animate-none"
+      >
+        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+      </svg>
+    </div>
+  </section>
+</main>
