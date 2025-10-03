@@ -1,12 +1,14 @@
-<main class="min-h-screen bg-gradient-to-b from-sky-200 via-sky-100 to-white text-center">
+<%= render "shared/header" %>
+
+<main class="min-h-screen bg-gradient-to-b from-sky-200 via-sky-100 to-white pt-24 md:pt-28 text-center">
   <!-- メインビジュアル -->
-  <div class="relative w-full min-h-[75vh]">
+  <div class="relative w-full min-h-[75vh] -mt-24 md:-mt-28">
     <%= image_tag(
       "fes.png",
       alt: "FES READY ステージ",
       class: "absolute inset-0 h-full w-full object-cover"
     ) %>
-    <h1 class="absolute left-1/2 top-[22%] -translate-x-1/2 -translate-y-1/2 text-4xl md:text-6xl font-black tracking-tight text-black drop-shadow-[0_4px_12px_rgba(255,255,255,0.8)]">
+    <h1 class="absolute left-1/2 top-[30%] -translate-x-1/2 -translate-y-1/2 text-4xl md:text-6xl font-black tracking-tight text-black drop-shadow-[0_4px_12px_rgba(255,255,255,0.8)]">
       FES READY
     </h1>
   </div>
