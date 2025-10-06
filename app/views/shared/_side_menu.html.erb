@@ -1,0 +1,38 @@
+<% is_signed_in = defined?(user_signed_in?) && user_signed_in? %>
+<% primary_links = is_signed_in ? [
+  { label: "マイページ", href: "#" },
+  { label: "ログアウト", href: "#" }
+] : [
+  { label: "ログイン", href: "#" }
+] %>
+<% secondary_links = [
+  { label: "利用規約", href: "#" },
+  { label: "プライバシーポリシー", href: "#" }
+] %>
+
+<div
+  class="fixed inset-0 z-40 hidden bg-black/60 opacity-0 transition-opacity duration-300"
+  data-side-menu-target="backdrop"
+  data-action="click->side-menu#close"
+></div>
+
+<aside
+  class="fixed inset-y-0 right-0 z-50 flex w-64 max-w-[80vw] translate-x-full flex-col justify-between bg-black/80 px-8 py-12 text-white shadow-xl transition-transform duration-300 ease-out"
+  data-side-menu-target="panel"
+>
+  <nav class="space-y-6 text-lg">
+    <% primary_links.each do |link| %>
+      <%= link_to link[:href], class: "block font-medium tracking-wide text-white transition hover:opacity-80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white" do %>
+        <%= link[:label] %>
+      <% end %>
+    <% end %>
+  </nav>
+
+  <nav class="space-y-3 text-sm">
+    <% secondary_links.each do |link| %>
+      <%= link_to link[:href], class: "block tracking-wide text-white/90 transition hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white" do %>
+        <%= link[:label] %>
+      <% end %>
+    <% end %>
+  </nav>
+</aside>
