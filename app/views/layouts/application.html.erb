@@ -22,8 +22,9 @@
     <%= javascript_include_tag "application", "data-turbo-track": "reload", type: "module" %>
   </head>
 
-  <body class="font-sans antialiased">
+  <body class="font-sans antialiased" data-controller="side-menu" data-action="keydown@window->side-menu#handleKeydown">
     <%= render "shared/header" %>
+    <%= render "shared/side_menu" %>
     <%= yield %>
     <%= render "shared/footer" %>
   </body>
