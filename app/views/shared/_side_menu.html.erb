@@ -1,9 +1,9 @@
 <% is_signed_in = defined?(user_signed_in?) && user_signed_in? %>
 <% primary_links = is_signed_in ? [
   { label: "マイページ", href: "#" },
-  { label: "ログアウト", href: "#" }
+  { label: "ログアウト", href: "" }
 ] : [
-  { label: "ログイン", href: "#" }
+  { label: "ログイン", href: new_user_session_path }
 ] %>
 <% secondary_links = [
   { label: "利用規約", href: "#" },
