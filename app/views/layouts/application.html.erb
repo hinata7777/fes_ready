@@ -25,6 +25,7 @@
   <body class="font-sans antialiased" data-controller="side-menu" data-action="keydown@window->side-menu#handleKeydown">
     <%= render "shared/header" %>
     <%= render "shared/side_menu" %>
+    <%= render "shared/flash" %>
     <%= yield %>
     <%= render "shared/footer" %>
   </body>
