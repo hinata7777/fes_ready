@@ -22,9 +22,10 @@
     <%= javascript_include_tag "application", "data-turbo-track": "reload", type: "module" %>
   </head>
 
-  <body class="font-sans antialiased pt-16 md:pt-20" 
+  <body class="font-sans antialiased bg-gradient-to-b from-sky-200 via-sky-100 to-white pt-16 md:pt-20" 
         data-controller="side-menu" 
-        data-action="keydown@window->side-menu#handleKeydown">
+        data-action="keydown@window->side-menu#handleKeydown"
+        style="--header-offset: 4.5rem; --footer-offset: 6rem; padding-top: var(--header-offset); padding-bottom: var(--footer-offset);">
     <%= render "shared/header" %>
     <%= render "shared/side_menu" %>
     <%= render "shared/flash" %>
