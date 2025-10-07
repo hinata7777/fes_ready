@@ -1,7 +1,7 @@
 <% is_signed_in = defined?(user_signed_in?) && user_signed_in? %>
 <% primary_links = is_signed_in ? [
   { label: "マイページ", href: "#" },
-  { label: "ログアウト", href: "" }
+  { label: "ログアウト", href: destroy_user_session_path, method: :delete }
 ] : [
   { label: "ログイン", href: new_user_session_path }
 ] %>
@@ -22,8 +22,14 @@
 >
   <nav class="space-y-6 text-lg">
     <% primary_links.each do |link| %>
-      <%= link_to link[:href], class: "block font-medium tracking-wide text-white transition hover:opacity-80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white" do %>
-        <%= link[:label] %>
+      <% if link[:method] == :delete %>
+        <%= button_to link[:label], link[:href],
+              method: :delete,
+              class: "block w-full text-left font-medium tracking-wide text-white transition hover:opacity-80",
+              data: { turbo_confirm: "ログアウトしますか？" } %>
+      <% else %>
+        <%= link_to link[:label], link[:href],
+              class: "block font-medium tracking-wide text-white transition hover:opacity-80" %>
       <% end %>
     <% end %>
   </nav>
