@@ -1,0 +1,33 @@
+<div class="mx-auto max-w-5xl px-4 py-10 min-h-[calc(100vh-var(--header-offset,4.5rem)-var(--footer-offset,6rem))]">
+  <h1 class="text-2xl font-bold text-center">ユーザー管理</h1>
+  <p class="mt-2 text-center text-slate-600">登録済みのユーザー情報を確認できます。</p>
+
+  <div class="mt-8 overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-sm">
+    <table class="min-w-full divide-y divide-slate-200 text-sm">
+      <thead class="bg-slate-50">
+        <tr class="text-left text-xs font-semibold uppercase tracking-wider text-slate-600">
+          <th class="px-4 py-3">ユーザーID</th>
+          <th class="px-4 py-3">ニックネーム</th>
+          <th class="px-4 py-3">メールアドレス</th>
+          <th class="px-4 py-3">権限</th>
+          <th class="px-4 py-3">登録日</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-slate-100 text-slate-800">
+        <% @users.each do |user| %>
+          <tr class="hover:bg-slate-50">
+            <td class="px-4 py-3 font-mono text-xs text-slate-500"><%= user.id %></td>
+            <td class="px-4 py-3 font-semibold"><%= user.nickname %></td>
+            <td class="px-4 py-3"><%= user.email %></td>
+            <td class="px-4 py-3">
+              <span class="inline-flex items-center rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-700">
+                <%= I18n.t("enums.user.role.#{user.role}", default: user.role.humanize) %>
+              </span>
+            </td>
+            <td class="px-4 py-3"><%= user.created_at.strftime("%Y-%m-%d %H:%M") %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
