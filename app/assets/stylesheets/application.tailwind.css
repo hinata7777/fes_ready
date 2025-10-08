@@ -17,3 +17,36 @@
 h1, h2, h3, h4 {
   font-family: var(--font-display);
 }
+
+@layer components {
+  .flash-stack {
+    top: var(--flash-visible-top, 5.25rem);
+  }
+
+  .flash-message {
+    animation: flash-slide var(--flash-duration, 3.0s) ease-in-out forwards;
+    will-change: transform, opacity;
+  }
+}
+
+@keyframes flash-slide {
+  0% {
+    opacity: 0;
+    transform: translateY(calc(-1 * var(--flash-visible-top, 5.25rem)));
+  }
+
+  10% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  90% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(calc(-1 * var(--flash-visible-top, 5.25rem)));
+  }
+}
