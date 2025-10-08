@@ -3,7 +3,7 @@
   <p class="mt-2 text-center text-slate-600">お疲れ様です、<%= current_user.nickname %> さん。</p>
 
   <nav class="mt-6 space-y-3">
-    <%= render "shared/nav_stack_button", label: "ユーザー管理", url: "#" %>
+    <%= render "shared/nav_stack_button", label: "ユーザー管理", url: admin_users_path %>
     <%= render "shared/nav_stack_button", label: "フェス管理", url: "#" %>
     <%= render "shared/nav_stack_button", label: "アーティスト管理", url: "#" %>
     <%= render "shared/nav_stack_button", label: "タイムテーブル管理", url: "#" %>
