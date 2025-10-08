@@ -1,23 +1,29 @@
 services:
   db:
-    image: postgres
+    image: postgres:17
     restart: always
     environment:
       TZ: Asia/Tokyo
+      POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
+      POSTGRES_DB: myapp_development   # ← 最初からこのDBを作っておく
+      # PGDATA はデフォルト (/var/lib/postgresql/data) を使う
     volumes:
-      - postgresql_data:/var/lib/postgresql
+      - fes_ready_postgresql_data:/var/lib/postgresql/data   # ← ここが重要
     ports:
-      - 5432:5432
+      - "5432:5432"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -d myapp_development -U postgres"]
+      # 存在するDB/サーバでチェックする（postgresなら常にある）
+      test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
       interval: 10s
       timeout: 5s
       retries: 5
+
   web:
     build:
       context: .
       dockerfile: Dockerfile.dev
+    # db:prepare は残してOK（初回にスキーマ作成）
     command: bash -c "bundle install && bundle exec rails db:prepare && rm -f tmp/pids/server.pid && ./bin/dev"
     tty: true
     stdin_open: true
@@ -32,7 +38,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
+
 volumes:
   bundle_data:
-  postgresql_data:
   node_modules:
+  fes_ready_postgresql_data: {}   # ← 名前を固定
