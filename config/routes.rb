@@ -4,8 +4,11 @@ Rails.application.routes.draw do
 
   get "up" => "rails/health#show", as: :rails_health_check
 
+  resources :artists, only: [ :index, :show ]
+
   namespace :admin do
     root "home#top"
     resources :users, only: :index
+    resources :artists
   end
 end
