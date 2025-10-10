@@ -10,9 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_10_07_014559) do
+ActiveRecord::Schema[8.0].define(version: 2025_10_10_024448) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "artists", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "spotify_artist_id"
+    t.string "image_url"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_artists_on_name"
+    t.index ["spotify_artist_id"], name: "index_artists_on_spotify_artist_id_unique_when_present", unique: true, where: "(spotify_artist_id IS NOT NULL)"
+  end
 
   create_table "users", force: :cascade do |t|
     t.string "nickname", null: false
