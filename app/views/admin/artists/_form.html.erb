@@ -1,0 +1,47 @@
+<%= form_with model: [:admin, @artist], class: "space-y-6", data: { controller: "spotify-artist-search" } do |f| %>
+  <div class="border rounded-md p-4">
+    <label class="block font-semibold mb-1">Spotifyで検索</label>
+    <div class="flex flex-col gap-2 sm:flex-row">
+      <input type="text"
+             placeholder="アーティスト名で検索"
+             class="w-full border rounded px-3 py-2 bg-white"
+             data-spotify-artist-search-target="query"
+             data-action="keydown.enter->spotify-artist-search#onSearch" />
+      <button type="button"
+              class="sm:w-auto px-4 py-2 rounded bg-slate-800 text-white hover:bg-slate-900"
+              data-action="click->spotify-artist-search#onSearch">
+        Search
+      </button>
+    </div>
+    <p class="text-xs text-slate-500 mt-2">3文字以上で検索。最大10件を表示します。</p>
+
+    <div class="mt-3 border rounded divide-y hidden bg-white"
+         data-spotify-artist-search-target="results"></div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
+    <div>
+      <%= f.label :name, "名前", class: "block font-semibold" %>
+      <%= f.text_field :name, class: "w-full border rounded px-3 py-2", data: { "spotify-artist-search-target": "name" } %>
+    </div>
+    <div>
+      <%= f.label :spotify_artist_id, "Spotify Artist ID（自動入力）", class: "block font-semibold" %>
+      <%= f.text_field :spotify_artist_id, class: "w-full border rounded px-3 py-2 bg-slate-100", readonly: true, data: { "spotify-artist-search-target": "spotifyId" } %>
+    </div>
+  </div>
+
+  <div>
+    <%= f.label :image_url, "画像URL（自動入力）", class: "block font-semibold" %>
+    <%= f.text_field :image_url, class: "w-full border rounded px-3 py-2 bg-slate-100", readonly: true, data: { "spotify-artist-search-target": "imageUrl" } %>
+
+    <div class="mt-2">
+      <img data-spotify-artist-search-target="preview"
+           alt=""
+           class="h-24 w-24 object-cover rounded border hidden" />
+    </div>
+  </div>
+
+  <div class="pt-4">
+    <%= f.submit "登録する", class: "px-4 py-2 rounded bg-[#F95858] text-white" %>
+  </div>
+<% end %>

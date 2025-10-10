@@ -9,3 +9,6 @@ application.register("hello", HelloController)
 
 import SideMenuController from "./side_menu_controller"
 application.register("side-menu", SideMenuController)
+
+import SpotifyArtistSearchController from "./spotify_artist_search_controller"
+application.register("spotify-artist-search", SpotifyArtistSearchController)
