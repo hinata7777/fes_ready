@@ -10,5 +10,6 @@ Rails.application.routes.draw do
     root "home#top"
     resources :users, only: :index
     resources :artists
+    get "spotify/search", to: "spotify#search"
   end
 end
