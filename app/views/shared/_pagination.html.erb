@@ -1,0 +1,82 @@
+<% return if pagy.pages <= 1 %>
+
+<div class="mt-6 flex flex-col items-center gap-2">
+
+  <%# --- モバイル（前/次 だけのコンパクト表示） --- %>
+  <nav class="flex w-full items-center justify-between md:hidden" aria-label="ページネーション（モバイル）">
+    <%# 前へ %>
+    <% if pagy.prev %>
+      <%= link_to "‹ 前へ", pagy_url_for(pagy, pagy.prev),
+                  class: "inline-flex items-center gap-1 rounded-xl border px-3 py-2 text-sm font-medium hover:bg-slate-50" %>
+    <% else %>
+      <span class="inline-flex items-center gap-1 rounded-xl border px-3 py-2 text-sm text-slate-400 opacity-60">‹ 前へ</span>
+    <% end %>
+
+    <span class="text-sm font-semibold text-slate-700"><%= pagy.page %> / <%= pagy.pages %></span>
+
+    <%# 次へ %>
+    <% if pagy.next %>
+      <%= link_to "次へ ›", pagy_url_for(pagy, pagy.next),
+                  class: "inline-flex items-center gap-1 rounded-xl border px-3 py-2 text-sm font-medium hover:bg-slate-50" %>
+    <% else %>
+      <span class="inline-flex items-center gap-1 rounded-xl border px-3 py-2 text-sm text-slate-400 opacity-60">次へ ›</span>
+    <% end %>
+  </nav>
+
+  <%# --- デスクトップ（フル表示） --- %>
+  <nav class="hidden md:flex items-center justify-center gap-1" aria-label="ページネーション">
+    <%# 最初へ / 前へ %>
+    <% if pagy.page > 1 %>
+      <%= link_to "≪", pagy_url_for(pagy, 1),
+                  class: "px-3 py-2 rounded-xl border text-sm hover:bg-slate-50",
+                  aria: { label: "最初のページへ" } %>
+    <% else %>
+      <span class="px-3 py-2 rounded-xl border text-sm text-slate-400 opacity-60">≪</span>
+    <% end %>
+
+    <% if pagy.prev %>
+      <%= link_to "‹", pagy_url_for(pagy, pagy.prev),
+                  class: "px-3 py-2 rounded-xl border text-sm hover:bg-slate-50",
+                  aria: { label: "前のページへ" } %>
+    <% else %>
+      <span class="px-3 py-2 rounded-xl border text-sm text-slate-400 opacity-60">‹</span>
+    <% end %>
+
+    <%# 中央のページ番号（…省略対応） %>
+    <% pagy.series.each do |item| %>
+      <% if item.is_a?(Integer) %>
+        <% if item == pagy.page %>
+          <span aria-current="page"
+                class="px-3 py-2 rounded-xl border text-sm font-semibold bg-slate-900 text-white"><%= item %></span>
+        <% else %>
+          <%= link_to item, pagy_url_for(pagy, item),
+                      class: "px-3 py-2 rounded-xl border text-sm hover:bg-slate-50" %>
+        <% end %>
+      <% elsif item == :gap %>
+        <span class="px-2 text-sm text-slate-500">…</span>
+      <% end %>
+    <% end %>
+
+    <%# 次へ / 最後へ %>
+    <% if pagy.next %>
+      <%= link_to "›", pagy_url_for(pagy, pagy.next),
+                  class: "px-3 py-2 rounded-xl border text-sm hover:bg-slate-50",
+                  aria: { label: "次のページへ" } %>
+    <% else %>
+      <span class="px-3 py-2 rounded-xl border text-sm text-slate-400 opacity-60">›</span>
+    <% end %>
+
+    <% if pagy.page < pagy.pages %>
+      <%= link_to "≫", pagy_url_for(pagy, pagy.pages),
+                  class: "px-3 py-2 rounded-xl border text-sm hover:bg-slate-50",
+                  aria: { label: "最後のページへ" } %>
+    <% else %>
+      <span class="px-3 py-2 rounded-xl border text-sm text-slate-400 opacity-60">≫</span>
+    <% end %>
+  </nav>
+
+  <%# 情報テキスト（Pagyの文字列は non-escaped で出す） %>
+  <div class="text-xs text-slate-600">
+    <%== pagy_info(pagy) %>
+  </div>
+</div>

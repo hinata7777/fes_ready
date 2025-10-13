@@ -2,7 +2,7 @@ class Admin::ArtistsController < Admin::BaseController
   before_action :set_artist, only: [ :edit, :update, :destroy ]
 
   def index
-    @artists = Artist.order(updated_at: :desc)
+    @pagy, @artists = pagy(Artist.order(:id), limit: 5)
   end
 
   def new
