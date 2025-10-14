@@ -8,8 +8,14 @@ Rails.application.routes.draw do
 
   namespace :admin do
     root "home#top"
+    get "spotify/search", to: "spotify#search"
     resources :users, only: :index
     resources :artists
-    get "spotify/search", to: "spotify#search"
+    resources :festivals do
+      member do
+        get  :setup   # 日程・ステージをまとめて編集する画面
+        patch :apply  # ネスト更新のsubmit先
+      end
+    end
   end
 end
