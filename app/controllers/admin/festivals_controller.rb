@@ -1,8 +1,11 @@
-class Admin::FestivalsController < Admin::ApplicationController
+class Admin::FestivalsController < Admin::BaseController
   before_action :set_festival, only: %i[show edit update destroy setup apply]
 
   def index
-    @pagy, @festivals = pagy(Festival.order(start_date: :desc), page: params[:page])
+    @pagy, @festivals = pagy(
+      Festival.includes(:festival_days, :stages).order(start_date: :desc),
+      items: 10
+    )
   end
 
   def show; end
