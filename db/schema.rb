@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_10_10_024448) do
+ActiveRecord::Schema[8.0].define(version: 2025_10_14_021909) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -22,6 +22,47 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_10_024448) do
     t.datetime "updated_at", null: false
     t.index ["name"], name: "index_artists_on_name"
     t.index ["spotify_artist_id"], name: "index_artists_on_spotify_artist_id_unique_when_present", unique: true, where: "(spotify_artist_id IS NOT NULL)"
+  end
+
+  create_table "festival_days", force: :cascade do |t|
+    t.bigint "festival_id", null: false
+    t.date "date", null: false
+    t.datetime "doors_at"
+    t.datetime "start_at"
+    t.datetime "end_at"
+    t.string "note"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["festival_id", "date"], name: "index_festival_days_on_festival_id_and_date", unique: true
+    t.index ["festival_id"], name: "index_festival_days_on_festival_id"
+  end
+
+  create_table "festivals", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "slug", null: false
+    t.string "venue_name"
+    t.string "city"
+    t.string "prefecture"
+    t.date "start_date", null: false
+    t.date "end_date", null: false
+    t.string "timezone", default: "Asia/Tokyo", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["slug"], name: "index_festivals_on_slug", unique: true
+    t.index ["start_date"], name: "index_festivals_on_start_date"
+  end
+
+  create_table "stages", force: :cascade do |t|
+    t.bigint "festival_id", null: false
+    t.string "name", null: false
+    t.integer "sort_order", default: 0, null: false
+    t.integer "environment"
+    t.string "note"
+    t.string "color_key"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["festival_id", "sort_order"], name: "index_stages_on_festival_id_and_sort_order"
+    t.index ["festival_id"], name: "index_stages_on_festival_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -37,4 +78,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_10_024448) do
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
+
+  add_foreign_key "festival_days", "festivals"
+  add_foreign_key "stages", "festivals"
 end
