@@ -1,0 +1,66 @@
+<h1 class="text-xl font-bold mb-4">日程・ステージの設定</h1>
+
+<%= form_with model: [:admin, @festival],
+              url: apply_admin_festival_path(@festival),
+              method: :patch,
+              class: "space-y-6" do |f| %>
+
+  <!-- 日程 -->
+  <div class="border rounded p-4 space-y-4" data-controller="nested-form">
+    <div>
+      <h2 class="font-semibold">日程</h2>
+      <p class="mt-1 text-sm text-slate-600">日付と開場・開演・終演時間を入力してください（24時間表記、タイムゾーンはフェス設定に準拠）。</p>
+    </div>
+
+    <div class="space-y-3" data-nested-form-target="container">
+      <%= f.fields_for :festival_days do |d| %>
+        <%= render "festival_day_fields", f: d %>
+      <% end %>
+    </div>
+
+    <!-- 追加ボタン -->
+    <div class="mt-2">
+      <button type="button"
+              class="text-sm text-[#F95858]"
+              data-action="click->nested-form#add">
+        日程を追加
+      </button>
+    </div>
+
+    <!-- 追加用テンプレート -->
+    <template data-nested-form-target="template">
+      <%= f.fields_for :festival_days, FestivalDay.new, child_index: "NEW_RECORD" do |d| %>
+        <%= render "festival_day_fields", f: d %>
+      <% end %>
+    </template>
+  </div>
+
+  <!-- ステージ -->
+  <div class="border rounded p-4 space-y-4" data-controller="nested-form">
+    <h2 class="font-semibold">ステージ</h2>
+
+    <div class="space-y-3" data-nested-form-target="container">
+      <%= f.fields_for :stages do |s| %>
+        <%= render "stage_fields", f: s %>
+      <% end %>
+    </div>
+
+    <!-- 追加ボタン -->
+    <div class="mt-2">
+      <button type="button"
+              class="text-sm text-[#F95858]"
+              data-action="click->nested-form#add">
+        ステージを追加
+      </button>
+    </div>
+
+    <!-- 追加用テンプレート -->
+    <template data-nested-form-target="template">
+      <%= f.fields_for :stages, Stage.new, child_index: "NEW_RECORD" do |s| %>
+        <%= render "stage_fields", f: s %>
+      <% end %>
+    </template>
+  </div>
+
+  <%= f.submit "適用する", class: "px-4 py-2 rounded bg-[#F95858] text-white" %>
+<% end %>

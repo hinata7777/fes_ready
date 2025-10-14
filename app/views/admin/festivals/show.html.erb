@@ -1,0 +1,160 @@
+<% time_zone = ActiveSupport::TimeZone[@festival.timezone] || Time.zone %>
+<% festival_days = @festival.festival_days.order(:date) %>
+<% stages = @festival.stages.order(:sort_order, :id) %>
+
+<div class="mx-auto max-w-5xl px-4 py-10 min-h-[calc(100vh-var(--header-offset,4.5rem)-var(--footer-offset,6rem))]">
+  <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+    <div>
+      <h1 class="text-2xl font-bold"><%= @festival.name %></h1>
+      <p class="mt-2 text-slate-600">
+        フェスの基本情報・日程・ステージの詳細を確認できます。
+      </p>
+    </div>
+    <div class="flex flex-wrap gap-2">
+      <%= link_to "一覧に戻る", admin_festivals_path, class: "inline-flex items-center justify-center rounded-lg border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-50" %>
+      <%= link_to "日程・ステージ設定", setup_admin_festival_path(@festival), class: "inline-flex items-center justify-center rounded-lg border border-indigo-200 bg-indigo-50 px-4 py-2 text-sm font-semibold text-indigo-700 transition hover:bg-indigo-100" %>
+      <%= link_to "編集", edit_admin_festival_path(@festival), class: "inline-flex items-center justify-center rounded-lg bg-[#F95858] px-4 py-2 text-sm font-semibold text-white shadow transition hover:bg-[#e04f4f]" %>
+    </div>
+  </div>
+
+  <div class="mt-10 space-y-12">
+    <section>
+      <h2 class="text-lg font-semibold text-slate-800">基本情報</h2>
+      <div class="mt-4 overflow-hidden rounded-xl border border-slate-200 bg-white">
+        <dl class="divide-y divide-slate-100 text-sm text-slate-700">
+          <div class="grid grid-cols-1 gap-2 px-4 py-3 sm:grid-cols-3">
+            <dt class="font-semibold text-slate-500">フェスID</dt>
+            <dd class="sm:col-span-2 font-mono text-xs text-slate-500"><%= @festival.id %></dd>
+          </div>
+          <div class="grid grid-cols-1 gap-2 px-4 py-3 sm:grid-cols-3">
+            <dt class="font-semibold text-slate-500">名称</dt>
+            <dd class="sm:col-span-2 font-semibold text-slate-800"><%= @festival.name %></dd>
+          </div>
+          <div class="grid grid-cols-1 gap-2 px-4 py-3 sm:grid-cols-3">
+            <dt class="font-semibold text-slate-500">スラッグ</dt>
+            <dd class="sm:col-span-2 font-mono text-xs text-slate-600"><%= @festival.slug %></dd>
+          </div>
+          <div class="grid grid-cols-1 gap-2 px-4 py-3 sm:grid-cols-3">
+            <dt class="font-semibold text-slate-500">開催期間</dt>
+            <dd class="sm:col-span-2">
+              <% start_label = @festival.start_date&.strftime("%Y/%m/%d") %>
+              <% end_label   = @festival.end_date&.strftime("%Y/%m/%d") %>
+              <%= if start_label && end_label
+                    @festival.start_date == @festival.end_date ? start_label : "#{start_label} 〜 #{end_label}"
+                  elsif start_label
+                    start_label
+                  elsif end_label
+                    end_label
+                  else
+                    "-"
+                  end %>
+            </dd>
+          </div>
+          <div class="grid grid-cols-1 gap-2 px-4 py-3 sm:grid-cols-3">
+            <dt class="font-semibold text-slate-500">会場</dt>
+            <dd class="sm:col-span-2">
+              <div><%= @festival.venue_name.presence || "-" %></div>
+              <% location = [@festival.prefecture, @festival.city].compact_blank %>
+              <% if location.any? %>
+                <div class="mt-1 text-xs text-slate-500"><%= location.join(" / ") %></div>
+              <% end %>
+            </dd>
+          </div>
+          <div class="grid grid-cols-1 gap-2 px-4 py-3 sm:grid-cols-3">
+            <dt class="font-semibold text-slate-500">タイムゾーン</dt>
+            <dd class="sm:col-span-2">
+              <span class="inline-flex items-center rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-700">
+                <%= @festival.timezone %>
+              </span>
+            </dd>
+          </div>
+          <div class="grid grid-cols-1 gap-2 px-4 py-3 sm:grid-cols-3">
+            <dt class="font-semibold text-slate-500">登録日時</dt>
+            <dd class="sm:col-span-2 text-xs text-slate-500"><%= l(@festival.created_at, format: :long) %></dd>
+          </div>
+          <div class="grid grid-cols-1 gap-2 px-4 py-3 sm:grid-cols-3">
+            <dt class="font-semibold text-slate-500">更新日時</dt>
+            <dd class="sm:col-span-2 text-xs text-slate-500"><%= l(@festival.updated_at, format: :long) %></dd>
+          </div>
+        </dl>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="text-lg font-semibold text-slate-800">日程</h2>
+      <% if festival_days.any? %>
+        <div class="mt-4 space-y-4">
+          <% festival_days.each do |day| %>
+            <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+              <div class="flex flex-wrap items-center justify-between gap-2">
+                <div class="text-base font-semibold text-slate-800">
+                  <%= day.date.strftime("%Y/%m/%d (%a)") %>
+                </div>
+                <% if day.note.present? %>
+                  <div class="text-xs text-slate-500"><%= day.note %></div>
+                <% end %>
+              </div>
+              <dl class="mt-3 grid grid-cols-1 gap-3 text-sm text-slate-700 sm:grid-cols-3">
+                <div>
+                  <dt class="text-xs font-semibold uppercase tracking-wide text-slate-500">開場</dt>
+                  <dd class="mt-1"><%= day.doors_at ? day.doors_at.in_time_zone(time_zone).strftime("%H:%M") : "-" %></dd>
+                </div>
+                <div>
+                  <dt class="text-xs font-semibold uppercase tracking-wide text-slate-500">開演</dt>
+                  <dd class="mt-1"><%= day.start_at ? day.start_at.in_time_zone(time_zone).strftime("%H:%M") : "-" %></dd>
+                </div>
+                <div>
+                  <dt class="text-xs font-semibold uppercase tracking-wide text-slate-500">終演</dt>
+                  <dd class="mt-1"><%= day.end_at ? day.end_at.in_time_zone(time_zone).strftime("%H:%M") : "-" %></dd>
+                </div>
+              </dl>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <p class="mt-4 rounded-lg border border-dashed border-slate-300 bg-slate-50 px-4 py-6 text-sm text-slate-500">
+          登録された日程はまだありません。日程・ステージ設定から追加してください。
+        </p>
+      <% end %>
+    </section>
+
+    <section>
+      <h2 class="text-lg font-semibold text-slate-800">ステージ</h2>
+      <% if stages.any? %>
+        <div class="mt-4 grid gap-4 md:grid-cols-2">
+          <% stages.each do |stage| %>
+            <% hex = stage.color_hex %>
+            <% text_color = stage_text_color(hex) %>
+            <% environment_label = stage.environment.present? ? I18n.t("enums.stage.environment.#{stage.environment}", default: stage.environment.humanize) : "-" %>
+            <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+              <div class="flex items-center justify-between gap-2">
+                <h3 class="text-base font-semibold text-slate-800"><%= stage.name %></h3>
+                <span class="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold" style="background-color: <%= hex %>; color: <%= text_color %>;">
+                  <span><%= stage.color_key.presence || "slate" %></span>
+                </span>
+              </div>
+              <dl class="mt-3 space-y-2 text-sm text-slate-700">
+                <div class="flex justify-between gap-3">
+                  <dt class="text-xs font-semibold uppercase tracking-wide text-slate-500">表示順</dt>
+                  <dd class="font-mono text-xs text-slate-600"><%= stage.sort_order %></dd>
+                </div>
+                <div class="flex justify-between gap-3">
+                  <dt class="text-xs font-semibold uppercase tracking-wide text-slate-500">環境</dt>
+                  <dd><%= environment_label %></dd>
+                </div>
+                <div>
+                  <dt class="text-xs font-semibold uppercase tracking-wide text-slate-500">メモ</dt>
+                  <dd class="mt-1 text-sm text-slate-600"><%= stage.note.presence || "-" %></dd>
+                </div>
+              </dl>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <p class="mt-4 rounded-lg border border-dashed border-slate-300 bg-slate-50 px-4 py-6 text-sm text-slate-500">
+          登録されたステージはまだありません。日程・ステージ設定から追加してください。
+        </p>
+      <% end %>
+    </section>
+  </div>
+</div>

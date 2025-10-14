@@ -1,0 +1,27 @@
+<div class="grid grid-cols-1 md:grid-cols-3 gap-2 mb-2 items-center" data-nested-form-wrapper>
+  <%= f.hidden_field :id %>
+
+  <%= f.text_field :name, placeholder: "メインステージ", class: "border rounded px-2 py-1" %>
+
+  <%= f.select :environment,
+               Stage.environments.keys.map { |k| [k, k] },
+               {},
+               class: "border rounded px-2 py-1" %>
+
+  <div class="flex items-center gap-2">
+    <%# color_key をセレクトで選ぶ %>
+    <%= f.select :color_key,
+                 Stage::COLOR_PALETTE.map { |k, hex| ["#{k} (#{hex})", k] },
+                 {},
+                 class: "border rounded px-2 py-1" %>
+
+    <%# 選択中のプレビュー（既存は f.object.color_hex を使う） %>
+    <% hex = f.object.respond_to?(:color_hex) ? f.object.color_hex : Stage::COLOR_PALETTE["slate"] %>
+    <span class="inline-block h-6 w-6 rounded border" style="background-color: <%= hex %>;"></span>
+  </div>
+
+  <%= f.hidden_field :_destroy, value: "0" %>
+  <div class="md:col-span-3">
+    <button class="text-xs px-2 py-1 rounded border" data-action="click->nested-form#remove" type="button">削除</button>
+  </div>
+</div>
