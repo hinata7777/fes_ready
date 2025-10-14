@@ -1,0 +1,29 @@
+<div class="space-y-3 rounded-lg border border-slate-200 bg-white p-4 shadow-sm" data-nested-form-wrapper>
+  <%= f.hidden_field :id %>
+  <div class="grid grid-cols-1 gap-4 md:grid-cols-4">
+    <div>
+      <%= f.label :date, "日付", class: "block text-sm font-semibold text-slate-700" %>
+      <%= f.date_field :date, class: "mt-1 w-full rounded border border-slate-300 px-3 py-2 text-sm" %>
+    </div>
+    <div>
+      <%= f.label :doors_at, "開場", class: "block text-sm font-semibold text-slate-700" %>
+      <%= f.time_field :doors_at, class: "mt-1 w-full rounded border border-slate-300 px-3 py-2 text-sm", step: 60 %>
+    </div>
+    <div>
+      <%= f.label :start_at, "開演", class: "block text-sm font-semibold text-slate-700" %>
+      <%= f.time_field :start_at, class: "mt-1 w-full rounded border border-slate-300 px-3 py-2 text-sm", step: 60 %>
+    </div>
+    <div>
+      <%= f.label :end_at, "終演", class: "block text-sm font-semibold text-slate-700" %>
+      <%= f.time_field :end_at, class: "mt-1 w-full rounded border border-slate-300 px-3 py-2 text-sm", step: 60 %>
+    </div>
+    <div class="md:col-span-4">
+      <%= f.label :note, "備考", class: "block text-sm font-semibold text-slate-700" %>
+      <%= f.text_field :note, class: "mt-1 w-full rounded border border-slate-300 px-3 py-2 text-sm", placeholder: "例）雨天決行 / 出演者情報など" %>
+    </div>
+  </div>
+  <div class="flex justify-end">
+    <%= f.hidden_field :_destroy, value: "0" %>
+    <button class="text-xs font-semibold text-red-600 transition hover:text-red-700" data-action="click->nested-form#remove" type="button">削除</button>
+  </div>
+</div>

@@ -1,0 +1,55 @@
+<%= form_with model: [:admin, @festival], class: "space-y-6" do |f| %>
+  <div class="border rounded-md p-4 bg-white">
+    <p class="text-sm text-slate-700">
+      フェスの基本情報を入力してください。<br>
+      <span class="text-slate-500 text-xs">※ slug はURL用の識別子です（例: <code>rockin-2025</code>）。未入力でも保存時に整形する処理を入れていれば自動生成可能です。</span>
+    </p>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
+    <div>
+      <%= f.label :name, "名称", class: "block font-semibold" %>
+      <%= f.text_field :name, class: "w-full border rounded px-3 py-2" %>
+    </div>
+    <div>
+      <%= f.label :slug, "スラッグ（URL識別子）", class: "block font-semibold" %>
+      <%= f.text_field :slug, class: "w-full border rounded px-3 py-2", placeholder: "fes-ready-2026" %>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-start">
+    <div>
+      <%= f.label :venue_name, "会場名", class: "block font-semibold" %>
+      <%= f.text_field :venue_name, class: "w-full border rounded px-3 py-2" %>
+    </div>
+    <div>
+      <%= f.label :prefecture, "都道府県", class: "block font-semibold" %>
+      <%= f.text_field :prefecture, class: "w-full border rounded px-3 py-2", placeholder: "例）長野県" %>
+    </div>
+    <div>
+      <%= f.label :city, "市区町村", class: "block font-semibold" %>
+      <%= f.text_field :city, class: "w-full border rounded px-3 py-2", placeholder: "例）茅野市" %>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
+    <div>
+      <%= f.label :start_date, "開始日", class: "block font-semibold" %>
+      <%= f.date_field :start_date, class: "w-full border rounded px-3 py-2" %>
+    </div>
+    <div>
+      <%= f.label :end_date, "終了日", class: "block font-semibold" %>
+      <%= f.date_field :end_date, class: "w-full border rounded px-3 py-2" %>
+    </div>
+  </div>
+
+  <div>
+    <%= f.label :timezone, "タイムゾーン", class: "block font-semibold" %>
+    <%= f.text_field :timezone, class: "w-full border rounded px-3 py-2", placeholder: "Asia/Tokyo", value: @festival.timezone.presence || "Asia/Tokyo" %>
+    <p class="text-xs text-slate-500 mt-1">通常は <code>Asia/Tokyo</code> のままでOKです。</p>
+  </div>
+
+  <div class="pt-4">
+    <%= f.submit "登録する", class: "px-4 py-2 rounded bg-[#F95858] text-white hover:opacity-90" %>
+  </div>
+<% end %>

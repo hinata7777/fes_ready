@@ -12,3 +12,6 @@ application.register("side-menu", SideMenuController)
 
 import SpotifyArtistSearchController from "./spotify_artist_search_controller"
 application.register("spotify-artist-search", SpotifyArtistSearchController)
+
+import NestedFormController from "./nested_form_controller"
+application.register("nested-form", NestedFormController)
