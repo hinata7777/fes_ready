@@ -1,0 +1,73 @@
+<div class="mx-auto max-w-5xl px-4 py-10 min-h-[calc(100vh-var(--header-offset,4.5rem)-var(--footer-offset,6rem))]">
+  <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+    <div>
+      <h1 class="text-2xl font-bold">フェス管理</h1>
+      <p class="mt-2 text-slate-600">登録済みのフェス情報を確認できます。</p>
+    </div>
+    <%= link_to "新規作成", new_admin_festival_path, class: "inline-flex items-center justify-center rounded-lg bg-[#F95858] px-4 py-2 text-sm font-semibold text-white shadow transition hover:bg-[#e04f4f]" %>
+  </div>
+
+  <div class="mt-8 overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-sm">
+    <table class="min-w-full divide-y divide-slate-200 text-sm">
+      <thead class="bg-slate-50">
+        <tr class="text-left text-xs font-semibold uppercase tracking-wider text-slate-600">
+          <th class="px-4 py-3">ID</th>
+          <th class="px-4 py-3">フェス名</th>
+          <th class="px-4 py-3">開催期間</th>
+          <th class="px-4 py-3">会場</th>
+          <th class="px-4 py-3">タイムゾーン</th>
+          <th class="px-4 py-3"></th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-slate-100 text-slate-800">
+        <% @festivals.each do |festival| %>
+          <tr class="hover:bg-slate-50">
+            <td class="px-4 py-3 font-mono text-xs text-slate-500"><%= festival.id %></td>
+            <td class="px-4 py-3">
+              <div class="font-semibold"><%= festival.name %></div>
+              <div class="mt-1 text-xs font-mono text-slate-500"><%= festival.slug %></div>
+            </td>
+            <td class="px-4 py-3">
+              <% period_label =
+                if festival.start_date && festival.end_date
+                  start_str = festival.start_date.strftime("%Y/%m/%d")
+                  end_str   = festival.end_date.strftime("%Y/%m/%d")
+                  festival.start_date == festival.end_date ? start_str : "#{start_str} 〜 #{end_str}"
+                elsif festival.start_date
+                  festival.start_date.strftime("%Y/%m/%d")
+                elsif festival.end_date
+                  festival.end_date.strftime("%Y/%m/%d")
+                else
+                  "-"
+                end %>
+              <span><%= period_label %></span>
+            </td>
+            <td class="px-4 py-3">
+              <% location_parts = [festival.prefecture, festival.city].compact_blank %>
+              <% venue_label = festival.venue_name.presence || "-" %>
+              <div><%= venue_label %></div>
+              <% if location_parts.any? %>
+                <div class="mt-1 text-xs text-slate-500"><%= location_parts.join(" / ") %></div>
+              <% end %>
+            </td>
+            <td class="px-4 py-3">
+              <span class="inline-flex items-center rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-700">
+                <%= festival.timezone %>
+              </span>
+            </td>
+            <td class="px-4 py-3">
+              <div class="flex flex-wrap items-center gap-3 text-sm font-semibold">
+                <%= link_to "詳細", admin_festival_path(festival), class: "text-slate-600 transition hover:text-slate-700" %>
+                <%= link_to "日程・ステージ設定", setup_admin_festival_path(festival), class: "text-indigo-600 transition hover:text-indigo-700" %>
+                <%= link_to "編集", edit_admin_festival_path(festival), class: "text-blue-600 transition hover:text-blue-700" %>
+                <%= link_to "削除", admin_festival_path(festival), data: { turbo_method: :delete, turbo_confirm: "このフェスを削除しますか？" }, class: "text-red-600 transition hover:text-red-700" %>
+              </div>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+
+  <%= render "shared/pagination", pagy: @pagy %>
+</div>
