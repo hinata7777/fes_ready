@@ -11,7 +11,7 @@ class Admin::FestivalsController < Admin::BaseController
   def show; end
 
   def new
-    @festival = Festival.new(timezone: 'Asia/Tokyo')
+    @festival = Festival.new(timezone: "Asia/Tokyo")
   end
 
   def create
@@ -53,7 +53,7 @@ class Admin::FestivalsController < Admin::BaseController
   end
 
   private
-  
+
   def set_festival
     @festival = Festival.find(params[:id])
   end
@@ -61,8 +61,8 @@ class Admin::FestivalsController < Admin::BaseController
   # 1ページ目（基本情報のみ）
   def festival_params_basic
     params.require(:festival).permit(
-      :name, :slug, :venue_name, :city, :prefecture, 
-      :start_date, :end_date, :timezone, 
+      :name, :slug, :venue_name, :city, :prefecture,
+      :start_date, :end_date, :timezone,
       :official_url
     )
   end
@@ -70,9 +70,9 @@ class Admin::FestivalsController < Admin::BaseController
   # setupページ（ネスト＋必要なら基本も一緒に）
   def festival_params_nested
     params.require(:festival).permit(
-      :name, :venue_name, :city, :prefecture, :timezone, :start_date, :end_date, :official_url, 
-      festival_days_attributes: [:id, :date, :doors_at, :start_at, :end_at, :note, :_destroy],
-      stages_attributes:        [:id, :name, :sort_order, :environment, :note, :color_key, :_destroy]
+      :name, :venue_name, :city, :prefecture, :timezone, :start_date, :end_date, :official_url,
+      festival_days_attributes: [ :id, :date, :doors_at, :start_at, :end_at, :note, :_destroy ],
+      stages_attributes:        [ :id, :name, :sort_order, :environment, :note, :color_key, :_destroy ]
     )
   end
 end

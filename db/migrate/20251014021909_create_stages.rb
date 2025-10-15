@@ -9,6 +9,6 @@ class CreateStages < ActiveRecord::Migration[8.0]
       t.string  :color_key
       t.timestamps
     end
-    add_index :stages, [:festival_id, :sort_order]
+    add_index :stages, [ :festival_id, :sort_order ]
   end
 end

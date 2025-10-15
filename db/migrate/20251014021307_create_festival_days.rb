@@ -9,6 +9,6 @@ class CreateFestivalDays < ActiveRecord::Migration[8.0]
       t.string   :note
       t.timestamps
     end
-    add_index :festival_days, [:festival_id, :date], unique: true
+    add_index :festival_days, [ :festival_id, :date ], unique: true
   end
 end
