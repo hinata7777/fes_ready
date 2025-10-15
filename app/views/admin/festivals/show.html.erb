@@ -35,6 +35,20 @@
             <dd class="sm:col-span-2 font-mono text-xs text-slate-600"><%= @festival.slug %></dd>
           </div>
           <div class="grid grid-cols-1 gap-2 px-4 py-3 sm:grid-cols-3">
+            <dt class="font-semibold text-slate-500">公式サイト</dt>
+            <dd class="sm:col-span-2">
+              <% if @festival.official_url.present? %>
+                <% url = @festival.official_url.to_s.strip %>
+                <%= link_to url, url,
+                      target: "_blank",
+                      rel: "noopener",
+                      class: "inline-flex items-center gap-2 text-indigo-700 hover:underline" %>
+              <% else %>
+                -
+              <% end %>
+            </dd>
+          </div>
+          <div class="grid grid-cols-1 gap-2 px-4 py-3 sm:grid-cols-3">
             <dt class="font-semibold text-slate-500">開催期間</dt>
             <dd class="sm:col-span-2">
               <% start_label = @festival.start_date&.strftime("%Y/%m/%d") %>

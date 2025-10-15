@@ -15,6 +15,10 @@
       <%= f.label :slug, "スラッグ（URL識別子）", class: "block font-semibold" %>
       <%= f.text_field :slug, class: "w-full border rounded px-3 py-2", placeholder: "fes-ready-2026" %>
     </div>
+    <div>
+      <%= f.label :official_url, "公式サイトURL", class: "block font-semibold" %>
+      <%= f.url_field :official_url, class: "w-full border rounded px-3 py-2", placeholder: "https://example.com" %>
+    </div>
   </div>
 
   <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-start">
