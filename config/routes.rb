@@ -1,9 +1,7 @@
 Rails.application.routes.draw do
   devise_for :users
   root "home#top"
-
   get "up" => "rails/health#show", as: :rails_health_check
-
   resources :artists, only: [ :index, :show ]
 
   namespace :admin do
@@ -11,10 +9,11 @@ Rails.application.routes.draw do
     get "spotify/search", to: "spotify#search"
     resources :users, only: :index
     resources :artists
+    resources :stage_performances
     resources :festivals do
       member do
-        get  :setup   # 日程・ステージをまとめて編集する画面
-        patch :apply  # ネスト更新のsubmit先
+        get  :setup
+        patch :apply
       end
     end
   end
