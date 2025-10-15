@@ -1,5 +1,6 @@
 class Stage < ApplicationRecord
   belongs_to :festival
+  has_many :stage_performances, dependent: :destroy
   validates :name, presence: true
 
   # 任意: 屋内/屋外など（UIは後で）

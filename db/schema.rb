@@ -10,8 +10,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_10_15_033024) do
+ActiveRecord::Schema[8.0].define(version: 2025_10_15_055830) do
   # These are extensions that must be enabled in order to support this database
+  enable_extension "btree_gist"
   enable_extension "pg_catalog.plpgsql"
 
   create_table "artists", force: :cascade do |t|
@@ -53,6 +54,25 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_15_033024) do
     t.index ["start_date"], name: "index_festivals_on_start_date"
   end
 
+  create_table "stage_performances", force: :cascade do |t|
+    t.bigint "festival_day_id", null: false
+    t.bigint "stage_id"
+    t.bigint "artist_id", null: false
+    t.datetime "starts_at"
+    t.datetime "ends_at"
+    t.integer "status", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["artist_id", "starts_at"], name: "index_stage_performances_on_artist_id_and_starts_at"
+    t.index ["artist_id"], name: "index_stage_performances_on_artist_id"
+    t.index ["festival_day_id", "artist_id"], name: "index_stage_performances_on_festival_day_id_and_artist_id", unique: true
+    t.index ["festival_day_id", "stage_id", "artist_id", "starts_at"], name: "uniq_sp_slot_when_scheduled", unique: true, where: "((status = 1) AND (stage_id IS NOT NULL) AND (starts_at IS NOT NULL))"
+    t.index ["festival_day_id", "stage_id", "starts_at"], name: "idx_on_festival_day_id_stage_id_starts_at_49921a49b2"
+    t.index ["festival_day_id"], name: "index_stage_performances_on_festival_day_id"
+    t.index ["stage_id"], name: "index_stage_performances_on_stage_id"
+    t.exclusion_constraint "stage_id WITH =, tsrange(starts_at, ends_at, '[)'::text) WITH &&", where: "(status = 1) AND (stage_id IS NOT NULL) AND (starts_at IS NOT NULL) AND (ends_at IS NOT NULL)", using: :gist, name: "no_overlap_on_same_stage_when_scheduled"
+  end
+
   create_table "stages", force: :cascade do |t|
     t.bigint "festival_id", null: false
     t.string "name", null: false
@@ -81,5 +101,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_15_033024) do
   end
 
   add_foreign_key "festival_days", "festivals"
+  add_foreign_key "stage_performances", "artists"
+  add_foreign_key "stage_performances", "festival_days"
+  add_foreign_key "stage_performances", "stages"
   add_foreign_key "stages", "festivals"
 end
