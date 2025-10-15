@@ -17,7 +17,7 @@ class Festival < ApplicationRecord
             format: { with: VALID_URL, message: "は http/https の正しいURL形式で入力してください" }
 
   private
-  
+
   def end_not_before_start
     return if start_date.blank? || end_date.blank?
     errors.add(:end_date, "は開始日以降にしてください") if end_date < start_date
