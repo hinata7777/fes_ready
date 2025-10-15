@@ -60,13 +60,17 @@ class Admin::FestivalsController < Admin::BaseController
 
   # 1ページ目（基本情報のみ）
   def festival_params_basic
-    params.require(:festival).permit(:name, :slug, :venue_name, :city, :prefecture, :start_date, :end_date, :timezone)
+    params.require(:festival).permit(
+      :name, :slug, :venue_name, :city, :prefecture, 
+      :start_date, :end_date, :timezone, 
+      :official_url
+    )
   end
 
   # setupページ（ネスト＋必要なら基本も一緒に）
   def festival_params_nested
     params.require(:festival).permit(
-      :name, :venue_name, :city, :prefecture, :timezone, :start_date, :end_date,
+      :name, :venue_name, :city, :prefecture, :timezone, :start_date, :end_date, :official_url, 
       festival_days_attributes: [:id, :date, :doors_at, :start_at, :end_at, :note, :_destroy],
       stages_attributes:        [:id, :name, :sort_order, :environment, :note, :color_key, :_destroy]
     )
