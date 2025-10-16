@@ -1,4 +1,8 @@
 class FestivalsController < ApplicationController
+  def show
+    @festival = Festival.find(params[:id])
+  end
+
   def index
     @status = params[:status]
     @status = "upcoming" unless %w[upcoming past].include?(@status)
