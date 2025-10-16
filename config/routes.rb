@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   root "home#top"
   get "up" => "rails/health#show", as: :rails_health_check
   resources :artists, only: [ :index, :show ]
+  resources :festivals, only: :index
 
   namespace :admin do
     root "home#top"

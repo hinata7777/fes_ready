@@ -9,6 +9,10 @@ class Festival < ApplicationRecord
   validates :slug, uniqueness: true
   validate  :end_not_before_start
 
+  scope :ordered,  -> { order(start_date: :asc, name: :asc) }
+  scope :upcoming, ->(today = Date.current) { where("start_date >= ?", today) }
+  scope :past,     ->(today = Date.current) { where("end_date < ?",  today) }
+
   before_validation -> { self.official_url = official_url&.strip.presence }
 
   VALID_URL = URI::DEFAULT_PARSER.make_regexp(%w[http https])
