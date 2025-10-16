@@ -1,5 +1,5 @@
 class Admin::StagePerformancesController < Admin::BaseController
-  before_action :set_sp, only: %i[show edit update destroy]
+  before_action :set_stage_performance, only: %i[show edit update destroy]
 
   def index
     @pagy, @stage_performances =
@@ -47,7 +47,7 @@ class Admin::StagePerformancesController < Admin::BaseController
 
   private
 
-  def set_sp
+  def set_stage_performance
     @stage_performance = StagePerformance.includes(:artist, :stage, festival_day: :festival).find(params[:id])
   end
 
