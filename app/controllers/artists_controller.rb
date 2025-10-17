@@ -1,6 +1,10 @@
 class ArtistsController < ApplicationController
   def index
-    @pagy, @artists = pagy Artist.order(:name)
+    base   = Artist.order(:name)
+    @q     = base.ransack(params[:q])
+    result = @q.result(distinct: true)
+
+    @pagy, @artists = pagy(result, params: { q: params[:q] })
   end
 
   def show

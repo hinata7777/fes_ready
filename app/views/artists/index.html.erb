@@ -4,6 +4,11 @@
       <h1 class="text-2xl font-bold text-slate-900">アーティストを選択</h1>
     </header>
 
+    <%= render "shared/search_form",
+               query: @q,
+               url: artists_path,
+               placeholder: "アーティスト名を入力" %>
+
     <section>
       <% if @artists.any? %>
         <div class="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
