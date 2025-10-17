@@ -15,6 +15,9 @@ class Festival < ApplicationRecord
 
   before_validation -> { self.official_url = official_url&.strip.presence }
 
+  def self.ransackable_attributes(_=nil); %w[name]; end
+  def self.ransackable_associations(_=nil); []; end
+  
   VALID_URL = URI::DEFAULT_PARSER.make_regexp(%w[http https])
 
   validates :official_url, allow_blank: true,
