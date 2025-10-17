@@ -8,7 +8,11 @@ class FestivalsController < ApplicationController
     @status = "upcoming" unless %w[upcoming past].include?(@status)
     @status_labels = { "upcoming" => "開催前", "past" => "開催済み" }
 
-    @pagy, @festivals = pagy(filtered_festivals, items: 20, params: { status: @status })
+    base   = filtered_festivals
+    @q     = base.ransack(params[:q])
+    result = @q.result(distinct: true)
+
+    @pagy, @festivals = pagy(result, items: 20, params: { status: @status, q: params[:q] })
   end
 
   private
