@@ -1,9 +1,7 @@
 class FestivalsController < ApplicationController
-  def show
-    @festival = Festival.find(params[:id])
-  end
-
   def index
+    @artist = Artist.find(params[:artist_id]) if params[:artist_id].present?
+
     @status = params[:status]
     @status = "upcoming" unless %w[upcoming past].include?(@status)
     @status_labels = { "upcoming" => "開催前", "past" => "開催済み" }
@@ -12,16 +10,31 @@ class FestivalsController < ApplicationController
     @q     = base.ransack(params[:q])
     result = @q.result(distinct: true)
 
-    @pagy, @festivals = pagy(result, items: 20, params: { status: @status, q: params[:q] })
+    pagy_params = request.query_parameters.merge(status: @status)
+    @pagy, @festivals = pagy(result, items: 20, params: pagy_params)
+  end
+
+  def show
+    @festival = Festival.find(params[:id])
   end
 
   private
 
   def filtered_festivals
+    relation =
+      if @artist
+        @artist.festivals.merge(Festival.ordered)
+      else
+        Festival.ordered
+      end
+
     today = Date.current
-    case @status
-    when "past"     then Festival.ordered.past(today)
-    else                 Festival.ordered.upcoming(today)
-    end
+    scoped =
+      case @status
+      when "past" then relation.merge(Festival.past(today))
+      else           relation.merge(Festival.upcoming(today))
+      end
+
+    scoped.distinct
   end
 end

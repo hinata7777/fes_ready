@@ -2,7 +2,9 @@ Rails.application.routes.draw do
   devise_for :users
   root "home#top"
   get "up" => "rails/health#show", as: :rails_health_check
-  resources :artists, only: [:index, :show] 
+  resources :artists, only: [:index, :show] do
+    resources :festivals, only: [:index], controller: :festivals
+  end
   resources :festivals, only: [:index, :show] do
     resources :artists, only: [:index], controller: :artists
   end
