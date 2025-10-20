@@ -4,6 +4,11 @@
                      html: { class: "mb-6" } do |f| %>
   <div class="flex flex-nowrap items-center gap-2">
     <%= hidden_field_tag(:status, status) if defined?(status) && status.present? %>
+    <% if defined?(hidden_fields) && hidden_fields.present? %>
+      <% hidden_fields.each do |key, value| %>
+        <%= hidden_field_tag(key, value) %>
+      <% end %>
+    <% end %>
     <%= f.search_field :name_i_cont,
       class: "h-12 w-full flex-1 rounded-lg border border-slate-300 bg-white px-4 text-slate-700 shadow-sm 
              transition focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-200 placeholder:text-slate-400",
