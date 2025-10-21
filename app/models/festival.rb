@@ -12,6 +12,7 @@ class Festival < ApplicationRecord
   scope :ordered,  -> { order(start_date: :asc, name: :asc) }
   scope :upcoming, ->(today = Date.current) { where("start_date >= ?", today) }
   scope :past,     ->(today = Date.current) { where("end_date < ?",  today) }
+  scope :with_published_timetable, -> { where(timetable_published: true) }
 
   before_validation -> { self.official_url = official_url&.strip.presence }
 
@@ -23,8 +24,24 @@ class Festival < ApplicationRecord
   validates :official_url, allow_blank: true,
             format: { with: VALID_URL, message: "は http/https の正しいURL形式で入力してください" }
 
-  private
+  def timetable_days
+    festival_days.order(:date)
+  end
 
+  def stage_performances_for(day_or_date)
+    day =
+      if day_or_date.is_a?(FestivalDay)
+        day_or_date
+      else
+        festival_days.find_by!(date: day_or_date)
+      end
+    day.stage_performances
+       .includes(:stage, :artist)
+       .order(:starts_at)
+  end
+
+  private
+  
   def end_not_before_start
     return if start_date.blank? || end_date.blank?
     errors.add(:end_date, "は開始日以降にしてください") if end_date < start_date
