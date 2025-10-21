@@ -63,14 +63,14 @@ class Admin::FestivalsController < Admin::BaseController
     params.require(:festival).permit(
       :name, :slug, :venue_name, :city, :prefecture,
       :start_date, :end_date, :timezone,
-      :official_url
+      :official_url, :timetable_published
     )
   end
 
   # setupページ（ネスト＋必要なら基本も一緒に）
   def festival_params_nested
     params.require(:festival).permit(
-      :name, :venue_name, :city, :prefecture, :timezone, :start_date, :end_date, :official_url,
+      :name, :venue_name, :city, :prefecture, :timezone, :start_date, :end_date, :official_url, :timetable_published,
       festival_days_attributes: [ :id, :date, :doors_at, :start_at, :end_at, :note, :_destroy ],
       stages_attributes:        [ :id, :name, :sort_order, :environment, :note, :color_key, :_destroy ]
     )
