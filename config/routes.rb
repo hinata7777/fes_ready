@@ -1,12 +1,18 @@
 Rails.application.routes.draw do
   devise_for :users
+
   root "home#top"
   get "up" => "rails/health#show", as: :rails_health_check
+
   resources :artists, only: [:index, :show] do
     resources :festivals, only: [:index], controller: :festivals
   end
+
+  resources :timetables, only: [:index]
+
   resources :festivals, only: [:index, :show] do
     resources :artists, only: [:index], controller: :artists
+    member { get :timetable }
   end
 
   namespace :admin do
