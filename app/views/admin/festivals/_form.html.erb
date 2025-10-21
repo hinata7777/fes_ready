@@ -53,6 +53,14 @@
     <p class="text-xs text-slate-500 mt-1">通常は <code>Asia/Tokyo</code> のままでOKです。</p>
   </div>
 
+  <div>
+    <%= f.label :timetable_published, class: "inline-flex items-center gap-2 font-semibold" do %>
+      <%= f.check_box :timetable_published, class: "h-4 w-4" %>
+      タイムテーブルを公開する
+    <% end %>
+    <p class="text-xs text-slate-500 mt-1">チェックを外すと一般ユーザー向けのタイムテーブルは非表示になります。</p>
+  </div>
+
   <div class="pt-4">
     <%= f.submit "登録する", class: "px-4 py-2 rounded bg-[#F95858] text-white hover:opacity-90" %>
   </div>
