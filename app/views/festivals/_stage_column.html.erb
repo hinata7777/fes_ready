@@ -1,0 +1,46 @@
+<% hex = stage.color_hex %>
+<% text_color = stage_text_color(hex) %>
+<% total_seconds ||= ((timeline_end - timeline_start) / 1.second).to_i %>
+<% total_seconds = [total_seconds, 3600].max %>
+<% column_height ||= [total_seconds / 3600.0 * 56, 56].max %>
+
+<div class="flex h-full min-w-[90px] flex-1 flex-col rounded-xl bg-white shadow-sm sm:min-w-[150px]">
+  <div class="flex h-10 items-center justify-center rounded-t-xl px-2 text-center text-[11px] font-semibold uppercase tracking-wide sm:h-12 sm:px-3 sm:text-xs"
+       style="background-color: <%= hex %>; color: <%= text_color %>;">
+    <%= stage.name %>
+  </div>
+  <div class="relative overflow-hidden rounded-b-xl border border-slate-200 bg-slate-50"
+       style="height: <%= column_height %>px;">
+    <% time_markers.each do |marker_time| %>
+      <% next if marker_time <= timeline_start %>
+      <% marker_offset_seconds = ((marker_time - timeline_start) / 1.second).to_f %>
+      <% offset = marker_offset_seconds / total_seconds.to_f %>
+      <% next if offset.negative? || offset > 1 %>
+      <div class="absolute inset-x-0 border-t border-slate-200/70" style="top: <%= offset * 100 %>%;"></div>
+    <% end %>
+
+    <div class="relative h-full w-full">
+      <% Array(performances).each do |performance| %>
+        <% block = timeline_performance_block(
+              performance,
+              timeline_start: timeline_start,
+              timeline_end: timeline_end,
+              timezone: timezone,
+              column_height: column_height
+            ) %>
+        <% next unless block %>
+        <div class="absolute inset-x-1.5 rounded-md px-2 py-1 text-[11px] font-semibold shadow-sm sm:inset-x-2 sm:px-3 sm:py-2 sm:text-xs"
+             style="top: <%= block.top_percent %>%; height: <%= block.height_percent %>%; background-color: <%= hex %>; color: <%= text_color %>;">
+          <div class="flex h-full flex-col justify-start gap-px text-left">
+            <div class="font-mono text-[9px] font-medium leading-none opacity-90 sm:text-[10px]">
+              <div><%= block.start_label %><% if block.end_label %> – <%= block.end_label %><% end %></div>
+            </div>
+            <div class="flex-1 overflow-hidden text-ellipsis text-[11px] font-bold leading-snug sm:text-xs">
+              <%= block.artist_name %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

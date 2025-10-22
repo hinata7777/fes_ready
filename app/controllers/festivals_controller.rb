@@ -35,11 +35,55 @@ class FestivalsController < ApplicationController
       else
         @festival_days.first
       end
+    
+    @timezone = ActiveSupport::TimeZone[@festival.timezone] || Time.zone
+    
+    @stages = @festival.stages.order(:sort_order, :id)
 
-    @stages = @festival.stages.order(:name)
+    @performances =
+      @festival
+        .stage_performances_for(@selected_day)
+        .scheduled
+        .includes(:stage, :artist)
 
-    @performances = @festival.stage_performances_for(@selected_day)
-    @performances_by_stage = @performances.group_by(&:stage_id)
+    @performances_by_stage =
+      @performances
+        .reject { |performance| performance.stage_id.blank? }
+        .group_by(&:stage_id)
+
+    day_date  = @selected_day.date
+    day_start = @timezone.local(day_date.year, day_date.month, day_date.day).beginning_of_day
+    day_end   = day_start.end_of_day
+
+    compose_time = lambda do |time|
+      next nil unless time
+      local = time.in_time_zone(@timezone)
+      @timezone.local(day_date.year, day_date.month, day_date.day, local.hour, local.min, local.sec)
+    rescue
+      nil
+    end
+
+    doors_at = compose_time.call(@selected_day.doors_at)
+    start_at = compose_time.call(@selected_day.start_at)
+    end_at   = compose_time.call(@selected_day.end_at)
+
+    default_start = doors_at || start_at || @timezone.local(day_date.year, day_date.month, day_date.day, 9, 0, 0)
+    default_end   = end_at || (start_at || default_start) + 8.hours
+
+    @timeline_start = [[default_start, day_start].max, day_end].min
+    @timeline_end   = [[default_end, day_start].max, day_end].min
+
+    if @timeline_end <= @timeline_start
+      @timeline_end = [@timeline_start + 1.hour, day_end].min
+    end
+
+    @time_markers = []
+    marker = @timeline_start
+    while marker <= @timeline_end
+      @time_markers << marker
+      marker += 1.hour
+    end
+    @time_markers << @timeline_end unless @time_markers.last == @timeline_end
   end
 
   private
