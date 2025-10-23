@@ -33,9 +33,9 @@
              style="top: <%= block.top_percent %>%; height: <%= block.height_percent %>%; background-color: <%= hex %>; color: <%= text_color %>;">
           <div class="flex h-full flex-col justify-start gap-px text-left">
             <div class="font-mono text-[9px] font-medium leading-none opacity-90 sm:text-[10px]">
-              <div><%= block.start_label %><% if block.end_label %> – <%= block.end_label %><% end %></div>
+              <div class="whitespace-nowrap"><%= block.start_label %><% if block.end_label %> – <%= block.end_label %><% end %></div>
             </div>
-            <div class="flex-1 overflow-hidden text-ellipsis text-[11px] font-bold leading-snug sm:text-xs">
+            <div class="flex-1 overflow-hidden text-ellipsis text-[11px] font-bold leading-tight sm:text-xs">
               <%= block.artist_name %>
             </div>
           </div>
