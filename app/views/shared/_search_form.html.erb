@@ -16,7 +16,8 @@
 
     <%= f.submit "検索",
       class: "inline-flex h-12 min-w-[90px] flex-shrink-0 items-center justify-center rounded-lg bg-gradient-to-r from-indigo-500 
-             to-violet-500 px-4 text-sm font-semibold text-white shadow-sm transition hover:from-indigo-600 hover:to-violet-600 
-             focus:outline-none focus:ring-2 focus:ring-indigo-200 whitespace-nowrap" %>
+             to-violet-500 px-4 text-sm font-semibold text-white shadow-sm interactive-lift hover:from-indigo-600 hover:to-violet-600 
+             focus:outline-none focus:ring-2 focus:ring-indigo-200 whitespace-nowrap",
+      data: { controller: "tap-feedback" } %>
   </div>
 <% end %>

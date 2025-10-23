@@ -40,12 +40,14 @@
 
       <div class="space-y-3">
         <%= link_to artist_festivals_path(@artist),
-                    class: "block w-full rounded-2xl bg-indigo-500 py-3 text-center text-sm font-bold text-white shadow-md transition hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-400" do %>
+                    class: "block w-full rounded-2xl bg-indigo-500 py-3 text-center text-sm font-bold text-white shadow-md interactive-lift hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-400",
+                    data: { controller: "tap-feedback" } do %>
           出演フェス一覧
         <% end %>
 
         <%= link_to "#",
-                    class: "block w-full rounded-2xl bg-indigo-500 py-3 text-center text-sm font-bold text-white shadow-md transition hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-400" do %>
+                    class: "block w-full rounded-2xl bg-indigo-500 py-3 text-center text-sm font-bold text-white shadow-md interactive-lift hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-400",
+                    data: { controller: "tap-feedback" } do %>
           アーティスト予習リストへ
         <% end %>
       </div>

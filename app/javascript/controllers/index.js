@@ -18,3 +18,6 @@ application.register("nested-form", NestedFormController)
 
 import StagePerformanceFormController from "./stage_performance_form_controller"
 application.register("stage-performance-form", StagePerformanceFormController)
+
+import TapFeedbackController from "./tap_feedback_controller"
+application.register("tap-feedback", TapFeedbackController)

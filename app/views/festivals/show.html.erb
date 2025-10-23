@@ -59,15 +59,18 @@
 
       <div class="space-y-3">
         <%= link_to festival_artists_path(@festival),
-                    class: "block w-full rounded-2xl bg-indigo-500 py-3 text-center text-sm font-bold text-white shadow-md transition hover:bg-indigo-400" do %>
+                    class: "block w-full rounded-2xl bg-indigo-500 py-3 text-center text-sm font-bold text-white shadow-md interactive-lift hover:bg-indigo-400",
+                    data: { controller: "tap-feedback" } do %>
           出演アーティスト一覧へ
         <% end %>
         <%= link_to "#",
-                    class: "block w-full rounded-2xl bg-indigo-500 py-3 text-center text-sm font-bold text-white shadow-md transition hover:bg-indigo-400" do %>
+                    class: "block w-full rounded-2xl bg-indigo-500 py-3 text-center text-sm font-bold text-white shadow-md interactive-lift hover:bg-indigo-400",
+                    data: { controller: "tap-feedback" } do %>
           タイムテーブルへ
         <% end %>
         <%= link_to "#",
-                    class: "block w-full rounded-2xl bg-indigo-500 py-3 text-center text-sm font-bold text-white shadow-md transition hover:bg-indigo-400" do %>
+                    class: "block w-full rounded-2xl bg-indigo-500 py-3 text-center text-sm font-bold text-white shadow-md interactive-lift hover:bg-indigo-400",
+                    data: { controller: "tap-feedback" } do %>
           フェス予習リストへ
         <% end %>
       </div>

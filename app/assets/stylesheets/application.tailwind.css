@@ -29,7 +29,25 @@ h1, h2, h3, h4 {
   }
 
   .nav-stack-button {
-    @apply block w-full rounded-xl bg-white px-5 py-3 text-left font-semibold text-slate-900 shadow-sm ring-1 ring-slate-200 transition hover:-translate-y-0.5 hover:shadow-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-500;
+    @apply block w-full rounded-xl bg-white px-5 py-3 text-left font-semibold text-slate-900 shadow-sm ring-1 ring-slate-200 interactive-lift focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-500;
+  }
+
+  .interactive-lift {
+    @apply transition duration-150 ease-out touch-manipulation hover:-translate-y-0.5 hover:shadow-md active:-translate-y-0.5 active:shadow-md;
+  }
+
+  .is-touch-active {
+    @apply -translate-y-0.5 shadow-md;
+  }
+
+  @screen sm {
+    .interactive-lift {
+      @apply hover:-translate-y-1 hover:shadow-lg active:-translate-y-1 active:shadow-lg;
+    }
+
+    .is-touch-active {
+      @apply -translate-y-1 shadow-lg;
+    }
   }
 }
 

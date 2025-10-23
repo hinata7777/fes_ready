@@ -8,8 +8,9 @@
              data-spotify-artist-search-target="query"
              data-action="keydown.enter->spotify-artist-search#onSearch" />
       <button type="button"
-              class="sm:w-auto px-4 py-2 rounded bg-slate-800 text-white hover:bg-slate-900"
-              data-action="click->spotify-artist-search#onSearch">
+              class="sm:w-auto px-4 py-2 rounded bg-slate-800 text-white shadow-sm interactive-lift hover:bg-slate-900"
+              data-action="click->spotify-artist-search#onSearch"
+              data-controller="tap-feedback">
         Search
       </button>
     </div>
@@ -42,6 +43,6 @@
   </div>
 
   <div class="pt-4">
-    <%= f.submit "登録する", class: "px-4 py-2 rounded bg-[#F95858] text-white" %>
+    <%= f.submit "登録する", class: "px-4 py-2 rounded bg-[#F95858] text-white shadow-sm interactive-lift hover:bg-[#e14f4f] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F95858]", data: { controller: "tap-feedback" } %>
   </div>
 <% end %>
