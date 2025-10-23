@@ -29,7 +29,8 @@
               column_height: column_height
             ) %>
         <% next unless block %>
-        <div class="absolute inset-x-1.5 rounded-md px-2 py-1 text-[11px] font-semibold shadow-sm sm:inset-x-2 sm:px-3 sm:py-2 sm:text-xs"
+        <div class="absolute inset-x-1.5 rounded-md px-2 py-1 text-[11px] font-semibold shadow-sm interactive-lift sm:inset-x-2 sm:px-3 sm:py-2 sm:text-xs"
+             data-controller="tap-feedback"
              style="top: <%= block.top_percent %>%; height: <%= block.height_percent %>%; background-color: <%= hex %>; color: <%= text_color %>;">
           <div class="flex h-full flex-col justify-start gap-px text-left">
             <div class="font-mono text-[9px] font-medium leading-none opacity-90 sm:text-[10px]">

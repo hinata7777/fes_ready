@@ -1,5 +1,5 @@
 <% nav_link_classes = "flex flex-1 flex-col items-center gap-1 rounded-xl py-2 text-[11px] md:text-[13px] 
-font-bold tracking-tight transition hover:bg-[#ea4a4a]/60 focus-visible:outline focus-visible:outline-2 
+font-bold tracking-tight shadow-sm interactive-lift hover:bg-[#ea4a4a]/60 focus-visible:outline focus-visible:outline-2 
 focus-visible:outline-offset-2 focus-visible:outline-white" %>
 
 <nav class="fixed inset-x-0 bottom-0 z-40 bg-[#F95858] text-white shadow-[0_-8px_24px_rgba(0,0,0,0.2)]">
@@ -7,27 +7,27 @@ focus-visible:outline-offset-2 focus-visible:outline-white" %>
     class="mx-auto flex w-full max-w-screen-md items-end justify-between gap-2 px-4 pt-2
           pb-[calc(env(safe-area-inset-bottom,0px)+0.5rem)]"
   >
-    <%= link_to festivals_path, class: nav_link_classes do %>
+    <%= link_to festivals_path, class: nav_link_classes, data: { controller: "tap-feedback" } do %>
       <%= icon 'fes' %>
       <span class="whitespace-nowrap">フェス</span>
     <% end %>
 
-    <%= link_to artists_path, class: nav_link_classes do %>
+    <%= link_to artists_path, class: nav_link_classes, data: { controller: "tap-feedback" } do %>
       <%= icon 'artists' %>
       <span class="whitespace-nowrap">アーティスト</span>
     <% end %>
 
-    <%= link_to timetables_path, class: nav_link_classes do %>
+    <%= link_to timetables_path, class: nav_link_classes, data: { controller: "tap-feedback" } do %>
       <%= icon 'timetable' %>
       <span class="whitespace-nowrap">タイムテーブル</span>
     <% end %>
 
-    <%= link_to '#', class: nav_link_classes do %>
+    <%= link_to '#', class: nav_link_classes, data: { controller: "tap-feedback" } do %>
       <%= icon 'practice' %>
       <span class="whitespace-nowrap">予習</span>
     <% end %>
 
-    <%= link_to '#', class: nav_link_classes do %>
+    <%= link_to '#', class: nav_link_classes, data: { controller: "tap-feedback" } do %>
       <%= icon 'checklist' %>
       <span class="whitespace-nowrap">持ち物</span>
     <% end %>
