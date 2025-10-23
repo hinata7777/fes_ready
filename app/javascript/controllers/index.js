@@ -15,3 +15,6 @@ application.register("spotify-artist-search", SpotifyArtistSearchController)
 
 import NestedFormController from "./nested_form_controller"
 application.register("nested-form", NestedFormController)
+
+import StagePerformanceFormController from "./stage_performance_form_controller"
+application.register("stage-performance-form", StagePerformanceFormController)

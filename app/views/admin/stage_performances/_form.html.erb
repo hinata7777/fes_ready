@@ -1,21 +1,37 @@
 <% stage_performance = local_assigns.fetch(:stage_performance, @stage_performance) %>
+<% stage_placeholder = "(未定)" %>
+<% stage_options = @stages_by_festival.transform_values { |stages| stages.map { |stage| { id: stage.id, name: stage.name } } } %>
+<% stage_collection = @stages_by_festival.values.flatten %>
 
-<%= form_with model: [:admin, stage_performance], class: "space-y-6" do |f| %>
+<%= form_with model: [:admin, stage_performance],
+      class: "space-y-6",
+      data: {
+        controller: "stage-performance-form",
+        "stage-performance-form-stages-value": json_escape(stage_options.to_json),
+        "stage-performance-form-festival-day-map-value": json_escape(@festival_day_festival_map.to_json),
+        "stage-performance-form-festival-day-dates-value": json_escape(@festival_day_date_map.to_json),
+        "stage-performance-form-stage-placeholder-value": stage_placeholder,
+        "stage-performance-form-minute-step-value": 5
+      } do |f| %>
   <div class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm space-y-6">
     <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
       <div>
         <%= f.label :festival_day_id, "日程", class: "block text-sm font-semibold text-slate-700" %>
         <%= f.collection_select :festival_day_id,
-              FestivalDay.includes(:festival).order(:date),
+              @festival_days,
               :id,
               ->(d) { "#{d.festival.name} / #{d.date.strftime('%Y/%m/%d')}" },
               {},
-              class: "mt-2 w-full rounded border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-200" %>
+              class: "mt-2 w-full rounded border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-200",
+              data: {
+                action: "change->stage-performance-form#onFestivalDayChange",
+                "stage-performance-form-target": "festivalDaySelect"
+              } %>
       </div>
       <div>
         <%= f.label :artist_id, "アーティスト", class: "block text-sm font-semibold text-slate-700" %>
         <%= f.collection_select :artist_id,
-              Artist.order(:name),
+              @artists,
               :id,
               :name,
               {},
@@ -26,11 +42,14 @@
     <div>
       <%= f.label :stage_id, "ステージ（確定時）", class: "block text-sm font-semibold text-slate-700" %>
       <%= f.collection_select :stage_id,
-            Stage.order(:sort_order, :id),
+            stage_collection,
             :id,
             :name,
-            { include_blank: "(未定)" },
-            class: "mt-2 w-full rounded border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-200" %>
+            { include_blank: stage_placeholder },
+            class: "mt-2 w-full rounded border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-200",
+            data: {
+              "stage-performance-form-target": "stageSelect"
+            } %>
       <p class="mt-2 text-xs text-slate-500">status が scheduled の場合は必須です。</p>
     </div>
 
@@ -38,12 +57,24 @@
       <div>
         <%= f.label :starts_at, "開始", class: "block text-sm font-semibold text-slate-700" %>
         <%= f.datetime_local_field :starts_at,
-              class: "mt-2 w-full rounded border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-200" %>
+              class: "mt-2 w-full rounded border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-200",
+              step: 300,
+              data: {
+                "stage-performance-form-target": "startsAt",
+                default_time: "00:00",
+                action: "input->stage-performance-form#normalizeTime change->stage-performance-form#normalizeTime"
+              } %>
       </div>
       <div>
         <%= f.label :ends_at, "終了", class: "block text-sm font-semibold text-slate-700" %>
         <%= f.datetime_local_field :ends_at,
-              class: "mt-2 w-full rounded border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-200" %>
+              class: "mt-2 w-full rounded border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-200",
+              step: 300,
+              data: {
+                "stage-performance-form-target": "endsAt",
+                default_time: "00:00",
+                action: "input->stage-performance-form#normalizeTime change->stage-performance-form#normalizeTime"
+              } %>
       </div>
     </div>
 
