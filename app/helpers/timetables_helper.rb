@@ -29,8 +29,19 @@ module TimetablesHelper
     top_percent        = ((offset_minutes / total_minutes) * 100).clamp(0, 100)
     remaining_percent  = [100 - top_percent, 0].max
     block_percent      = (duration_minutes / total_minutes) * 100
-    min_percent        = [(44.0 / column_height) * 100, remaining_percent].min
-    height_percent     = [[block_percent, min_percent].max, remaining_percent].min
+
+    min_block_height_px = 24.0
+    min_height_percent  = (min_block_height_px / column_height) * 100
+    block_height_px     = (block_percent / 100.0) * column_height
+
+    adjusted_percent =
+      if block_height_px < min_block_height_px
+        [min_height_percent, remaining_percent].min
+      else
+        block_percent
+      end
+
+    height_percent = [adjusted_percent, remaining_percent].min
 
     PerformanceBlock.new(
       top_percent:   top_percent,

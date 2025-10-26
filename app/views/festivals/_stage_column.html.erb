@@ -2,7 +2,8 @@
 <% text_color = stage_text_color(hex) %>
 <% total_seconds ||= ((timeline_end - timeline_start) / 1.second).to_i %>
 <% total_seconds = [total_seconds, 3600].max %>
-<% column_height ||= [total_seconds / 3600.0 * 56, 56].max %>
+<% hour_height_px = 90 %>
+<% column_height ||= [total_seconds / 3600.0 * hour_height_px, hour_height_px].max %>
 
 <div class="flex h-full min-w-[90px] flex-1 flex-col rounded-xl bg-white shadow-sm sm:min-w-[150px]">
   <div class="flex h-10 items-center justify-center rounded-t-xl px-2 text-center text-[11px] font-semibold uppercase tracking-wide sm:h-12 sm:px-3 sm:text-xs"
@@ -29,18 +30,19 @@
               column_height: column_height
             ) %>
         <% next unless block %>
-        <div class="absolute inset-x-1.5 rounded-md px-2 py-1 text-[11px] font-semibold shadow-sm interactive-lift sm:inset-x-2 sm:px-3 sm:py-2 sm:text-xs"
-             data-controller="tap-feedback"
-             style="top: <%= block.top_percent %>%; height: <%= block.height_percent %>%; background-color: <%= hex %>; color: <%= text_color %>;">
+        <%= link_to artist_path(performance.artist),
+                    class: "absolute inset-x-1.5 rounded-md px-2 py-1 text-[11px] font-semibold shadow-sm interactive-lift sm:inset-x-2 sm:px-3 sm:py-2 sm:text-xs",
+                    data: { controller: "tap-feedback" },
+                    style: "top: #{block.top_percent}%; height: #{block.height_percent}%; background-color: #{hex}; color: #{text_color};" do %>
           <div class="flex h-full flex-col justify-start gap-px text-left">
             <div class="font-mono text-[9px] font-medium leading-none opacity-90 sm:text-[10px]">
-              <div class="whitespace-nowrap"><%= block.start_label %><% if block.end_label %> – <%= block.end_label %><% end %></div>
+              <div class="whitespace-nowrap"><%= block.start_label %><% if block.end_label %>-<%= block.end_label %><% end %></div>
             </div>
             <div class="flex-1 overflow-hidden text-ellipsis text-[11px] font-bold leading-tight sm:text-xs">
               <%= block.artist_name %>
             </div>
           </div>
-        </div>
+        <% end %>
       <% end %>
     </div>
   </div>
