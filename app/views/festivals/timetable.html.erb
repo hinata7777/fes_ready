@@ -1,6 +1,6 @@
 <% raw_total_seconds = ((@timeline_end - @timeline_start) / 1.second).to_i %>
 <% total_seconds = [raw_total_seconds, 3600].max %>
-<% hour_height = 56 %>
+<% hour_height = 90 %>
 <% column_height = [total_seconds / 3600.0 * hour_height, hour_height].max %>
 
 <div class="min-h-screen px-4 pb-24 pt-6">

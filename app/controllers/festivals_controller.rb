@@ -78,11 +78,20 @@ class FestivalsController < ApplicationController
     end
 
     @time_markers = []
-    marker = @timeline_start
+    @time_markers << @timeline_start
+
+    marker =
+      if @timeline_start.min.zero? && @timeline_start.sec.zero?
+        @timeline_start + 1.hour
+      else
+        (@timeline_start + 1.hour).change(min: 0, sec: 0)
+      end
+
     while marker <= @timeline_end
       @time_markers << marker
       marker += 1.hour
     end
+
     @time_markers << @timeline_end unless @time_markers.last == @timeline_end
   end
 
