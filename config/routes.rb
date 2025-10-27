@@ -12,7 +12,13 @@ Rails.application.routes.draw do
 
   resources :festivals, only: [:index, :show] do
     resources :artists, only: [:index], controller: :artists
-    member { get :timetable }
+    member do
+      get :timetable
+      # マイタイムテーブル（作成→保存→表示）
+      get  "my_timetable/build", to: "my_timetables#build",  as: :build_my_timetable
+      post "my_timetable",       to: "my_timetables#create", as: :my_timetable
+      get  "my_timetable",       to: "my_timetables#show"
+    end
   end
 
   namespace :admin do

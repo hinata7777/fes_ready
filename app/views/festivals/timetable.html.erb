@@ -57,6 +57,14 @@
           <% end %>
         </div>
       </div>
+      <% if user_signed_in? %>
+        <div class="mt-4 flex justify-center">
+          <%= link_to "この日程のマイタイムテーブルを作成",
+                      build_my_timetable_festival_path(@festival, date: @selected_day.date.to_s),
+                      class: "inline-flex items-center justify-center rounded-2xl bg-indigo-500 px-6 py-3 text-sm font-bold text-white shadow-md interactive-lift hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500",
+                      data: { controller: "tap-feedback" } %>
+        </div>
+      <% end %>
     </header>
 
     <section class="rounded-3xl border border-slate-200 bg-gradient-to-b from-slate-100 via-white to-slate-100 p-3 shadow-lg shadow-slate-200/60 sm:p-4">
