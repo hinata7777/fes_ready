@@ -1,0 +1,165 @@
+<% raw_total_seconds = ((@timeline_end - @timeline_start) / 1.second).to_i %>
+<% total_seconds = [raw_total_seconds, 3600].max %>
+<% hour_height = 90 %>
+<% column_height = [total_seconds / 3600.0 * hour_height, hour_height].max %>
+
+<div class="min-h-screen px-4 pb-24 pt-6">
+  <div class="mx-auto flex max-w-6xl flex-col gap-6">
+    <header class="rounded-3xl border border-slate-200 bg-gradient-to-b from-sky-100 via-slate-100 to-white p-6 shadow-lg shadow-slate-200/60">
+      <p class="text-xs font-semibold uppercase tracking-[0.3em] text-slate-500">マイタイムテーブル作成</p>
+      <h1 class="mt-2 text-2xl font-extrabold text-slate-900"><%= @festival.name %></h1>
+      <div class="mt-4 flex flex-wrap items-center gap-4 text-sm text-slate-600">
+        <div class="flex flex-wrap items-center gap-3">
+          <div>
+            <span class="text-xs font-semibold uppercase tracking-wide text-slate-500">日付</span>
+            <div class="text-base font-semibold text-slate-900"><%= format_date_with_weekday(@selected_day.date) %></div>
+          </div>
+          <div class="flex items-center gap-4 text-xs">
+            <div>
+              <span class="font-semibold uppercase tracking-wide text-slate-500">開場</span>
+              <div class="font-mono text-sm text-slate-800">
+                <%= @selected_day.doors_at ? @selected_day.doors_at.in_time_zone(@timezone).strftime("%H:%M") : "—" %>
+              </div>
+            </div>
+            <div>
+              <span class="font-semibold uppercase tracking-wide text-slate-500">開演</span>
+              <div class="font-mono text-sm text-slate-800">
+                <%= @selected_day.start_at ? @selected_day.start_at.in_time_zone(@timezone).strftime("%H:%M") : "—" %>
+              </div>
+            </div>
+            <div>
+              <span class="font-semibold uppercase tracking-wide text-slate-500">終演</span>
+              <div class="font-mono text-sm text-slate-800">
+                <%= @selected_day.end_at ? @selected_day.end_at.in_time_zone(@timezone).strftime("%H:%M") : "—" %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <% if @selected_day.note.present? %>
+        <p class="mt-4 text-xs text-slate-600"><%= @selected_day.note %></p>
+      <% end %>
+
+      <p class="mt-4 text-sm text-slate-700">
+        見たいアーティストのブロックをタップして選択してください。選択した内容は「保存する」を押すとマイタイムテーブルに反映されます。
+      </p>
+    </header>
+
+    <%= form_with url: my_timetable_festival_path(@festival, date: @selected_day.date.to_s, user_id: current_user.id),
+                  method: :post,
+                  class: "flex flex-col gap-6" do %>
+      <section class="rounded-3xl border border-slate-200 bg-gradient-to-b from-slate-100 via-white to-slate-100 p-3 shadow-lg shadow-slate-200/60 sm:p-4">
+        <div class="overflow-x-auto overflow-y-hidden">
+          <div class="flex items-start gap-2 md:gap-3">
+            <div class="flex flex-shrink-0 flex-col items-center">
+              <div class="h-10 w-14 sm:h-12 sm:w-16"></div>
+              <div class="relative w-14 rounded-xl border border-slate-200 bg-white/80 text-[10px] font-semibold text-slate-600 sm:w-16 sm:text-[11px]"
+                   style="height: <%= column_height %>px;">
+                <% @time_markers.each do |marker| %>
+                  <% next if marker <= @timeline_start %>
+                  <% marker_offset_seconds = ((marker - @timeline_start) / 1.second).to_f %>
+                  <% offset_ratio = marker_offset_seconds / total_seconds.to_f %>
+                  <% next if offset_ratio.negative? || offset_ratio > 1 %>
+                  <div class="absolute inset-x-0 border-t border-slate-200/70"
+                       style="top: <%= offset_ratio * 100 %>%;"></div>
+                <% end %>
+                <% marker_count = @time_markers.length %>
+                <% @time_markers.each_with_index do |marker, index| %>
+                  <% marker_offset_seconds = ((marker - @timeline_start) / 1.second).to_f %>
+                  <% offset_ratio = marker_offset_seconds / total_seconds.to_f %>
+                  <% next if offset_ratio.negative? || offset_ratio > 1 %>
+                  <% top_percent = offset_ratio * 100 %>
+                  <% base_classes = "absolute inset-x-0 text-center pointer-events-none" %>
+                  <% if index.zero? %>
+                    <div class="<%= [base_classes, 'translate-y-0'].join(' ') %>"
+                         style="top: <%= top_percent %>%;">
+                      <span class="inline-block rounded bg-white/90 px-[3px] py-0.5 font-mono text-[9px] text-slate-700 shadow-sm sm:px-1 sm:text-[10px]">
+                        <%= marker.in_time_zone(@timezone).strftime("%H:%M") %>
+                      </span>
+                    </div>
+                  <% else %>
+                    <% translation_class =
+                         if index == marker_count - 1
+                           '-translate-y-full'
+                         else
+                           '-translate-y-1/2'
+                         end %>
+                    <div class="<%= [base_classes, translation_class].join(' ') %>"
+                         style="top: <%= top_percent %>%;">
+                      <span class="inline-block rounded bg-white/90 px-[3px] py-0.5 font-mono text-[9px] text-slate-700 shadow-sm sm:px-1 sm:text-[10px]">
+                        <%= marker.in_time_zone(@timezone).strftime("%H:%M") %>
+                      </span>
+                    </div>
+                  <% end %>
+                <% end %>
+              </div>
+            </div>
+
+            <div class="flex flex-1 gap-2 md:gap-3">
+              <% if @stages.any? %>
+                <% @stages.each do |stage| %>
+                  <%= render "stage_column_picker",
+                             stage: stage,
+                             performances: @performances_by_stage[stage.id],
+                             timeline_start: @timeline_start,
+                             timeline_end: @timeline_end,
+                             time_markers: @time_markers,
+                             timezone: @timezone,
+                             total_seconds: total_seconds,
+                             column_height: column_height,
+                             picked_ids: @picked_ids %>
+                <% end %>
+              <% else %>
+                <div class="flex h-full min-h-[320px] flex-1 items-center justify-center rounded-2xl border border-dashed border-slate-300 bg-white/70 px-6 py-12 text-center text-sm text-slate-500">
+                  登録されたステージがありません
+                </div>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <% if @performances_without_stage.present? %>
+        <section class="rounded-3xl border border-dashed border-slate-300 bg-white/80 p-4 shadow-sm">
+          <h2 class="text-sm font-bold text-slate-700">ステージ未設定の出演</h2>
+          <p class="mt-2 text-xs text-slate-500">以下の出演はステージが未設定のため、リスト形式で選択できます。</p>
+          <div class="mt-4 space-y-3">
+            <% @performances_without_stage.each do |performance| %>
+              <% checkbox_id = "stage-performance-#{performance.id}" %>
+              <div class="rounded-2xl border border-slate-200 bg-white p-3 shadow-sm">
+                <%= check_box_tag "stage_performance_ids[]",
+                                   performance.id,
+                                   @picked_ids.include?(performance.id),
+                                   id: checkbox_id,
+                                   class: "peer sr-only" %>
+                <label for="<%= checkbox_id %>"
+                       class="block w-full rounded-xl border border-transparent px-3 py-2 transition interactive-lift peer-checked:border-rose-500 peer-checked:bg-rose-50 peer-checked:shadow-md"
+                       data-controller="tap-feedback">
+                  <div class="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
+                    <div>
+                      <div class="text-sm font-semibold text-slate-800">
+                        <%= performance.artist.name %>
+                      </div>
+                      <div class="text-xs font-mono text-slate-500">
+                        <%= performance.starts_at&.in_time_zone(@timezone)&.strftime("%H:%M") %> - <%= performance.ends_at&.in_time_zone(@timezone)&.strftime("%H:%M") %>
+                      </div>
+                    </div>
+                    <span class="mt-1 inline-flex items-center rounded-full border border-slate-300 px-3 py-1 text-xs font-semibold text-slate-600 transition peer-checked:border-rose-500 peer-checked:bg-rose-500 peer-checked:text-white sm:mt-0">
+                      <span class="hidden peer-checked:inline">選択中</span>
+                    </span>
+                  </div>
+                </label>
+              </div>
+            <% end %>
+          </div>
+        </section>
+      <% end %>
+
+      <div class="flex justify-end">
+        <%= submit_tag "保存する",
+                       class: "inline-flex items-center justify-center rounded-2xl bg-indigo-500 px-6 py-3 text-sm font-bold text-white shadow-md interactive-lift hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500" %>
+      </div>
+    <% end %>
+  </div>
+</div>
