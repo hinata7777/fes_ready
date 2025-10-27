@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_10_21_020350) do
+ActiveRecord::Schema[8.0].define(version: 2025_10_27_015710) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "pg_catalog.plpgsql"
@@ -88,6 +88,16 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_21_020350) do
     t.index ["festival_id"], name: "index_stages_on_festival_id"
   end
 
+  create_table "user_timetable_entries", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "stage_performance_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["stage_performance_id"], name: "index_user_timetable_entries_on_stage_performance_id"
+    t.index ["user_id", "stage_performance_id"], name: "idx_user_timetable_entries_uniqueness", unique: true
+    t.index ["user_id"], name: "index_user_timetable_entries_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "nickname", null: false
     t.integer "role", default: 0, null: false
@@ -107,4 +117,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_21_020350) do
   add_foreign_key "stage_performances", "festival_days"
   add_foreign_key "stage_performances", "stages"
   add_foreign_key "stages", "festivals"
+  add_foreign_key "user_timetable_entries", "stage_performances"
+  add_foreign_key "user_timetable_entries", "users"
 end
