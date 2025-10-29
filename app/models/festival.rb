@@ -16,9 +16,9 @@ class Festival < ApplicationRecord
 
   before_validation -> { self.official_url = official_url&.strip.presence }
 
-  def self.ransackable_attributes(_=nil); %w[name]; end
-  def self.ransackable_associations(_=nil); []; end
-  
+  def self.ransackable_attributes(_ = nil); %w[name]; end
+  def self.ransackable_associations(_ = nil); []; end
+
   VALID_URL = URI::DEFAULT_PARSER.make_regexp(%w[http https])
 
   validates :official_url, allow_blank: true,
@@ -41,7 +41,7 @@ class Festival < ApplicationRecord
   end
 
   private
-  
+
   def end_not_before_start
     return if start_date.blank? || end_date.blank?
     errors.add(:end_date, "は開始日以降にしてください") if end_date < start_date

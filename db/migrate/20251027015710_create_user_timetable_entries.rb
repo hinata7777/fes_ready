@@ -7,6 +7,6 @@ class CreateUserTimetableEntries < ActiveRecord::Migration[8.0]
       t.timestamps null: false
     end
 
-    add_index :user_timetable_entries, [:user_id, :stage_performance_id], unique: true, name: "idx_user_timetable_entries_uniqueness"
+    add_index :user_timetable_entries, [ :user_id, :stage_performance_id ], unique: true, name: "idx_user_timetable_entries_uniqueness"
   end
 end

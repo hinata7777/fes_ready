@@ -2,7 +2,7 @@ class ArtistsController < ApplicationController
   def index
     @festival = Festival.find_by(id: params[:festival_id])
 
-    base = 
+    base =
     if @festival
       @festival_days = @festival.festival_days.order(:date)
       @selected_festival_day = if params[:festival_day_id].present?

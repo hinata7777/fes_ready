@@ -2,7 +2,7 @@ class MyTimetablesController < ApplicationController
   before_action :authenticate_user!, except: :show
   before_action :set_festival!
   before_action :set_selected_day!
-  before_action :prepare_timetable_context!, only: [:build, :show]
+  before_action :prepare_timetable_context!, only: [ :build, :show ]
   before_action :set_timetable_owner!, only: :show
 
   def build
@@ -128,11 +128,11 @@ class MyTimetablesController < ApplicationController
     default_start = doors_at || start_at || @timezone.local(day_date.year, day_date.month, day_date.day, 9, 0, 0)
     default_end   = end_at || (start_at || default_start) + 8.hours
 
-    @timeline_start = [[default_start, day_start].max, day_end].min
-    @timeline_end   = [[default_end, day_start].max, day_end].min
+    @timeline_start = [ [ default_start, day_start ].max, day_end ].min
+    @timeline_end   = [ [ default_end, day_start ].max, day_end ].min
 
     if @timeline_end <= @timeline_start
-      @timeline_end = [@timeline_start + 1.hour, day_end].min
+      @timeline_end = [ @timeline_start + 1.hour, day_end ].min
     end
 
     @time_markers = []
