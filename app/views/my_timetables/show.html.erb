@@ -43,10 +43,17 @@
 
       <div class="mt-6 flex flex-col items-center gap-3 sm:flex-row sm:justify-between">
         <% if @timetable_owner == current_user %>
-          <%= link_to "マイタイムテーブルを編集する",
-                      build_my_timetable_festival_path(@festival, date: @selected_day.date.to_s),
-                      class: "inline-flex items-center justify-center rounded-2xl bg-indigo-500 px-5 py-2.5 text-sm font-bold text-white shadow-md interactive-lift hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500",
-                      data: { controller: "tap-feedback" } %>
+          <div class="flex items-center gap-3">
+            <%= link_to "編集する",
+                        build_my_timetable_festival_path(@festival, date: @selected_day.date.to_s),
+                        class: "inline-flex items-center justify-center rounded-2xl bg-indigo-500 px-5 py-2.5 text-sm font-bold text-white shadow-md interactive-lift hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500",
+                        data: { controller: "tap-feedback" } %>
+            <%= button_to "削除する",
+                          my_timetable_festival_path(@festival, date: @selected_day.date.to_s),
+                          method: :delete,
+                          data: { controller: "tap-feedback", turbo_confirm: "このマイタイムテーブルを削除しますか？" },
+                          class: "inline-flex items-center justify-center rounded-2xl bg-rose-500 px-5 py-2.5 text-sm font-bold text-white shadow-md interactive-lift hover:bg-rose-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-500" %>
+          </div>
         <% end %>
       </div>
     </header>
@@ -138,7 +145,7 @@
       </section>
 
       <% if @timetable_owner == current_user %>
-        <% share_text = "FES READYで #{@festival.name} のマイタイムテーブルを作成！" %>
+        <% share_text = "FES READYで #{@festival.name} のマイタイムテーブルを作成しました！" %>
         <% share_link = my_timetable_festival_url(@festival,
                                                   date: @selected_day.date.to_s,
                                                   user_id: current_user.id) %>

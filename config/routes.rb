@@ -9,6 +9,7 @@ Rails.application.routes.draw do
   end
 
   resources :timetables, only: [ :index ]
+  resources :my_timetables, only: [ :index ]
 
   resources :festivals, only: [ :index, :show ] do
     resources :artists, only: [ :index ], controller: :artists
@@ -18,6 +19,7 @@ Rails.application.routes.draw do
       get  "my_timetable/build", to: "my_timetables#build",  as: :build_my_timetable
       post "my_timetable",       to: "my_timetables#create", as: :my_timetable
       get  "my_timetable",       to: "my_timetables#show"
+      delete "my_timetable",     to: "my_timetables#destroy"
     end
   end
 
