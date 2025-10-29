@@ -8,6 +8,12 @@
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
+    <meta property="og:site_name" content="FES READY">
+    <meta property="og:image" content="<%= image_url('fesready_ogp.png') %>">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="<%= image_url('fesready_ogp.png') %>">
+    <meta name="twitter:image:alt" content="FES READY">
+
     <%= yield :head %>
 
     <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
