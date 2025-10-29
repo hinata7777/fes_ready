@@ -70,7 +70,7 @@ class Admin::StagePerformancesController < Admin::BaseController
     @festival_days = FestivalDay.includes(:festival).order(:date)
     @artists = Artist.order(:name)
     @stages_by_festival = Stage.order(:sort_order, :id).group_by(&:festival_id)
-    @festival_day_festival_map = @festival_days.map { |day| [day.id, day.festival_id] }.to_h
-    @festival_day_date_map = @festival_days.map { |day| [day.id, day.date.iso8601] }.to_h
+    @festival_day_festival_map = @festival_days.map { |day| [ day.id, day.festival_id ] }.to_h
+    @festival_day_date_map = @festival_days.map { |day| [ day.id, day.date.iso8601 ] }.to_h
   end
 end

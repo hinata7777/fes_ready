@@ -18,16 +18,16 @@ module TimetablesHelper
 
     return if end_time <= timeline_start || start_time >= timeline_end
 
-    clipped_start = [start_time, timeline_start].max
-    clipped_end   = [end_time,   timeline_end].min
+    clipped_start = [ start_time, timeline_start ].max
+    clipped_end   = [ end_time,   timeline_end ].min
     return if clipped_end <= clipped_start
 
     total_minutes      = (timeline_end - timeline_start) / 60.0
-    duration_minutes   = [(clipped_end - clipped_start) / 60.0, 15].max
-    offset_minutes     = [((clipped_start - timeline_start) / 60.0), 0].max
+    duration_minutes   = [ (clipped_end - clipped_start) / 60.0, 15 ].max
+    offset_minutes     = [ ((clipped_start - timeline_start) / 60.0), 0 ].max
 
     top_percent        = ((offset_minutes / total_minutes) * 100).clamp(0, 100)
-    remaining_percent  = [100 - top_percent, 0].max
+    remaining_percent  = [ 100 - top_percent, 0 ].max
     block_percent      = (duration_minutes / total_minutes) * 100
 
     min_block_height_px = 24.0
@@ -36,12 +36,12 @@ module TimetablesHelper
 
     adjusted_percent =
       if block_height_px < min_block_height_px
-        [min_height_percent, remaining_percent].min
+        [ min_height_percent, remaining_percent ].min
       else
         block_percent
       end
 
-    height_percent = [adjusted_percent, remaining_percent].min
+    height_percent = [ adjusted_percent, remaining_percent ].min
 
     PerformanceBlock.new(
       top_percent:   top_percent,

@@ -1,7 +1,7 @@
 class FestivalsController < ApplicationController
-  before_action :set_festival, only: [:show, :timetable]
+  before_action :set_festival, only: [ :show, :timetable ]
   before_action :ensure_timetable_published!, only: :timetable
-  
+
   def index
     @artist = Artist.find(params[:artist_id]) if params[:artist_id].present?
 
@@ -35,9 +35,9 @@ class FestivalsController < ApplicationController
       else
         @festival_days.first
       end
-    
+
     @timezone = ActiveSupport::TimeZone[@festival.timezone] || Time.zone
-    
+
     @stages = @festival.stages.order(:sort_order, :id)
 
     @performances =
@@ -70,11 +70,11 @@ class FestivalsController < ApplicationController
     default_start = doors_at || start_at || @timezone.local(day_date.year, day_date.month, day_date.day, 9, 0, 0)
     default_end   = end_at || (start_at || default_start) + 8.hours
 
-    @timeline_start = [[default_start, day_start].max, day_end].min
-    @timeline_end   = [[default_end, day_start].max, day_end].min
+    @timeline_start = [ [ default_start, day_start ].max, day_end ].min
+    @timeline_end   = [ [ default_end, day_start ].max, day_end ].min
 
     if @timeline_end <= @timeline_start
-      @timeline_end = [@timeline_start + 1.hour, day_end].min
+      @timeline_end = [ @timeline_start + 1.hour, day_end ].min
     end
 
     @time_markers = []
@@ -104,7 +104,7 @@ class FestivalsController < ApplicationController
   def ensure_timetable_published!
     raise ActiveRecord::RecordNotFound unless @festival.timetable_published?
   end
-  
+
   def filtered_festivals
     relation =
       if @artist

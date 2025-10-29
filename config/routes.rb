@@ -4,14 +4,14 @@ Rails.application.routes.draw do
   root "home#top"
   get "up" => "rails/health#show", as: :rails_health_check
 
-  resources :artists, only: [:index, :show] do
-    resources :festivals, only: [:index], controller: :festivals
+  resources :artists, only: [ :index, :show ] do
+    resources :festivals, only: [ :index ], controller: :festivals
   end
 
-  resources :timetables, only: [:index]
+  resources :timetables, only: [ :index ]
 
-  resources :festivals, only: [:index, :show] do
-    resources :artists, only: [:index], controller: :artists
+  resources :festivals, only: [ :index, :show ] do
+    resources :artists, only: [ :index ], controller: :artists
     member do
       get :timetable
       # マイタイムテーブル（作成→保存→表示）
