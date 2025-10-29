@@ -137,6 +137,23 @@
         </div>
       </section>
 
+      <% if @timetable_owner == current_user %>
+        <% share_text = "FES READYで #{@festival.name} のマイタイムテーブルを作成！" %>
+        <% share_link = my_timetable_festival_url(@festival,
+                                                  date: @selected_day.date.to_s,
+                                                  user_id: current_user.id) %>
+        <% share_href = "https://twitter.com/intent/tweet?text=#{ERB::Util.url_encode(share_text + "\n")}&url=#{ERB::Util.url_encode(share_link)}" %>
+        <div class="mt-6 flex justify-center">
+          <%= link_to share_href,
+                      class: "inline-flex items-center justify-center gap-2 rounded-2xl bg-black px-5 py-2.5 text-sm font-bold text-white shadow-md interactive-lift hover:bg-neutral-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black",
+                      target: "_blank",
+                      rel: "noopener" do %>
+            <%= image_tag "x-logo.png", alt: "X", class: "h-4 w-4" %>
+            <span>でシェアする</span>
+          <% end %>
+        </div>
+      <% end %>
+
       <% if @performances_without_stage.present? %>
         <section class="rounded-3xl border border-dashed border-slate-300 bg-white/80 p-4 shadow-sm">
           <h2 class="text-sm font-bold text-slate-700">ステージ未設定の出演</h2>
