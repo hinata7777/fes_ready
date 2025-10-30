@@ -24,6 +24,10 @@ class Festival < ApplicationRecord
   validates :official_url, allow_blank: true,
             format: { with: VALID_URL, message: "は http/https の正しいURL形式で入力してください" }
 
+  def to_param
+    slug.presence || super
+  end
+
   def timetable_days
     festival_days.order(:date)
   end

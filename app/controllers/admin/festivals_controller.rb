@@ -55,7 +55,7 @@ class Admin::FestivalsController < Admin::BaseController
   private
 
   def set_festival
-    @festival = Festival.find(params[:id])
+    @festival = Festival.find_by!(slug: params[:id])
   end
 
   # 1ページ目（基本情報のみ）

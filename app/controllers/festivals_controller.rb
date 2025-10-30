@@ -98,7 +98,7 @@ class FestivalsController < ApplicationController
   private
 
   def set_festival
-    @festival = Festival.includes(:festival_days, :stages).find(params[:id])
+    @festival = Festival.includes(:festival_days, :stages).find_by!(slug: params[:id])
   end
 
   def ensure_timetable_published!
