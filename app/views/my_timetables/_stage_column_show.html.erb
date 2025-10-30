@@ -43,7 +43,14 @@
              "interactive-lift",
              opacity_class
            ].reject(&:blank?).join(" ") %>
-        <%= link_to artist_path(performance.artist),
+        <% artist_link_params = {
+             from: "my_timetable",
+             festival_id: @festival.slug,
+             date: @selected_day&.date&.to_s
+           } %>
+        <% artist_link_params.compact! %>
+        <% artist_link_params[:user_id] = params[:user_id] if params[:user_id].present? %>
+        <%= link_to artist_path(performance.artist, artist_link_params),
                     class: label_classes,
                     data: { controller: "tap-feedback" },
                     style: "top: #{block.top_percent}%; height: #{block.height_percent}%; background-color: #{block_bg_color}; color: #{block_text_color}; border: 1px solid #{border_color};" do %>
