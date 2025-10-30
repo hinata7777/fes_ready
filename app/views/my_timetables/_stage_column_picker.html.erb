@@ -38,8 +38,15 @@
                              picked_ids.include?(performance.id),
                              id: input_id,
                              class: "peer sr-only" %>
+          <span class="pointer-events-none absolute right-1 top-1 z-20 flex items-center justify-center rounded-full bg-white/95 p-[2px] opacity-0 shadow-sm transition transform scale-75 peer-checked:opacity-100 peer-checked:scale-100">
+            <%= image_tag "icons/check_mark.svg",
+                          alt: "",
+                          width: 18,
+                          height: 18,
+                          class: "h-4 w-4" %>
+          </span>
           <label for="<%= input_id %>"
-                 class="flex h-full cursor-pointer flex-col justify-start gap-px rounded-md border border-white/50 px-1.5 py-1 text-left text-[11px] font-semibold shadow-sm transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 peer-checked:border-2 peer-checked:border-rose-500 peer-checked:shadow-lg interactive-lift sm:px-2.5 sm:py-2 sm:text-xs"
+                 class="group flex h-full w-full cursor-pointer flex-col justify-start gap-px rounded-md border border-white/50 px-1.5 py-1 text-left text-[11px] font-semibold shadow-sm transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 peer-checked:border-white peer-checked:shadow-lg peer-checked:ring-2 peer-checked:ring-white/80 interactive-lift sm:px-2.5 sm:py-2 sm:text-xs"
                  data-controller="tap-feedback"
                  style="background-color: <%= hex %>; color: <%= text_color %>;">
             <div class="font-mono text-[9px] font-medium leading-none opacity-90 sm:text-[10px]">
