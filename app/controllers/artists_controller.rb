@@ -1,6 +1,6 @@
 class ArtistsController < ApplicationController
   def index
-    @festival = Festival.find_by(id: params[:festival_id])
+    @festival = Festival.find_by(slug: params[:festival_id])
 
     base =
     if @festival
