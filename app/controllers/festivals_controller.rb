@@ -1,4 +1,5 @@
 class FestivalsController < ApplicationController
+  before_action :set_header_back_path, only: [ :index, :show, :timetable ]
   before_action :set_festival, only: [ :show, :timetable ]
   before_action :ensure_timetable_published!, only: :timetable
 
@@ -121,5 +122,15 @@ class FestivalsController < ApplicationController
       end
 
     scoped.distinct
+  end
+
+  def set_header_back_path
+    if params[:from] == "artist_festivals" && params[:artist_id].present?
+      @header_back_path = artist_festivals_path(params[:artist_id])
+    elsif params[:artist_id].present?
+      @header_back_path = artist_path(params[:artist_id])
+    elsif params[:from] == "timetables"
+      @header_back_path = timetables_path
+    end
   end
 end

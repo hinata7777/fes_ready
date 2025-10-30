@@ -1,5 +1,6 @@
 module ApplicationHelper
   include Pagy::Frontend
+  include NavigationHelper
 
   def flash_class(key)
     case key.to_sym
