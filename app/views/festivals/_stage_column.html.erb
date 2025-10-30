@@ -30,7 +30,12 @@
               column_height: column_height
             ) %>
         <% next unless block %>
-        <%= link_to artist_path(performance.artist),
+        <% artist_link_params = {
+             from: "festival_timetable",
+             festival_id: @festival.slug,
+             date: @selected_day&.date&.to_s
+           }.compact %>
+        <%= link_to artist_path(performance.artist, artist_link_params),
                     class: "absolute inset-x-1.5 rounded-md px-2 py-1 text-[11px] font-semibold shadow-sm interactive-lift sm:inset-x-2 sm:px-3 sm:py-2 sm:text-xs",
                     data: { controller: "tap-feedback" },
                     style: "top: #{block.top_percent}%; height: #{block.height_percent}%; background-color: #{hex}; color: #{text_color};" do %>

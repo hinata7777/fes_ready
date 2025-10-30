@@ -18,6 +18,15 @@ module NavigationHelper
   private
 
   def festivals_back_path
+    case params[:from]
+    when "artist_festivals"
+      return artist_festivals_path(params[:artist_id]) if params[:artist_id].present?
+    when "timetables"
+      return timetables_path
+    end
+
+    return artist_path(params[:artist_id]) if params[:artist_id].present?
+
     case action_name
     when "index" then root_path
     when "timetable" then festival_path(params[:id])
@@ -27,6 +36,13 @@ module NavigationHelper
   end
 
   def artists_back_path
+    case params[:from]
+    when "festival_timetable"
+      return timetable_back_path if params[:festival_id].present?
+    when "my_timetable"
+      return my_timetable_back_path
+    end
+
     return festival_path(params[:festival_id]) if params[:festival_id].present?
 
     case action_name
@@ -34,6 +50,20 @@ module NavigationHelper
     else
       artists_path
     end
+  end
+
+  def timetable_back_path
+    options = {}
+    options[:date] = params[:date] if params[:date].present?
+    timetable_festival_path(params[:festival_id], options)
+  end
+
+  def my_timetable_back_path
+    return root_path if params[:festival_id].blank?
+    options = {}
+    options[:date] = params[:date] if params[:date].present?
+    options[:user_id] = params[:user_id] if params[:user_id].present?
+    my_timetable_festival_path(params[:festival_id], options)
   end
 
   def my_timetables_back_path
