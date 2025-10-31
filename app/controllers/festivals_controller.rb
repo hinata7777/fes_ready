@@ -24,6 +24,9 @@ class FestivalsController < ApplicationController
     @festival_days = @festival.timetable_days
     raise ActiveRecord::RecordNotFound if @festival_days.blank?
 
+    @timetable_query_params =
+      params.permit(:from, :artist_id, :festival_id, :user_id).to_h
+
     @selected_day =
       if params[:date].present?
         begin
