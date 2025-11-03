@@ -9,6 +9,8 @@
     <%= csp_meta_tag %>
 
     <meta property="og:site_name" content="FES READY">
+    <meta property="og:title" content="<%= content_for(:title) || 'FES READY' %>">
+    <meta name="twitter:title" content="<%= content_for(:title) || 'FES READY' %>">
     <meta property="og:image" content="<%= image_url('fesready_ogp.png') %>">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:image" content="<%= image_url('fesready_ogp.png') %>">
