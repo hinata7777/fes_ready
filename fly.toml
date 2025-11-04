@@ -5,9 +5,13 @@ app = "fes-ready"
 [deploy]
   release_command = "./bin/rails db:prepare"
 
+[processes]
+  app = "bash -lc 'bundle exec puma -C config/puma.rb'"
+
 [[services]]
   internal_port = 3000
   protocol = "tcp"
+  processes = ["app"]
 
   [[services.ports]]
     port = 80
