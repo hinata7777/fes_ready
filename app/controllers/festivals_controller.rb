@@ -125,5 +125,4 @@ class FestivalsController < ApplicationController
 
     scoped.distinct
   end
-
 end
