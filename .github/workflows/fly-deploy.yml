@@ -1,18 +1,36 @@
-# See https://fly.io/docs/app-guides/continuous-deployment-with-github-actions/
+name: Deploy to Fly.io
 
-name: Fly Deploy
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]      # mainにpush/mergeで自動デプロイ
+  workflow_dispatch:         # 手動実行も可能に
+
 jobs:
   deploy:
     name: Deploy app
     runs-on: ubuntu-latest
-    concurrency: deploy-group    # optional: ensure only one action runs at a time
+
+    # 同一ブランチでの並行デプロイを抑止（古い実行はキャンセル）
+    concurrency:
+      group: fly-${{ github.ref }}
+      cancel-in-progress: true
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: superfly/flyctl-actions/setup-flyctl@master
-      - run: flyctl deploy --remote-only
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # setup-flyctl は安定版 tag（v2）を使用
+      - name: Set up flyctl
+        uses: superfly/flyctl-actions/setup-flyctl@v2
+
+      - name: Deploy to Fly.io
         env:
-          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+          FLY_API_TOKEN:    ${{ secrets.FLY_API_TOKEN }}   # 必須：fly tokens create deploy で作成
+          FLY_APP_NAME:     ${{ secrets.FLY_APP_NAME }}    # 推奨：アプリ名（例：fes-ready）
+          RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}# 必要なら（assetsやinitでcredentials読む場合）
+        run: |
+          flyctl deploy \
+            --app "$FLY_APP_NAME" \
+            --remote-only \
+            --image-label "${GITHUB_SHA}" \
+            --build-secret RAILS_MASTER_KEY="${RAILS_MASTER_KEY}"
