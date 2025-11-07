@@ -21,7 +21,7 @@ jobs:
 
       # setup-flyctl は安定版 tag（v2）を使用
       - name: Set up flyctl
-        uses: superfly/flyctl-actions/setup-flyctl@v2
+        uses: superfly/flyctl-actions/setup-flyctl@master
 
       - name: Deploy to Fly.io
         env:
