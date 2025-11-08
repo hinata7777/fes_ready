@@ -134,4 +134,8 @@ https://www.figma.com/design/kpkzJnx15fiFkZp8c7443Y/FES-READY_%E7%94%BB%E9%9D%A2
 
 ## **ER図**
 
+### **MVPリリースまで**
 ![alt text](FESREADY_MVP_ER図.png)
+
+### **本リリースまで**
+![alt text](FESREADY_本リリース_ER図.png)
