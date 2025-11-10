@@ -1,3 +1,5 @@
+require "securerandom"
+
 class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
@@ -12,7 +14,19 @@ class User < ApplicationRecord
   has_many :user_timetable_entries, dependent: :destroy
   has_many :my_stage_performances, through: :user_timetable_entries, source: :stage_performance
 
+  before_create :ensure_uuid!
+
   def picked?(stage_performance)
     user_timetable_entries.exists?(stage_performance_id: stage_performance.id)
+  end
+
+  def to_param
+    uuid
+  end
+
+  private
+
+  def ensure_uuid!
+    self.uuid ||= SecureRandom.uuid
   end
 end

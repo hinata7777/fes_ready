@@ -46,7 +46,7 @@
       </p>
     </header>
 
-    <%= form_with url: my_timetable_festival_path(@festival, date: @selected_day.date.to_s, user_id: current_user.id),
+    <%= form_with url: my_timetable_festival_path(@festival, date: @selected_day.date.to_s, user_id: current_user.uuid),
                   method: :post,
                   class: "flex flex-col gap-6" do %>
       <section class="rounded-3xl border border-slate-200 bg-gradient-to-b from-slate-100 via-white to-slate-100 p-3 shadow-lg shadow-slate-200/60 sm:p-4">

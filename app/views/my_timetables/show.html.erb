@@ -148,7 +148,7 @@
         <% share_text = "FES READYで #{@festival.name} のマイタイムテーブルを作成しました！" %>
         <% share_link = my_timetable_festival_url(@festival,
                                                   date: @selected_day.date.to_s,
-                                                  user_id: current_user.id) %>
+                                                  user_id: current_user.uuid) %>
         <% share_href = "https://twitter.com/intent/tweet?text=#{ERB::Util.url_encode(share_text + "\n")}&url=#{ERB::Util.url_encode(share_link)}" %>
         <div class="mt-6 flex justify-center">
           <%= link_to share_href,

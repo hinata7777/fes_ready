@@ -49,7 +49,8 @@
              date: @selected_day&.date&.to_s
            } %>
         <% artist_link_params.compact! %>
-        <% artist_link_params[:user_id] = params[:user_id] if params[:user_id].present? %>
+        <% owner_identifier = params[:user_id].presence || @timetable_owner&.uuid %>
+        <% artist_link_params[:user_id] = owner_identifier if owner_identifier.present? %>
         <%= link_to artist_path(performance.artist, artist_link_params),
                     class: label_classes,
                     data: { controller: "tap-feedback" },
