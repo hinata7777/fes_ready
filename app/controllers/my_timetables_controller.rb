@@ -42,7 +42,7 @@ class MyTimetablesController < ApplicationController
       end
     end
 
-    redirect_to my_timetable_festival_path(@festival, date: @selected_day.date.to_s, user_id: current_user.id),
+    redirect_to my_timetable_festival_path(@festival, date: @selected_day.date.to_s, user_id: current_user.uuid),
                 notice: "マイタイムテーブルを保存しました。"
   end
 
@@ -104,12 +104,17 @@ class MyTimetablesController < ApplicationController
   def set_timetable_owner!
     @timetable_owner =
       if params[:user_id].present?
-        User.find(params[:user_id])
+        find_user_by_identifier!(params[:user_id])
       elsif user_signed_in?
         current_user
       else
         raise ActiveRecord::RecordNotFound
       end
+  end
+
+  def find_user_by_identifier!(identifier)
+    user = User.find_by(uuid: identifier) || User.find_by(id: identifier)
+    user || raise(ActiveRecord::RecordNotFound)
   end
 
   def prepare_timetable_context!
