@@ -109,10 +109,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_09_063637) do
     t.datetime "remember_created_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.uuid "uuid", default: -> { "gen_random_uuid()" }, null: false
+    t.uuid "uuid"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
-    t.index ["uuid"], name: "index_users_on_uuid", unique: true
   end
 
   add_foreign_key "festival_days", "festivals"
