@@ -3,7 +3,7 @@ class FestivalsController < ApplicationController
   before_action :ensure_timetable_published!, only: :timetable
 
   def index
-    @artist = Artist.find(params[:artist_id]) if params[:artist_id].present?
+    @artist = find_artist_by_identifier!(params[:artist_id]) if params[:artist_id].present?
 
     @status = params[:status]
     @status = "upcoming" unless %w[upcoming past].include?(@status)
@@ -124,5 +124,9 @@ class FestivalsController < ApplicationController
       end
 
     scoped.distinct
+  end
+
+  def find_artist_by_identifier!(identifier)
+    Artist.find_by(uuid: identifier) || Artist.find(identifier)
   end
 end

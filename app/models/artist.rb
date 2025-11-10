@@ -1,9 +1,13 @@
+require "securerandom"
+
 class Artist < ApplicationRecord
   validates :name, presence: true
 
   has_many :stage_performances, dependent: :destroy
   has_many :festival_days, through: :stage_performances
   has_many :festivals, -> { distinct }, through: :festival_days
+
+  before_create :ensure_uuid!
 
   def self.ransackable_attributes(_ = nil); %w[name]; end
   def self.ransackable_associations(_ = nil); []; end
@@ -18,4 +22,14 @@ class Artist < ApplicationRecord
            uniqueness: { allow_nil: true }
 
   # 将来: has_many :performances など
+
+  def to_param
+    uuid
+  end
+
+  private
+
+  def ensure_uuid!
+    self.uuid ||= SecureRandom.uuid
+  end
 end
