@@ -34,6 +34,12 @@ class ArtistsController < ApplicationController
   end
 
   def show
-    @artist = Artist.find(params[:id])
+    @artist = find_artist_by_identifier!(params[:id])
+  end
+
+  private
+
+  def find_artist_by_identifier!(identifier)
+    Artist.find_by(uuid: identifier) || Artist.find(identifier)
   end
 end
