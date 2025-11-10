@@ -1,27 +1,37 @@
+# db/migrate/20251109063637_add_uuid_to_users.rb
 class AddUuidToUsers < ActiveRecord::Migration[8.0]
   def up
-    # gen_random_uuid() を使うための拡張（DBに1回だけ有効化すればOK）
+    # gen_random_uuid() を使うための拡張（冪等）
     enable_extension "pgcrypto" unless extension_enabled?("pgcrypto")
 
-    # 1) まず追加（NULL許容・defaultなし）
-    add_column :users, :uuid, :uuid
+    # users.uuid カラムを追加（存在しない場合のみ）
+    unless column_exists?(:users, :uuid, :uuid)
+      add_column :users, :uuid, :uuid
+    end
 
-    # 2) 既存レコードそれぞれにUUID採番（行ごとに関数が評価されて全員ユニークになる）
-    execute "UPDATE users SET uuid = gen_random_uuid() WHERE uuid IS NULL;"
+    # 既存レコードにUUIDを採番（NULLのものだけ）
+    execute <<~SQL
+      UPDATE users
+      SET uuid = gen_random_uuid()
+      WHERE uuid IS NULL;
+    SQL
 
-    # 3) 空欄禁止
+    # NOT NULL 制約
     change_column_null :users, :uuid, false
 
-    # 4) 今後のINSERTは自動採番
-    change_column_default :users, :uuid, "gen_random_uuid()"
+    # 以降のINSERTは自動採番（★ProcでSQL関数を渡す）
+    change_column_default :users, :uuid, -> { "gen_random_uuid()" }
 
-    # 5) 重複禁止（ユニークインデックス）
-    add_index :users, :uuid, unique: true, name: "index_users_on_uuid"
+    # ユニークインデックス（未作成なら）
+    unless index_exists?(:users, :uuid, name: "index_users_on_uuid", unique: true)
+      add_index :users, :uuid, unique: true, name: "index_users_on_uuid"
+    end
   end
 
   def down
-    remove_index :users, name: "index_users_on_uuid"
-    change_column_default :users, :uuid, nil
-    remove_column :users, :uuid
+    # 逆順で安全に戻す
+    remove_index :users, name: "index_users_on_uuid" if index_exists?(:users, :uuid, name: "index_users_on_uuid")
+    change_column_default :users, :uuid, nil if column_exists?(:users, :uuid)
+    remove_column :users, :uuid if column_exists?(:users, :uuid)
   end
 end
