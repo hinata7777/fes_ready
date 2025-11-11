@@ -31,8 +31,8 @@ class TimelineLayoutPresenter
     @timeline_end   = timeline_end
     @timezone       = timezone
     @hour_height_px = hour_height_px
-    @duration_seconds = [((timeline_end - timeline_start) / 1.second).to_i, 3600].max
-    @column_height_px = [(@duration_seconds / 3600.0) * hour_height_px, hour_height_px].max
+    @duration_seconds = [ ((timeline_end - timeline_start) / 1.second).to_i, 3600 ].max
+    @column_height_px = [ (@duration_seconds / 3600.0) * hour_height_px, hour_height_px ].max
   end
 
   def column_height_px
@@ -76,16 +76,16 @@ class TimelineLayoutPresenter
     end_time = align_time_to_day(performance.ends_at) || start_time + 30.minutes
     return if end_time <= timeline_start || start_time >= timeline_end
 
-    clipped_start = [start_time, timeline_start].max
-    clipped_end   = [end_time, timeline_end].min
+    clipped_start = [ start_time, timeline_start ].max
+    clipped_end   = [ end_time, timeline_end ].min
     return if clipped_end <= clipped_start
 
     total_minutes = duration_minutes
-    duration_minutes_value = [((clipped_end - clipped_start) / 60.0), 15].max
-    offset_minutes = [((clipped_start - timeline_start) / 60.0), 0].max
+    duration_minutes_value = [ ((clipped_end - clipped_start) / 60.0), 15 ].max
+    offset_minutes = [ ((clipped_start - timeline_start) / 60.0), 0 ].max
 
     top_percent = percent(offset_minutes / total_minutes)
-    remaining_percent = [100 - top_percent, 0].max
+    remaining_percent = [ 100 - top_percent, 0 ].max
     block_percent = percent(duration_minutes_value / total_minutes)
 
     min_block_height_px = 24.0
@@ -94,12 +94,12 @@ class TimelineLayoutPresenter
 
     adjusted_percent =
       if block_height_px < min_block_height_px
-        [min_height_percent, remaining_percent].min
+        [ min_height_percent, remaining_percent ].min
       else
         block_percent
       end
 
-    height_percent = [adjusted_percent, remaining_percent].min
+    height_percent = [ adjusted_percent, remaining_percent ].min
 
     PerformanceBlock.new(
       top_percent: top_percent,
