@@ -1,8 +1,3 @@
-<% raw_total_seconds = ((@timeline_end - @timeline_start) / 1.second).to_i %>
-<% total_seconds = [raw_total_seconds, 3600].max %>
-<% hour_height = 90 %>
-<% column_height = [total_seconds / 3600.0 * hour_height, hour_height].max %>
-
 <div class="min-h-screen px-4 pb-24 pt-6">
   <div class="mx-auto flex max-w-6xl flex-col gap-6">
     <header class="rounded-3xl border border-slate-200 bg-gradient-to-b from-indigo-100 via-white to-slate-100 p-6 shadow-lg shadow-slate-200/60">
@@ -78,44 +73,22 @@
           <div class="flex items-start gap-2 md:gap-3">
             <div class="flex flex-shrink-0 flex-col items-center">
               <div class="h-10 w-14 sm:h-12 sm:w-16"></div>
+              <% marker_lines = @timeline_layout.marker_lines(@time_markers) %>
+              <% marker_labels = @timeline_layout.marker_labels(@time_markers) %>
               <div class="relative w-14 rounded-xl border border-slate-200 bg-white/80 text-[10px] font-semibold text-slate-600 sm:w-16 sm:text-[11px]"
-                   style="height: <%= column_height %>px;">
-                <% @time_markers.each do |marker| %>
-                  <% next if marker <= @timeline_start %>
-                  <% marker_offset_seconds = ((marker - @timeline_start) / 1.second).to_f %>
-                  <% offset_ratio = marker_offset_seconds / total_seconds.to_f %>
-                  <% next if offset_ratio.negative? || offset_ratio > 1 %>
+                   style="height: <%= @timeline_layout.column_height_px %>px;">
+                <% marker_lines.each do |line| %>
                   <div class="absolute inset-x-0 border-t border-slate-200/70"
-                       style="top: <%= offset_ratio * 100 %>%;"></div>
+                       style="top: <%= line.top_percent %>%;"></div>
                 <% end %>
-                <% marker_count = @time_markers.length %>
-                <% @time_markers.each_with_index do |marker, index| %>
-                  <% marker_offset_seconds = ((marker - @timeline_start) / 1.second).to_f %>
-                  <% offset_ratio = marker_offset_seconds / total_seconds.to_f %>
-                  <% next if offset_ratio.negative? || offset_ratio > 1 %>
-                  <% top_percent = offset_ratio * 100 %>
-                  <% base_classes = "absolute inset-x-0 text-center pointer-events-none" %>
-                  <% if index.zero? %>
-                    <div class="<%= [base_classes, 'translate-y-0'].join(' ') %>"
-                         style="top: <%= top_percent %>%;">
-                      <span class="inline-block rounded bg-white/90 px-[3px] py-0.5 font-mono text-[9px] text-slate-700 shadow-sm sm:px-1 sm:text-[10px]">
-                        <%= marker.in_time_zone(@timezone).strftime("%H:%M") %>
-                      </span>
-                    </div>
-                  <% else %>
-                    <% translation_class =
-                         if index == marker_count - 1
-                           '-translate-y-full'
-                         else
-                           '-translate-y-1/2'
-                         end %>
-                    <div class="<%= [base_classes, translation_class].join(' ') %>"
-                         style="top: <%= top_percent %>%;">
-                      <span class="inline-block rounded bg-white/90 px-[3px] py-0.5 font-mono text-[9px] text-slate-700 shadow-sm sm:px-1 sm:text-[10px]">
-                        <%= marker.in_time_zone(@timezone).strftime("%H:%M") %>
-                      </span>
-                    </div>
-                  <% end %>
+                <% base_classes = "absolute inset-x-0 text-center pointer-events-none" %>
+                <% marker_labels.each do |label| %>
+                  <div class="<%= [base_classes, label.css_translation_class].join(' ') %>"
+                       style="top: <%= label.top_percent %>%;">
+                    <span class="inline-block rounded bg-white/90 px-[3px] py-0.5 font-mono text-[9px] text-slate-700 shadow-sm sm:px-1 sm:text-[10px]">
+                      <%= label.formatted_time(@timezone) %>
+                    </span>
+                  </div>
                 <% end %>
               </div>
             </div>
@@ -126,12 +99,8 @@
                   <%= render "my_timetables/stage_column_show",
                              stage: stage,
                              performances: @performances_by_stage[stage.id],
-                             timeline_start: @timeline_start,
-                             timeline_end: @timeline_end,
                              time_markers: @time_markers,
-                             timezone: @timezone,
-                             total_seconds: total_seconds,
-                             column_height: column_height,
+                             timeline_layout: @timeline_layout,
                              selected_ids: @selected_performance_ids %>
                 <% end %>
               <% else %>

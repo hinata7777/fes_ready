@@ -1,9 +1,6 @@
+<% layout = timeline_layout || @timeline_layout %>
 <% hex = stage.color_hex %>
 <% text_color = stage_text_color(hex) %>
-<% total_seconds ||= ((timeline_end - timeline_start) / 1.second).to_i %>
-<% total_seconds = [total_seconds, 3600].max %>
-<% hour_height_px = 90 %>
-<% column_height ||= [total_seconds / 3600.0 * hour_height_px, hour_height_px].max %>
 
 <div class="flex h-full min-w-[90px] flex-1 flex-col rounded-xl bg-white shadow-sm sm:min-w-[150px]">
   <div class="flex h-10 items-center justify-center rounded-t-xl px-2 text-center text-[11px] font-semibold uppercase tracking-wide sm:h-12 sm:px-3 sm:text-xs"
@@ -11,28 +8,18 @@
     <%= stage.name %>
   </div>
   <div class="relative overflow-hidden rounded-b-xl border border-slate-200 bg-slate-50"
-       style="height: <%= column_height %>px;">
-    <% time_markers.each do |marker_time| %>
-      <% next if marker_time <= timeline_start %>
-      <% marker_offset_seconds = ((marker_time - timeline_start) / 1.second).to_f %>
-      <% offset = marker_offset_seconds / total_seconds.to_f %>
-      <% next if offset.negative? || offset > 1 %>
-      <div class="absolute inset-x-0 border-t border-slate-200/70" style="top: <%= offset * 100 %>%;"></div>
+       style="height: <%= layout.column_height_px %>px;">
+    <% layout.marker_lines(time_markers).each do |line| %>
+      <div class="absolute inset-x-0 border-t border-slate-200/70" style="top: <%= line.top_percent %>%;"></div>
     <% end %>
 
     <div class="relative h-full w-full">
       <% Array(performances).each do |performance| %>
-        <% block = timeline_performance_block(
-              performance,
-              timeline_start: timeline_start,
-              timeline_end: timeline_end,
-              timezone: timezone,
-              column_height: column_height
-            ) %>
+        <% block = layout.performance_block(performance) %>
         <% next unless block %>
         <% input_id = "stage-performance-#{performance.id}" %>
         <div class="absolute inset-x-1.5 sm:inset-x-2"
-             style="top: <%= block.top_percent %>%; height: <%= block.height_percent %>%;">
+             style="top: <%= block.top_percent %>%; height: <%= block.height_percent %>%">
           <%= check_box_tag "stage_performance_ids[]",
                              performance.id,
                              picked_ids.include?(performance.id),

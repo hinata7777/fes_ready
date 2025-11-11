@@ -136,47 +136,15 @@ class MyTimetablesController < ApplicationController
       @performances
         .select { |performance| performance.stage_id.blank? }
 
-    day_date  = @selected_day.date
-    day_start = @timezone.local(day_date.year, day_date.month, day_date.day).beginning_of_day
-    day_end   = day_start.end_of_day
+    timeline_context = TimelineContextBuilder.build(
+      festival: @festival,
+      selected_day: @selected_day,
+      timezone: @timezone
+    )
 
-    compose_time = lambda do |time|
-      next nil unless time
-      local = time.in_time_zone(@timezone)
-      @timezone.local(day_date.year, day_date.month, day_date.day, local.hour, local.min, local.sec)
-    rescue
-      nil
-    end
-
-    doors_at = compose_time.call(@selected_day.doors_at)
-    start_at = compose_time.call(@selected_day.start_at)
-    end_at   = compose_time.call(@selected_day.end_at)
-
-    default_start = doors_at || start_at || @timezone.local(day_date.year, day_date.month, day_date.day, 9, 0, 0)
-    default_end   = end_at || (start_at || default_start) + 8.hours
-
-    @timeline_start = [ [ default_start, day_start ].max, day_end ].min
-    @timeline_end   = [ [ default_end, day_start ].max, day_end ].min
-
-    if @timeline_end <= @timeline_start
-      @timeline_end = [ @timeline_start + 1.hour, day_end ].min
-    end
-
-    @time_markers = []
-    @time_markers << @timeline_start
-
-    marker =
-      if @timeline_start.min.zero? && @timeline_start.sec.zero?
-        @timeline_start + 1.hour
-      else
-        (@timeline_start + 1.hour).change(min: 0, sec: 0)
-      end
-
-    while marker <= @timeline_end
-      @time_markers << marker
-      marker += 1.hour
-    end
-
-    @time_markers << @timeline_end unless @time_markers.last == @timeline_end
+    @timeline_start = timeline_context.timeline_start
+    @timeline_end   = timeline_context.timeline_end
+    @time_markers   = timeline_context.time_markers
+    @timeline_layout = timeline_context.timeline_layout
   end
 end

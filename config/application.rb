@@ -15,6 +15,9 @@ module Myapp
     # not contain `.rb` files, or that should not be reloaded or eager loaded.
     # Common ones are `templates`, `generators`, or `middleware`, for example.
     config.autoload_lib(ignore: %w[assets tasks])
+    presenters_path = Rails.root.join("app/presenters")
+    config.autoload_paths << presenters_path
+    config.eager_load_paths << presenters_path
 
     config.i18n.available_locales = [ :ja, :en ]
     config.i18n.default_locale = :ja
