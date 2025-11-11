@@ -50,18 +50,18 @@ class TimelineContextBuilder
     default_start = doors_at || start_at || timezone.local(day_date.year, day_date.month, day_date.day, 9, 0, 0)
     default_end   = end_at || (start_at || default_start) + 8.hours
 
-    timeline_start = [[default_start, day_start].max, day_end].min
-    timeline_end   = [[default_end, day_start].max, day_end].min
+    timeline_start = [ [ default_start, day_start ].max, day_end ].min
+    timeline_end   = [ [ default_end, day_start ].max, day_end ].min
 
     if timeline_end <= timeline_start
-      timeline_end = [timeline_start + 1.hour, day_end].min
+      timeline_end = [ timeline_start + 1.hour, day_end ].min
     end
 
-    [timeline_start, timeline_end]
+    [ timeline_start, timeline_end ]
   end
 
   def build_markers(timeline_start, timeline_end)
-    markers = [timeline_start]
+    markers = [ timeline_start ]
 
     marker =
       if timeline_start.min.zero? && timeline_start.sec.zero?
