@@ -1,42 +1,10 @@
 <div class="min-h-screen px-4 pb-24 pt-6">
   <div class="mx-auto flex max-w-6xl flex-col gap-6">
-    <header class="rounded-3xl border border-slate-200 bg-gradient-to-b from-sky-100 via-slate-100 to-white p-6 shadow-lg shadow-slate-200/60">
-      <p class="text-xs font-semibold uppercase tracking-[0.3em] text-slate-500">タイムテーブル</p>
-      <h1 class="mt-2 text-2xl font-extrabold text-slate-900"><%= @festival.name %></h1>
-
-      <div class="mt-4 flex flex-wrap items-center gap-4 text-sm text-slate-600">
-        <div class="flex flex-wrap items-center gap-3">
-          <div>
-            <span class="text-xs font-semibold uppercase tracking-wide text-slate-500">日付</span>
-            <div class="text-base font-semibold text-slate-900"><%= format_date_with_weekday(@selected_day.date) %></div>
-          </div>
-          <div class="flex items-center gap-4 text-xs">
-            <div>
-              <span class="font-semibold uppercase tracking-wide text-slate-500">開場</span>
-              <div class="font-mono text-sm text-slate-800">
-                <%= @selected_day.doors_at ? @selected_day.doors_at.in_time_zone(@timezone).strftime("%H:%M") : "—" %>
-              </div>
-            </div>
-            <div>
-              <span class="font-semibold uppercase tracking-wide text-slate-500">開演</span>
-              <div class="font-mono text-sm text-slate-800">
-                <%= @selected_day.start_at ? @selected_day.start_at.in_time_zone(@timezone).strftime("%H:%M") : "—" %>
-              </div>
-            </div>
-            <div>
-              <span class="font-semibold uppercase tracking-wide text-slate-500">終演</span>
-              <div class="font-mono text-sm text-slate-800">
-                <%= @selected_day.end_at ? @selected_day.end_at.in_time_zone(@timezone).strftime("%H:%M") : "—" %>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <% if @selected_day.note.present? %>
-        <p class="mt-4 text-xs text-slate-600"><%= @selected_day.note %></p>
-      <% end %>
-
+    <%= render "shared/timetable_header",
+               title: "タイムテーブル",
+               festival_name: @festival.name,
+               selected_day: @selected_day,
+               timezone: @timezone do %>
       <div class="mt-6 flex justify-center">
         <div class="inline-flex overflow-hidden rounded-xl bg-white p-1 shadow-md">
           <% @festival_days.each do |day| %>
@@ -61,7 +29,7 @@
                       data: { controller: "tap-feedback" } %>
         </div>
       <% end %>
-    </header>
+    <% end %>
 
     <section class="rounded-3xl border border-slate-200 bg-gradient-to-b from-slate-100 via-white to-slate-100 p-3 shadow-lg shadow-slate-200/60 sm:p-4">
       <div class="overflow-x-auto overflow-y-hidden">
