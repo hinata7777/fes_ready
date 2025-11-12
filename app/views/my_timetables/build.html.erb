@@ -13,50 +13,22 @@
     <%= form_with url: my_timetable_festival_path(@festival, date: @selected_day.date.to_s, user_id: current_user.uuid),
                   method: :post,
                   class: "flex flex-col gap-6" do %>
-      <section class="rounded-3xl border border-slate-200 bg-gradient-to-b from-slate-100 via-white to-slate-100 p-3 shadow-lg shadow-slate-200/60 sm:p-4">
-        <div class="overflow-x-auto overflow-y-hidden">
-          <div class="flex items-start gap-2 md:gap-3">
-            <div class="flex flex-shrink-0 flex-col items-center">
-              <div class="h-10 w-14 sm:h-12 sm:w-16"></div>
-              <% marker_lines = @timeline_layout.marker_lines(@time_markers) %>
-              <% marker_labels = @timeline_layout.marker_labels(@time_markers) %>
-              <div class="relative w-14 rounded-xl border border-slate-200 bg-white/80 text-[10px] font-semibold text-slate-600 sm:w-16 sm:text-[11px]"
-                   style="height: <%= @timeline_layout.column_height_px %>px;">
-                <% marker_lines.each do |line| %>
-                  <div class="absolute inset-x-0 border-t border-slate-200/70"
-                       style="top: <%= line.top_percent %>%;"></div>
-                <% end %>
-                <% base_classes = "absolute inset-x-0 text-center pointer-events-none" %>
-                <% marker_labels.each do |label| %>
-                  <div class="<%= [base_classes, label.css_translation_class].join(' ') %>"
-                       style="top: <%= label.top_percent %>%;">
-                    <span class="inline-block rounded bg-white/90 px-[3px] py-0.5 font-mono text-[9px] text-slate-700 shadow-sm sm:px-1 sm:text-[10px]">
-                      <%= label.formatted_time(@timezone) %>
-                    </span>
-                  </div>
-                <% end %>
-              </div>
-            </div>
+      <% stage_renderer = ->(stage) do
+           render "stage_column_picker",
+                  stage: stage,
+                  performances: @performances_by_stage[stage.id],
+                  time_markers: @time_markers,
+                  timeline_layout: @timeline_layout,
+                  picked_ids: @picked_ids
+         end %>
 
-            <div class="flex flex-1 gap-2 md:gap-3">
-              <% if @stages.any? %>
-                <% @stages.each do |stage| %>
-                  <%= render "stage_column_picker",
-                             stage: stage,
-                             performances: @performances_by_stage[stage.id],
-                             time_markers: @time_markers,
-                             timeline_layout: @timeline_layout,
-                             picked_ids: @picked_ids %>
-                <% end %>
-              <% else %>
-                <div class="flex h-full min-h-[320px] flex-1 items-center justify-center rounded-2xl border border-dashed border-slate-300 bg-white/70 px-6 py-12 text-center text-sm text-slate-500">
-                  登録されたステージがありません
-                </div>
-              <% end %>
-            </div>
-          </div>
-        </div>
-      </section>
+      <%= render "shared/timetable_board",
+                 stages: @stages,
+                 time_markers: @time_markers,
+                 timeline_layout: @timeline_layout,
+                 timezone: @timezone,
+                 empty_message: "登録されたステージがありません",
+                 stage_renderer: stage_renderer %>
 
       <% if @performances_without_stage.present? %>
         <section class="rounded-3xl border border-dashed border-slate-300 bg-white/80 p-4 shadow-sm">
@@ -94,7 +66,7 @@
         </section>
       <% end %>
 
-      <div class="flex justify-end">
+      <div class="flex justify-center">
         <%= submit_tag "保存する",
                        class: "inline-flex items-center justify-center rounded-2xl bg-indigo-500 px-6 py-3 text-sm font-bold text-white shadow-md interactive-lift hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500" %>
       </div>
