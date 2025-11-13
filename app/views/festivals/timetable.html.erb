@@ -32,11 +32,14 @@
     <% end %>
 
     <% stage_renderer = ->(stage) do
-         render "stage_column",
-                stage: stage,
-                performances: @performances_by_stage[stage.id],
-                time_markers: @time_markers,
-                timeline_layout: @timeline_layout
+         render StageColumns::FestivalComponent.new(
+           stage: stage,
+           performances: @performances_by_stage[stage.id],
+           time_markers: @time_markers,
+           timeline_layout: @timeline_layout,
+           festival: @festival,
+           selected_day: @selected_day
+         )
        end %>
 
     <%= render "shared/timetable_board",

@@ -23,6 +23,8 @@ gem "jbuilder"
 
 gem "inline_svg", "~> 1.9"
 
+gem "view_component"
+
 gem "devise"
 # 日本語化
 gem "rails-i18n"

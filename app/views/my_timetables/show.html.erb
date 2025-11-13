@@ -38,13 +38,18 @@
         </div>
       <% end %>
 
+      <% timetable_owner_identifier = params[:user_id].presence || @timetable_owner&.uuid %>
       <% stage_renderer = ->(stage) do
-           render "my_timetables/stage_column_show",
-                  stage: stage,
-                  performances: @performances_by_stage[stage.id],
-                  time_markers: @time_markers,
-                  timeline_layout: @timeline_layout,
-                  selected_ids: @selected_performance_ids
+           render StageColumns::ShowComponent.new(
+             stage: stage,
+             performances: @performances_by_stage[stage.id],
+             time_markers: @time_markers,
+             timeline_layout: @timeline_layout,
+             festival: @festival,
+             selected_day: @selected_day,
+             selected_ids: @selected_performance_ids,
+             owner_identifier: timetable_owner_identifier
+           )
          end %>
 
       <%= render "shared/timetable_board",
