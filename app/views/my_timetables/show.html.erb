@@ -52,13 +52,14 @@
            )
          end %>
 
-      <%= render "shared/timetable_board",
-                 stages: @stages,
-                 time_markers: @time_markers,
-                 timeline_layout: @timeline_layout,
-                 timezone: @timezone,
-                 empty_message: "ステージ情報がありません。",
-                 stage_renderer: stage_renderer %>
+      <%= render Shared::TimetableBoardComponent.new(
+               stages: @stages,
+               time_markers: @time_markers,
+               timeline_layout: @timeline_layout,
+               timezone: @timezone,
+               empty_message: "ステージ情報がありません。",
+               stage_renderer: stage_renderer
+             ) %>
 
       <% if @timetable_owner == current_user %>
         <% share_text = "FES READYで #{@festival.name} のマイタイムテーブルを作成しました！" %>
