@@ -9,7 +9,7 @@ module Shared
     end
 
     def call
-      search_form_for(query, url: url, method: :get, html: { class: "mb-6" }) do |f|
+      helpers.search_form_for(query, url: url, method: :get, html: { class: "mb-6" }) do |f|
         content_tag(:div, class: "flex flex-nowrap items-center gap-2") do
           safe_join([ status_field, hidden_field_elements, search_input(f), submit_button(f) ].compact)
         end
@@ -23,14 +23,14 @@ module Shared
     def status_field
       return unless status.present?
 
-      hidden_field_tag(:status, status)
+      helpers.hidden_field_tag(:status, status)
     end
 
     def hidden_field_elements
       return if hidden_fields.blank?
 
       fields = hidden_fields.map do |key, value|
-        hidden_field_tag(key, value)
+        helpers.hidden_field_tag(key, value)
       end
       safe_join(fields)
     end
