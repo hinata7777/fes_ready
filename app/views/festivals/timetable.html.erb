@@ -1,10 +1,11 @@
 <div class="min-h-screen px-4 pb-24 pt-6">
   <div class="mx-auto flex max-w-6xl flex-col gap-6">
-    <%= render "shared/timetable_header",
-               title: "タイムテーブル",
-               festival_name: @festival.name,
-               selected_day: @selected_day,
-               timezone: @timezone do %>
+    <%= render Shared::TimetableHeaderComponent.new(
+                 title: "タイムテーブル",
+                 festival_name: @festival.name,
+                 selected_day: @selected_day,
+                 timezone: @timezone
+               ) do %>
       <div class="mt-6 flex justify-center">
         <div class="inline-flex overflow-hidden rounded-xl bg-white p-1 shadow-md">
           <% @festival_days.each do |day| %>
