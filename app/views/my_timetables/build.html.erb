@@ -1,10 +1,11 @@
 <div class="min-h-screen px-4 pb-24 pt-6">
   <div class="mx-auto flex max-w-6xl flex-col gap-6">
-    <%= render "shared/timetable_header",
-               title: "マイタイムテーブル作成",
-               festival_name: @festival.name,
-               selected_day: @selected_day,
-               timezone: @timezone do %>
+    <%= render Shared::TimetableHeaderComponent.new(
+                 title: "マイタイムテーブル作成",
+                 festival_name: @festival.name,
+                 selected_day: @selected_day,
+                 timezone: @timezone
+               ) do %>
       <p class="mt-4 text-sm text-slate-700">
         見たいアーティストのブロックをタップして選択してください。選択した内容は「保存する」を押すとマイタイムテーブルに反映されます。
       </p>

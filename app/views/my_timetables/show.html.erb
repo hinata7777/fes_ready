@@ -1,11 +1,12 @@
 <div class="min-h-screen px-4 pb-24 pt-6">
   <div class="mx-auto flex max-w-6xl flex-col gap-6">
-    <%= render "shared/timetable_header",
-               title: "#{@timetable_owner.nickname}のマイタイムテーブル",
-               festival_name: @festival.name,
-               selected_day: @selected_day,
-               timezone: @timezone,
-               header_classes: "rounded-3xl border border-slate-200 bg-gradient-to-b from-indigo-100 via-white to-slate-100 p-6 shadow-lg shadow-slate-200/60" do %>
+    <%= render Shared::TimetableHeaderComponent.new(
+                 title: "#{@timetable_owner.nickname}のマイタイムテーブル",
+                 festival_name: @festival.name,
+                 selected_day: @selected_day,
+                 timezone: @timezone,
+                 header_classes: "rounded-3xl border border-slate-200 bg-gradient-to-b from-indigo-100 via-white to-slate-100 p-6 shadow-lg shadow-slate-200/60"
+               ) do %>
       <div class="mt-6 flex flex-col items-center gap-3 sm:flex-row sm:justify-between">
         <% if @timetable_owner == current_user %>
           <div class="flex items-center gap-3">
