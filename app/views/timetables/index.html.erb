@@ -11,21 +11,13 @@
                       data: { controller: "tap-feedback" } %>
         <% end %>
       </div>
+      <% preserved_query = request.query_parameters.except(:page, :status) %>
       <div class="flex justify-center">
-        <div class="inline-flex rounded-xl bg-white p-1 shadow-md">
-          <% preserved_query = request.query_parameters.except(:page, :status) %>
-          <% @status_labels.each do |key, label| %>
-            <% active = @status == key %>
-            <% link_classes = [
-              "rounded-lg px-4 py-2 text-sm font-semibold transition",
-              active ? "bg-rose-500 text-white shadow-sm" : "text-slate-500 hover:text-rose-500"
-            ].join(" ") %>
-            <% path_options = preserved_query.merge(status: key) %>
-            <%= link_to label,
-                        timetables_path(path_options),
-                        class: link_classes %>
-          <% end %>
-        </div>
+        <%= render Shared::SegmentedTabsComponent.new(
+              items: @status_labels,
+              active_key: @status,
+              url_builder: ->(key) { timetables_path(preserved_query.merge(status: key)) }
+            ) %>
       </div>
     </header>
 
