@@ -36,11 +36,12 @@
       artists_path
     end %>
 
-    <%= render "shared/search_form",
+    <%= render Shared::SearchFormComponent.new(
                query: @q,
                url: search_url,
                hidden_fields: (@selected_festival_day ? { festival_day_id: @selected_festival_day.id } : {}),
-               placeholder: "アーティスト名を入力" %>
+               placeholder: "アーティスト名を入力"
+             ) %>
 
     <section>
       <% if @artists.any? %>

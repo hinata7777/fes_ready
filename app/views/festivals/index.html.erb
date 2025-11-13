@@ -23,11 +23,12 @@
     </header>
 
     <% search_url = @artist ? artist_festivals_path(@artist) : festivals_path %>
-    <%= render "shared/search_form",
+    <%= render Shared::SearchFormComponent.new(
                query: @q,
                url: search_url,
                placeholder: "フェス名を入力",
-               status: @status %>
+               status: @status
+             ) %>
 
     <section class="grid gap-3 md:grid-cols-2 md:gap-4">
       <% if @festivals.any? %>

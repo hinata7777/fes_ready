@@ -29,11 +29,12 @@
       </div>
     </header>
 
-    <%= render "shared/search_form",
+    <%= render Shared::SearchFormComponent.new(
                query: @q,
                url: timetables_path,
                placeholder: "フェス名を入力",
-               status: @status %>
+               status: @status
+             ) %>
 
     <section class="grid gap-3 md:grid-cols-2 md:gap-4">
       <% if @festivals.any? %>
