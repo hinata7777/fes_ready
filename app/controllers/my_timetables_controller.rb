@@ -23,6 +23,9 @@ class MyTimetablesController < ApplicationController
                     .joins(:stage_performance)
                     .where(stage_performances: { festival_day_id: @selected_day.id })
                     .pluck(:stage_performance_id)
+
+    @performances_without_stage =
+      @performances.select { |performance| performance.stage_id.blank? }
   end
 
   def create
@@ -131,10 +134,6 @@ class MyTimetablesController < ApplicationController
       @performances
         .reject { |performance| performance.stage_id.blank? }
         .group_by(&:stage_id)
-
-    @performances_without_stage =
-      @performances
-        .select { |performance| performance.stage_id.blank? }
 
     timeline_context = TimelineContextBuilder.build(
       festival: @festival,
