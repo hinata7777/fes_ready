@@ -42,12 +42,13 @@
          )
        end %>
 
-    <%= render "shared/timetable_board",
-               stages: @stages,
-               time_markers: @time_markers,
-               timeline_layout: @timeline_layout,
-               timezone: @timezone,
-               empty_message: "登録されたステージがありません",
-               stage_renderer: stage_renderer %>
+    <%= render Shared::TimetableBoardComponent.new(
+          stages: @stages,
+          time_markers: @time_markers,
+          timeline_layout: @timeline_layout,
+          timezone: @timezone,
+          empty_message: "登録されたステージがありません",
+          stage_renderer: stage_renderer
+        ) %>
   </div>
 </div>
