@@ -7,19 +7,15 @@
 
       <% if @festival.present? && @festival_days.any? %>
         <% preserved_query = request.query_parameters.except(:page, :festival_day_id) %>
+        <% tab_items = @festival_days.map { |festival_day| [ festival_day.id, format_date_with_weekday(festival_day.date) ] }.to_h %>
         <div class="flex justify-center">
-          <div class="inline-flex rounded-xl bg-white p-1 shadow-md">
-            <% @festival_days.each do |festival_day| %>
-              <% active = @selected_festival_day&.id == festival_day.id %>
-              <% link_classes = [
-                "rounded-lg px-4 py-2 text-sm font-semibold transition",
-                active ? "bg-rose-500 text-white shadow-sm" : "text-slate-500 hover:text-rose-500"
-              ].join(" ") %>
-              <%= link_to format_date_with_weekday(festival_day.date),
-                          festival_artists_path(@festival, preserved_query.merge(festival_day_id: festival_day.id)),
-                          class: link_classes %>
-            <% end %>
-          </div>
+          <%= render Shared::SegmentedTabsComponent.new(
+                items: tab_items,
+                active_key: @selected_festival_day&.id,
+                url_builder: ->(festival_day_id) {
+                  festival_artists_path(@festival, preserved_query.merge(festival_day_id: festival_day_id))
+                }
+              ) %>
         </div>
       <% end %>
 
