@@ -19,6 +19,10 @@ module Myapp
     config.autoload_paths << presenters_path
     config.eager_load_paths << presenters_path
 
+    components_path = Rails.root.join("app/components")
+    config.autoload_paths << components_path
+    config.eager_load_paths << components_path
+
     config.i18n.available_locales = [ :ja, :en ]
     config.i18n.default_locale = :ja
     config.time_zone = "Asia/Tokyo"

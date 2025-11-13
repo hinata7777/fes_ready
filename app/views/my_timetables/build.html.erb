@@ -14,12 +14,13 @@
                   method: :post,
                   class: "flex flex-col gap-6" do %>
       <% stage_renderer = ->(stage) do
-           render "stage_column_picker",
-                  stage: stage,
-                  performances: @performances_by_stage[stage.id],
-                  time_markers: @time_markers,
-                  timeline_layout: @timeline_layout,
-                  picked_ids: @picked_ids
+           render StageColumns::PickerComponent.new(
+             stage: stage,
+             performances: @performances_by_stage[stage.id],
+             time_markers: @time_markers,
+             timeline_layout: @timeline_layout,
+             picked_ids: @picked_ids
+           )
          end %>
 
       <%= render "shared/timetable_board",
