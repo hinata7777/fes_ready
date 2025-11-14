@@ -7,7 +7,8 @@
 ] %>
 <% secondary_links = [
   { label: "利用規約", href: terms_path },
-  { label: "プライバシーポリシー", href: privacy_path }
+  { label: "プライバシーポリシー", href: privacy_path },
+  { label: "お問い合わせ", href: "https://forms.gle/N9j4cZw7xPhbsHZE8", external: true }
 ] %>
 
 <div
@@ -38,8 +39,11 @@
 
   <nav class="space-y-3 text-sm">
     <% secondary_links.each do |link| %>
-      <%= link_to link[:href], class: "block tracking-wide text-white/90 transition hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white",
-      data: { action: "side-menu#close" } do %>
+      <%= link_to link[:href],
+            class: "block tracking-wide text-white/90 transition hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white",
+            data: { action: "side-menu#close" },
+            target: (link[:external] ? "_blank" : nil),
+            rel: (link[:external] ? "noopener" : nil) do %>
         <%= link[:label] %>
       <% end %>
     <% end %>
