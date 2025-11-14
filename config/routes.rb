@@ -7,7 +7,7 @@ Rails.application.routes.draw do
   get "up" => "rails/health#show", as: :rails_health_check
   get "/service-worker.js", to: "rails/pwa#service_worker", defaults: { format: :js }, as: :pwa_service_worker
   get "/manifest.webmanifest", to: "rails/pwa#manifest", defaults: { format: :json }, as: :pwa_manifest
-  
+
   resources :artists, only: [ :index, :show ] do
     resources :festivals, only: [ :index ], controller: :festivals
   end
