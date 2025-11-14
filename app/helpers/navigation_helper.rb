@@ -4,6 +4,8 @@ module NavigationHelper
     return @header_back_path if defined?(@header_back_path) && @header_back_path.present?
 
     case controller_path
+    when "home"
+      home_back_path
     when "festivals"
       festivals_back_path
     when "artists"
@@ -16,6 +18,26 @@ module NavigationHelper
   end
 
   private
+
+  def home_back_path
+    return safe_referer_path || root_path if action_name == "terms"
+
+    root_path
+  end
+
+  def safe_referer_path
+    return if request.referer.blank?
+
+    uri = URI.parse(request.referer)
+    return if uri.host.present? && uri.host != request.host
+
+    path = uri.path.presence || root_path
+    query = uri.query.present? ? "?#{uri.query}" : ""
+    fragment = uri.fragment.present? ? "##{uri.fragment}" : ""
+    "#{path}#{query}#{fragment}"
+  rescue URI::InvalidURIError
+    nil
+  end
 
   def festivals_back_path
     case params[:from]
