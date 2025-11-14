@@ -20,7 +20,7 @@ module NavigationHelper
   private
 
   def home_back_path
-    return safe_referer_path || root_path if action_name == "terms"
+    return safe_referer_path || root_path if %w[terms privacy].include?(action_name)
 
     root_path
   end
