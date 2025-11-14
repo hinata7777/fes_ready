@@ -1,0 +1,109 @@
+<% content_for :title, "プライバシーポリシー | FES READY" %>
+
+<main
+  class="box-border flex items-center justify-center px-4 py-6 md:py-8"
+  style="height: calc(100vh - var(--header-offset) - var(--footer-offset));"
+>
+  <div class="box-border flex h-full w-full max-w-4xl flex-col rounded-3xl bg-white/95 p-6 shadow-xl ring-1 ring-slate-200 backdrop-blur lg:p-8">
+    <header class="space-y-2 text-center shrink-0">
+      <h1 class="text-2xl font-black text-slate-900">
+        FES READY <span class="block md:inline">プライバシーポリシー</span>
+      </h1>
+    </header>
+
+    <div class="mt-6 h-px w-full bg-gradient-to-r from-transparent via-[#F95858]/40 to-transparent"></div>
+
+    <div class="mt-6 flex-1 space-y-8 overflow-y-auto pr-2 text-sm leading-relaxed text-slate-700 md:text-base">
+      <section class="space-y-3" id="policy">
+        <h2 class="text-lg font-semibold text-slate-900">1. 基本方針</h2>
+        <p>
+          FES READY（以下「当サービス」）は、フェス参加前後の体験を支援するアプリとして、利用者の個人情報と関連データの保護を最優先に取り組みます。
+          関係法令・ガイドラインを順守するとともに、取得目的を明確にしたうえで適切に取り扱います。
+        </p>
+      </section>
+
+      <section class="space-y-3" id="data">
+        <h2 class="text-lg font-semibold text-slate-900">2. 取得する情報</h2>
+        <ul class="list-disc space-y-2 pl-5">
+          <li>会員登録情報：ニックネーム、メールアドレス、パスワード（ハッシュ化）、認証関連トークン</li>
+          <li>プロフィール設定：アイコン等の任意入力情報（実装済み範囲）</li>
+          <li>利用ログ：アクセス日時、利用した機能、端末情報、ブラウザ情報</li>
+          <li>フェス関連データ：お気に入りアーティスト、マイタイムテーブル、持ち物テンプレート選択履歴</li>
+          <li>外部連携情報：Spotify 連携時のトークン・再生リクエスト、Open-Meteo 連携時の天気リクエストパラメータ</li>
+        </ul>
+      </section>
+
+      <section class="space-y-3" id="purpose">
+        <h2 class="text-lg font-semibold text-slate-900">3. 利用目的</h2>
+        <ul class="list-disc space-y-2 pl-5">
+          <li>ログイン認証、アカウント管理、パスワード再設定などサービス提供に不可欠な機能の実現</li>
+          <li>マイタイムテーブル、セットリスト予習、持ち物リスト、天気連携など各機能のパーソナライズ</li>
+          <li>利用状況の把握、機能改善、新機能の検討および障害対応</li>
+          <li>不正アクセス・スパム・違反行為の監視と防止</li>
+          <li>法令や利用規約に基づく問い合わせ対応</li>
+        </ul>
+      </section>
+
+      <section class="space-y-3" id="external">
+        <h2 class="text-lg font-semibold text-slate-900">4. 外部サービスとの連携</h2>
+        <p>
+          当サービスは Spotify API や Open-Meteo API 等の外部サービスと連携します。利用者の認証情報は必要最小限のみ取得し、連携先の利用規約・API ポリシーに従って安全に管理します。
+          連携先で生じた障害や仕様変更によって得られる情報が制限される場合がありますが、その際も可能な範囲で通知・改善を行います。
+        </p>
+      </section>
+
+      <section class="space-y-3" id="cookie">
+        <h2 class="text-lg font-semibold text-slate-900">5. クッキー等の利用</h2>
+        <p>
+          ログイン状態の維持やアクセス解析のためにクッキー・ローカルストレージを使用します。ブラウザ設定で無効化した場合、一部機能が利用できなくなる可能性があります。
+          解析ツールを導入する際には、収集する情報と目的をアプリ内・公式ブログで告知します。
+        </p>
+      </section>
+
+      <section class="space-y-3" id="third-party">
+        <h2 class="text-lg font-semibold text-slate-900">6. 第三者提供・委託</h2>
+        <p>
+          利用者の同意がある場合、法令に基づく要請がある場合、もしくは運営委託先に機密保持契約を結んだうえで業務を委託する場合を除き、個人情報を第三者へ提供しません。
+          委託先には適切な監督を行い、安全管理措置の継続的改善を求めます。
+        </p>
+      </section>
+
+      <section class="space-y-3" id="security">
+        <h2 class="text-lg font-semibold text-slate-900">7. 情報の管理</h2>
+        <ul class="list-disc space-y-2 pl-5">
+          <li>暗号化・アクセス制御・ログ監査など技術的・組織的安全管理措置を講じます。</li>
+          <li>退会後のデータは、法令等で保存義務がある場合を除き、一定期間経過後に削除または匿名化します。</li>
+          <li>障害やインシデント発生時は影響範囲を速やかに特定し、必要に応じて利用者へ通知します。</li>
+        </ul>
+      </section>
+
+      <section class="space-y-3" id="rights">
+        <h2 class="text-lg font-semibold text-slate-900">8. 利用者の権利</h2>
+        <p>
+          利用者は、自身の登録情報やログデータに関して開示・訂正・削除・利用停止を求めることができます。お問い合わせフォームあるいはアプリ内サポート機能からご連絡ください。
+          本人確認後、合理的な期間内に対応します。
+        </p>
+      </section>
+
+      <section class="space-y-3" id="compliance">
+        <h2 class="text-lg font-semibold text-slate-900">9. 法令遵守とポリシーの改定</h2>
+        <p>
+          適用される法令・ガイドラインの変更やサービス内容の拡張に応じて、本ポリシーを改定します。重要な変更を行う場合は、サービス内のお知らせや公式 note 等で告知します。
+          改定後も当サービスを利用した場合、新しいポリシーに同意したものとみなします。
+        </p>
+      </section>
+
+      <section class="space-y-3" id="contact">
+        <h2 class="text-lg font-semibold text-slate-900">10. お問い合わせ</h2>
+        <p>
+          個人情報の取り扱いに関するご質問や、ご自身のデータに関する請求は、お問い合わせフォームまたは運営チーム宛てにご連絡ください。
+          いただいたお問い合わせ内容は、利用者サポートとサービス改善以外の目的では利用しません。
+        </p>
+      </section>
+    </div>
+
+    <p class="mt-6 text-right text-xs text-slate-500">
+      制定日：<%= Date.current.strftime("%Y年%-m月%-d日") %>（最新版）
+    </p>
+  </div>
+</main>
