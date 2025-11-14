@@ -35,16 +35,12 @@ class Admin::ArtistsController < Admin::BaseController
 
   private
   def set_artist
-    @artist = find_artist_by_identifier!(params[:id])
+    @artist = Artist.find_by_identifier!(params[:id])
   end
 
   def artist_params
     params.require(:artist).permit(:name, :spotify_artist_id, :image_url).tap do |p|
       p[:spotify_artist_id] = p[:spotify_artist_id].presence
     end
-  end
-
-  def find_artist_by_identifier!(identifier)
-    Artist.find_by(uuid: identifier) || Artist.find(identifier)
   end
 end

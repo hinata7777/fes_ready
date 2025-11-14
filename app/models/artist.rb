@@ -9,6 +9,10 @@ class Artist < ApplicationRecord
 
   before_create :ensure_uuid!
 
+  def self.find_by_identifier!(identifier)
+    find_by(uuid: identifier) || find(identifier)
+  end
+
   def self.ransackable_attributes(_ = nil); %w[name]; end
   def self.ransackable_associations(_ = nil); []; end
 
