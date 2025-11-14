@@ -29,3 +29,8 @@
 
 en:
   hello: "Hello world"
+  enums:
+    festival:
+      status_filter:
+        upcoming: Upcoming
+        past: Past

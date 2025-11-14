@@ -3,13 +3,11 @@ class FestivalsController < ApplicationController
   before_action :ensure_timetable_published!, only: :timetable
 
   def index
-    @artist = find_artist_by_identifier!(params[:artist_id]) if params[:artist_id].present?
+    @artist = nil
+    @status = Festival.normalized_status(params[:status])
+    @status_labels = Festival.status_labels
 
-    @status = params[:status]
-    @status = "upcoming" unless %w[upcoming past].include?(@status)
-    @status_labels = { "upcoming" => "開催前", "past" => "開催済み" }
-
-    base   = filtered_festivals
+    base   = Festival.for_status(@status)
     @q     = base.ransack(params[:q])
     result = @q.result(distinct: true)
 
@@ -69,32 +67,11 @@ class FestivalsController < ApplicationController
   private
 
   def set_festival
-    @festival = Festival.includes(:festival_days, :stages).find_by!(slug: params[:id])
+    relation = Festival.includes(:festival_days, :stages)
+    @festival = Festival.find_by_slug!(params[:id], scope: relation)
   end
 
   def ensure_timetable_published!
     raise ActiveRecord::RecordNotFound unless @festival.timetable_published?
-  end
-
-  def filtered_festivals
-    relation =
-      if @artist
-        @artist.festivals.merge(Festival.ordered)
-      else
-        Festival.ordered
-      end
-
-    today = Date.current
-    scoped =
-      case @status
-      when "past" then relation.merge(Festival.past(today))
-      else           relation.merge(Festival.upcoming(today))
-      end
-
-    scoped.distinct
-  end
-
-  def find_artist_by_identifier!(identifier)
-    Artist.find_by(uuid: identifier) || Artist.find(identifier)
   end
 end

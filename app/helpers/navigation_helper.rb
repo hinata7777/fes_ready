@@ -6,9 +6,9 @@ module NavigationHelper
     case controller_path
     when "home"
       home_back_path
-    when "festivals"
+    when "festivals", "festivals/artists"
       festivals_back_path
-    when "artists"
+    when "artists", "artists/festivals"
       artists_back_path
     when "my_timetables"
       my_timetables_back_path

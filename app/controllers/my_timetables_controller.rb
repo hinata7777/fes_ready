@@ -71,7 +71,7 @@ class MyTimetablesController < ApplicationController
 
   def set_festival!
     slug = params[:festival_id] || params[:id]
-    @festival = Festival.find_by!(slug: slug)
+    @festival = Festival.find_by_slug!(slug)
   end
 
   def set_selected_day!

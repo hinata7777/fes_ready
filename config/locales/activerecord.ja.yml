@@ -13,3 +13,7 @@ ja:
       role:
         general: 一般
         admin: 管理者
+    festival:
+      status_filter:
+        upcoming: 開催前
+        past: 開催済み
