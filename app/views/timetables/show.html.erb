@@ -14,7 +14,7 @@
               active_key: @selected_day.id,
               url_builder: ->(festival_day_id) do
                 day = day_lookup[festival_day_id]
-                timetable_festival_path(@festival, @timetable_query_params.merge("date" => day.date.to_s))
+                timetable_path(@festival, @timetable_query_params.merge("date" => day.date.to_s))
               end
             ) %>
       </div>

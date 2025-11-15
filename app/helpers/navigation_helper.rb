@@ -77,7 +77,7 @@ module NavigationHelper
   def timetable_back_path
     options = {}
     options[:date] = params[:date] if params[:date].present?
-    timetable_festival_path(params[:festival_id], options)
+    timetable_path(params[:festival_id], options)
   end
 
   def my_timetable_back_path
@@ -96,7 +96,7 @@ module NavigationHelper
       my_timetables_path
     else
       identifier = params[:festival_id] || params[:id]
-      identifier.present? ? timetable_festival_path(identifier) : root_path
+      identifier.present? ? timetable_path(identifier) : root_path
     end
   end
 end
