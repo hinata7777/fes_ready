@@ -64,7 +64,7 @@
           出演アーティスト一覧へ
         <% end %>
         <% if @festival.timetable_published? %>
-          <%= link_to timetable_festival_path(@festival),
+          <%= link_to timetable_path(@festival),
                       class: "block w-full rounded-2xl bg-indigo-500 py-3 text-center text-sm font-bold text-white shadow-md interactive-lift hover:bg-indigo-400",
                       data: { controller: "tap-feedback" } do %>
             タイムテーブルへ
