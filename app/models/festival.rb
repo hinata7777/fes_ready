@@ -76,7 +76,6 @@ class Festival < ApplicationRecord
       .joins(stage_performances: :festival_day)
       .where(stage_performances: { festival_day_id: festival_day.id })
       .distinct
-      .includes(stage_performances: :festival_day)
       .order(:name)
   end
 
