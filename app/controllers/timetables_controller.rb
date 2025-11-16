@@ -29,8 +29,8 @@ class TimetablesController < ApplicationController
   private
 
   def set_festival
-    relation = Festival.includes(:festival_days, :stages)
-    @festival = Festival.find_by_slug!(params[:id], scope: relation)
+    festival_relation = Festival.includes(:festival_days, :stages)
+    @festival = Festival.find_by_slug!(params[:id], scope: festival_relation)
   end
 
   def ensure_timetable_published!
