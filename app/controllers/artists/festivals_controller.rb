@@ -5,8 +5,8 @@ class Artists::FestivalsController < ApplicationController
     @status = Festival.normalized_status(params[:status])
     @status_labels = Festival.status_labels
 
-    base = @artist.festivals.merge(Festival.for_status(@status))
-    @q   = base.ransack(params[:q])
+    festival_scope = @artist.festivals.merge(Festival.for_status(@status))
+    @q   = festival_scope.ransack(params[:q])
     result = @q.result(distinct: true)
 
     pagy_params = request.query_parameters.merge(status: @status)

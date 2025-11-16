@@ -4,8 +4,8 @@ class ArtistsController < ApplicationController
     @festival_days = []
     @selected_festival_day = nil
 
-    scope = Artist.order(:name)
-    @q     = scope.ransack(params[:q])
+    artists_scope = Artist.order(:name)
+    @q     = artists_scope.ransack(params[:q])
     result = @q.result(distinct: true)
 
     @pagy, @artists = pagy(result, params: request.query_parameters)

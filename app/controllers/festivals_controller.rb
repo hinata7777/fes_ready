@@ -6,8 +6,8 @@ class FestivalsController < ApplicationController
     @status = Festival.normalized_status(params[:status])
     @status_labels = Festival.status_labels
 
-    base   = Festival.for_status(@status)
-    @q     = base.ransack(params[:q])
+    festival_scope = Festival.for_status(@status)
+    @q     = festival_scope.ransack(params[:q])
     result = @q.result(distinct: true)
 
     pagy_params = request.query_parameters.merge(status: @status)
@@ -20,7 +20,7 @@ class FestivalsController < ApplicationController
   private
 
   def set_festival
-    relation = Festival.includes(:festival_days, :stages)
-    @festival = Festival.find_by_slug!(params[:id], scope: relation)
+    festival_relation = Festival.includes(:festival_days, :stages)
+    @festival = Festival.find_by_slug!(params[:id], scope: festival_relation)
   end
 end
