@@ -10,17 +10,13 @@ class TimelineLayoutPresenter
 
   MarkerLine = Struct.new(:top_percent, :time, keyword_init: true)
 
-  MarkerLabel = Struct.new(:time, :top_percent, :placement, keyword_init: true) do
+  MarkerLabel = Struct.new(:time, :top_percent, :placement, :label_text, keyword_init: true) do
     def css_translation_class
       case placement
       when :start then "translate-y-0"
       when :end then "-translate-y-full"
       else "-translate-y-1/2"
       end
-    end
-
-    def formatted_time(timezone)
-      time.in_time_zone(timezone).strftime("%H:%M")
     end
   end
 
@@ -65,7 +61,12 @@ class TimelineLayoutPresenter
         else
           :middle
         end
-      MarkerLabel.new(time: time, top_percent: percent(ratio), placement: placement)
+      MarkerLabel.new(
+        time: time,
+        top_percent: percent(ratio),
+        placement: placement,
+        label_text: format_time_label(time)
+      )
     end
   end
 
@@ -104,8 +105,8 @@ class TimelineLayoutPresenter
     PerformanceBlock.new(
       top_percent: top_percent,
       height_percent: height_percent,
-      start_label: start_time.strftime("%H:%M"),
-      end_label: end_time&.strftime("%H:%M"),
+      start_label: format_time_label(start_time),
+      end_label: end_time ? format_time_label(end_time) : nil,
       artist_name: performance.artist.name
     )
   end
@@ -133,9 +134,19 @@ class TimelineLayoutPresenter
 
   def align_time_to_day(time)
     return unless time
+    time.in_time_zone(timezone)
+  end
 
-    day = timeline_start.to_date
+  def format_time_label(time)
+    return unless time
     local = time.in_time_zone(timezone)
-    timezone.local(day.year, day.month, day.day, local.hour, local.min, local.sec)
+    hours_since_day_start = ((local - day_start_reference) / 1.hour).floor
+    hours_since_day_start = [ hours_since_day_start, 0 ].max
+    minutes = local.min
+    format("%02d:%02d", hours_since_day_start, minutes)
+  end
+
+  def day_start_reference
+    @day_start_reference ||= timeline_start.in_time_zone(timezone).beginning_of_day
   end
 end

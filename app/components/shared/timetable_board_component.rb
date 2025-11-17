@@ -60,7 +60,7 @@ module Shared
       elements = labels.map do |label|
         content_tag(:div,
                     content_tag(:span,
-                                label.formatted_time(timezone),
+                                label.label_text,
                                 class: "inline-block rounded bg-white/90 px-[3px] py-0.5 font-mono text-[9px] text-slate-700 shadow-sm sm:px-1 sm:text-[10px]"),
                     class: [ base_classes, label.css_translation_class ].join(" "),
                     style: "top: #{label.top_percent}%")
