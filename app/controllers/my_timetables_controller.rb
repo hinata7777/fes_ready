@@ -2,47 +2,25 @@ class MyTimetablesController < ApplicationController
   before_action :authenticate_user!, except: :show
   before_action :set_festival!, except: :index
   before_action :set_selected_day!, except: :index
-  before_action :prepare_timetable_context!, only: [ :build, :show ]
+  before_action :prepare_timetable_context!, only: [ :edit, :show ]
   before_action :set_timetable_owner!, only: :show
 
   def index
-    @festival_days =
-      FestivalDay
-        .joins(:festival, stage_performances: :user_timetable_entries)
-        .where(user_timetable_entries: { user_id: current_user.id })
-        .includes(:festival)
-        .distinct
-        .order("festivals.start_date ASC", "festival_days.date ASC")
-
-    @festival_day_groups = @festival_days.group_by(&:festival)
+    festival_days = FestivalDay.for_user(current_user)
+    @festival_day_groups = festival_days.group_by(&:festival)
   end
 
-  def build
-    @picked_ids = current_user
-                    .user_timetable_entries
-                    .joins(:stage_performance)
-                    .where(stage_performances: { festival_day_id: @selected_day.id })
-                    .pluck(:stage_performance_id)
+  def edit
+    @picked_ids = current_user.stage_performance_ids_for_day(@selected_day)
   end
 
-  def create
-    ids = Array(params[:stage_performance_ids]).map!(&:to_i)
-
-    allowed_ids = StagePerformance.where(festival_day_id: @selected_day.id).pluck(:id)
-    ids &= allowed_ids
-
-    ActiveRecord::Base.transaction do
-      current_user.user_timetable_entries
-                  .joins(:stage_performance)
-                  .where(stage_performances: { festival_day_id: @selected_day.id })
-                  .delete_all
-
-      ids.uniq.each do |sp_id|
-        current_user.user_timetable_entries.create!(stage_performance_id: sp_id)
-      end
-    end
-
-    redirect_to my_timetable_festival_path(@festival, date: @selected_day.date.to_s, user_id: current_user.uuid),
+  def update
+    MyTimetables::Updater.call(
+      user: current_user,
+      festival_day: @selected_day,
+      stage_performance_ids: params[:stage_performance_ids]
+    )
+    redirect_to festival_my_timetable_path(@festival, date: @selected_day.date.to_s, user_id: current_user.uuid),
                 notice: "マイタイムテーブルを保存しました。"
   end
 

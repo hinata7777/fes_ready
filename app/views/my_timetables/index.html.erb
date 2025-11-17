@@ -5,7 +5,7 @@
       <p class="text-sm text-slate-600">作成したマイタイムテーブルを確認できます。</p>
     </header>
 
-    <% if @festival_days.present? %>
+    <% if @festival_day_groups.present? %>
       <section class="space-y-6">
         <% @festival_day_groups.each do |festival, days| %>
           <div class="grid gap-3 md:grid-cols-2 md:gap-4">
@@ -13,7 +13,7 @@
               <div class="w-full">
                 <%= render "shared/nav_stack_button",
                            label: "#{festival.name} - #{format_date_with_weekday(festival_day.date)}",
-                           url: my_timetable_festival_path(festival, date: festival_day.date.to_s) %>
+                           url: festival_my_timetable_path(festival, date: festival_day.date.to_s) %>
               </div>
             <% end %>
           </div>

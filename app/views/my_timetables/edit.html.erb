@@ -1,7 +1,7 @@
 <div class="min-h-screen px-4 pb-24 pt-6">
   <div class="mx-auto flex max-w-6xl flex-col gap-6">
     <%= render Shared::TimetableHeaderComponent.new(
-                 title: "マイタイムテーブル作成",
+                 title: "マイタイムテーブル編集",
                  festival_name: @festival.name,
                  selected_day: @selected_day,
                  timezone: @timezone
@@ -11,8 +11,8 @@
       </p>
     <% end %>
 
-    <%= form_with url: my_timetable_festival_path(@festival, date: @selected_day.date.to_s, user_id: current_user.uuid),
-                  method: :post,
+    <%= form_with url: festival_my_timetable_path(@festival, date: @selected_day.date.to_s, user_id: current_user.uuid),
+                  method: :patch,
                   class: "flex flex-col gap-6" do %>
       <% stage_renderer = ->(stage) do
            render StageColumns::PickerComponent.new(
