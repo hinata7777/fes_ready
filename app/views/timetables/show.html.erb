@@ -10,8 +10,8 @@
       <% tab_items = day_lookup.transform_values { |day| day.date.strftime("%-m/%-d") } %>
       <div class="mt-6 flex justify-center">
         <%= render Shared::SegmentedTabsComponent.new(
-              items: tab_items,
-              active_key: @selected_day.id,
+              tabs: tab_items,
+              active_tab_key: @selected_day.id,
               url_builder: ->(festival_day_id) do
                 day = day_lookup[festival_day_id]
                 timetable_path(@festival, @timetable_query_params.merge("date" => day.date.to_s))
