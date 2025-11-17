@@ -1,4 +1,8 @@
 class TimelineContextBuilder
+  DEFAULT_DAY_START_HOUR = 9
+  MIN_TIMELINE_SPAN = 1.hour
+  MAX_OVERNIGHT_EXTENSION = 8.hours
+
   Result = Struct.new(
     :timeline_start,
     :timeline_end,
@@ -41,21 +45,24 @@ class TimelineContextBuilder
   def calculate_range
     day_date = selected_day.date
     day_start = timezone.local(day_date.year, day_date.month, day_date.day).beginning_of_day
-    day_end   = day_start.end_of_day
+    max_day_end = day_start + 1.day + MAX_OVERNIGHT_EXTENSION
 
     doors_at = compose_time(selected_day.doors_at, day_date)
     start_at = compose_time(selected_day.start_at, day_date)
     end_at   = compose_time(selected_day.end_at, day_date)
 
-    default_start = doors_at || start_at || timezone.local(day_date.year, day_date.month, day_date.day, 9, 0, 0)
-    default_end   = end_at || (start_at || default_start) + 8.hours
+    performance_start, performance_end = stage_time_range
 
-    timeline_start = [ [ default_start, day_start ].max, day_end ].min
-    timeline_end   = [ [ default_end, day_start ].max, day_end ].min
+    default_start = doors_at || start_at || performance_start || timezone.local(day_date.year, day_date.month, day_date.day, DEFAULT_DAY_START_HOUR, 0, 0)
+    default_end =
+      if end_at
+        adjusted_end_time(end_at, reference: default_start)
+      else
+        performance_end || ((start_at || performance_start || default_start) + 8.hours)
+      end
 
-    if timeline_end <= timeline_start
-      timeline_end = [ timeline_start + 1.hour, day_end ].min
-    end
+    timeline_start = clamp_time(default_start, min: day_start, max: max_day_end)
+    timeline_end   = clamp_time(default_end, min: timeline_start + MIN_TIMELINE_SPAN, max: max_day_end)
 
     [ timeline_start, timeline_end ]
   end
@@ -86,5 +93,22 @@ class TimelineContextBuilder
     timezone.local(day_date.year, day_date.month, day_date.day, local.hour, local.min, local.sec)
   rescue
     nil
+  end
+
+  def stage_time_range
+    scope = festival.stage_performances_on(selected_day).scheduled
+    start_at = scope.minimum(:starts_at)
+    end_at   = scope.maximum(:ends_at)
+    return unless start_at && end_at
+    [ start_at.in_time_zone(timezone), end_at.in_time_zone(timezone) ]
+  end
+
+  def clamp_time(value, min:, max:)
+    reference = value || min
+    [ [ reference, min ].max, max ].min
+  end
+
+  def adjusted_end_time(time, reference:)
+    time <= reference ? time + 1.day : time
   end
 end
