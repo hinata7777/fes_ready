@@ -10,8 +10,8 @@
         <% tab_items = @festival_days.map { |festival_day| [ festival_day.id, format_date_with_weekday(festival_day.date) ] }.to_h %>
         <div class="flex justify-center">
           <%= render Shared::SegmentedTabsComponent.new(
-                items: tab_items,
-                active_key: @selected_festival_day&.id,
+                tabs: tab_items,
+                active_tab_key: @selected_festival_day&.id,
                 url_builder: ->(festival_day_id) {
                   festival_artists_path(@festival, preserved_query.merge(festival_day_id: festival_day_id))
                 }
