@@ -101,7 +101,7 @@ class MyTimetablesController < ApplicationController
 
     @performances =
       @festival
-        .stage_performances_for(@selected_day)
+        .stage_performances_on(@selected_day)
         .scheduled
         .includes(:stage, :artist)
 
