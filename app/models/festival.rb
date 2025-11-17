@@ -62,11 +62,13 @@ class Festival < ApplicationRecord
     festival_days.order(:date)
   end
 
-  def stage_performances_for(day_or_date)
-    day = day_or_date.is_a?(FestivalDay) ? day_or_date : festival_days.find_by!(date: day_or_date)
-    day.stage_performances
-       .includes(:stage, :artist)
-       .order(:starts_at)
+  def stage_performances_on(festival_day)
+    return StagePerformance.none if festival_day.blank?
+    raise ArgumentError, "festival_day must belong to festival" if festival_day.festival_id != id
+
+    festival_day.stage_performances
+                .includes(:stage, :artist)
+                .order(:starts_at)
   end
 
   def artists_for_day(festival_day)

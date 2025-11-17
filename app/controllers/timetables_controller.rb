@@ -78,7 +78,7 @@ class TimetablesController < ApplicationController
   def performances_by_stage
     @performances_by_stage ||=
       @festival
-        .stage_performances_for(@selected_day)
+        .stage_performances_on(@selected_day)
         .scheduled
         .where.not(stage_id: nil)
         .includes(:stage, :artist)
