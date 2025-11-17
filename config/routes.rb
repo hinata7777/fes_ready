@@ -18,13 +18,7 @@ Rails.application.routes.draw do
 
   resources :festivals, only: [ :index, :show ] do
     resources :artists, only: [ :index ], module: :festivals
-    member do
-      # マイタイムテーブル（作成→保存→表示）
-      get  "my_timetable/build", to: "my_timetables#build",  as: :build_my_timetable
-      post "my_timetable",       to: "my_timetables#create", as: :my_timetable
-      get  "my_timetable",       to: "my_timetables#show"
-      delete "my_timetable",     to: "my_timetables#destroy"
-    end
+    resource :my_timetable, only: [ :show, :edit, :update, :destroy ], controller: :my_timetables
   end
 
   namespace :admin do

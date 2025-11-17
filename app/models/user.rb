@@ -20,6 +20,13 @@ class User < ApplicationRecord
     user_timetable_entries.exists?(stage_performance_id: stage_performance.id)
   end
 
+  def stage_performance_ids_for_day(festival_day)
+    user_timetable_entries
+      .joins(:stage_performance)
+      .where(stage_performances: { festival_day_id: festival_day.id })
+      .pluck(:stage_performance_id)
+  end
+
   def to_param
     uuid
   end
