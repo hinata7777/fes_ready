@@ -15,6 +15,7 @@ Rails.application.routes.draw do
 
   resources :timetables, only: [ :index, :show ]
   resources :my_timetables, only: [ :index ]
+  resource :mypage, only: [ :show ]
 
   resources :festivals, only: [ :index, :show ] do
     resources :artists, only: [ :index ], module: :festivals

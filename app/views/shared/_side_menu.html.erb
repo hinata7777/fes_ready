@@ -1,6 +1,6 @@
 <% is_signed_in = defined?(user_signed_in?) && user_signed_in? %>
 <% primary_links = is_signed_in ? [
-  { label: "マイページ", href: "#" },
+  { label: "マイページ", href: mypage_path },
   { label: "ログアウト", href: destroy_user_session_path, method: :delete }
 ] : [
   { label: "ログイン", href: new_user_session_path }
