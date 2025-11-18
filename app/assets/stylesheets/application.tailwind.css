@@ -40,6 +40,16 @@ h1, h2, h3, h4 {
     @apply -translate-y-0.5 shadow-md;
   }
 
+  .footer-nav-inner {
+    padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 0.5rem);
+  }
+
+  @media (hover: none) and (pointer: coarse) {
+    .footer-nav-inner {
+      padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 1.5rem);
+    }
+  }
+
   @screen sm {
     .interactive-lift {
       @apply hover:-translate-y-1 hover:shadow-lg active:-translate-y-1 active:shadow-lg;
