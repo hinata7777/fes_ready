@@ -44,9 +44,35 @@ h1, h2, h3, h4 {
     padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 0.5rem);
   }
 
+  .footer-nav-touch-active {
+    @apply transition duration-150 ease-out;
+  }
+
+  .header-button-touch-active {
+    @apply transition duration-150 ease-out;
+  }
+
+  .header-logo-touch-active {
+    @apply transition duration-150 ease-out;
+  }
+
   @media (hover: none) and (pointer: coarse) {
     .footer-nav-inner {
       padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 1.5rem);
+    }
+
+    .footer-nav-touch-active {
+      @apply -translate-y-0.5 shadow-md;
+      background-color: rgba(234, 74, 74, 0.6);
+    }
+
+    .header-button-touch-active {
+      @apply -translate-y-0.5 shadow-md;
+      background-color: rgba(234, 74, 74, 0.5);
+    }
+
+    .header-logo-touch-active {
+      opacity: 0.75;
     }
   }
 
