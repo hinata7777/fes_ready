@@ -8,7 +8,7 @@ jobs:
   rubocop:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: ruby/setup-ruby@v1
         with: { ruby-version: '3.3.6', bundler-cache: true }
       - run: bundle exec rubocop
@@ -16,7 +16,7 @@ jobs:
   brakeman:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: ruby/setup-ruby@v1
         with: { ruby-version: '3.3.6', bundler-cache: true }
       - run: bundle exec brakeman -q -w2
