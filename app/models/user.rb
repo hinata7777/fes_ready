@@ -21,7 +21,7 @@ class User < ApplicationRecord
     user = find_by(provider: auth.provider, uid: auth.uid)
     user ||= find_by(email: auth.info.email)
 
-    nickname = sanitized_nickname(auth)
+    nickname = user&.nickname.presence || sanitized_nickname(auth)
 
     user ||= new(
       email: auth.info.email,
