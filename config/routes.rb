@@ -20,10 +20,14 @@ Rails.application.routes.draw do
   resources :timetables, only: [ :index, :show ]
   resources :my_timetables, only: [ :index ]
   resource :mypage, only: [ :show ]
+  namespace :mypage do
+    resources :favorite_festivals, only: [ :index ], path: "festivals"
+  end
 
   resources :festivals, only: [ :index, :show ] do
     resources :artists, only: [ :index ], module: :festivals
     resource :my_timetable, only: [ :show, :edit, :update, :destroy ], controller: :my_timetables
+    resource :favorite, only: [ :create, :destroy ], module: :festivals
   end
 
   namespace :admin do
