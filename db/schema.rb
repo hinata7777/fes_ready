@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_11_19_055428) do
+ActiveRecord::Schema[8.0].define(version: 2025_11_22_092002) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "pg_catalog.plpgsql"
@@ -91,6 +91,16 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_19_055428) do
     t.index ["festival_id"], name: "index_stages_on_festival_id"
   end
 
+  create_table "user_festival_favorites", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "festival_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["festival_id"], name: "index_user_festival_favorites_on_festival_id"
+    t.index ["user_id", "festival_id"], name: "index_user_festival_favorites_on_user_id_and_festival_id", unique: true
+    t.index ["user_id"], name: "index_user_festival_favorites_on_user_id"
+  end
+
   create_table "user_timetable_entries", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "stage_performance_id", null: false
@@ -111,7 +121,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_19_055428) do
     t.datetime "remember_created_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.uuid "uuid", default: -> { "gen_random_uuid()" }, null: false
+    t.uuid "uuid", null: false
     t.string "provider"
     t.string "uid"
     t.index ["email"], name: "index_users_on_email", unique: true
@@ -125,6 +135,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_19_055428) do
   add_foreign_key "stage_performances", "festival_days"
   add_foreign_key "stage_performances", "stages"
   add_foreign_key "stages", "festivals"
+  add_foreign_key "user_festival_favorites", "festivals"
+  add_foreign_key "user_festival_favorites", "users"
   add_foreign_key "user_timetable_entries", "stage_performances"
   add_foreign_key "user_timetable_entries", "users"
 end

@@ -4,6 +4,8 @@ class Festival < ApplicationRecord
 
   has_many :festival_days, dependent: :destroy, inverse_of: :festival
   has_many :stages,        dependent: :destroy, inverse_of: :festival
+  has_many :user_festival_favorites, dependent: :destroy
+  has_many :favorited_users, through: :user_festival_favorites, source: :user
 
   accepts_nested_attributes_for :festival_days, allow_destroy: true
   accepts_nested_attributes_for :stages,        allow_destroy: true
@@ -16,6 +18,7 @@ class Festival < ApplicationRecord
   scope :upcoming, ->(today = Date.current) { where("start_date >= ?", today) }
   scope :past,     ->(today = Date.current) { where("end_date < ?",  today) }
   scope :with_published_timetable, -> { where(timetable_published: true) }
+  scope :with_slug, ->(slug) { where(slug: slug) }
 
   before_validation -> { self.official_url = official_url&.strip.presence }
 
@@ -30,8 +33,6 @@ class Festival < ApplicationRecord
   def to_param
     slug.presence || super
   end
-
-  scope :with_slug, ->(slug) { where(slug: slug) }
 
   def self.status_labels
     status_filters.keys.index_with do |key|
@@ -79,6 +80,12 @@ class Festival < ApplicationRecord
       .where(stage_performances: { festival_day_id: festival_day.id })
       .distinct
       .order(:name)
+  end
+
+  # 指定したユーザーがお気に入り済みかどうかを判定するヘルパー
+  def favorited_by?(user)
+    return false unless user
+    user_festival_favorites.exists?(user_id: user.id)
   end
 
   private
