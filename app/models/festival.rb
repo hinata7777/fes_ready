@@ -19,6 +19,12 @@ class Festival < ApplicationRecord
   scope :past,     ->(today = Date.current) { where("end_date < ?",  today) }
   scope :with_published_timetable, -> { where(timetable_published: true) }
   scope :with_slug, ->(slug) { where(slug: slug) }
+  scope :favorited_by, ->(user) {
+    joins(:user_festival_favorites)
+      .where(user_festival_favorites: { user_id: user.id })
+      .includes(:festival_days, :stages)
+      .order(start_date: :asc, name: :asc)
+  }
 
   before_validation -> { self.official_url = official_url&.strip.presence }
 
