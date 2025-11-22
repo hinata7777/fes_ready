@@ -14,6 +14,8 @@ class User < ApplicationRecord
 
   has_many :user_timetable_entries, dependent: :destroy
   has_many :my_stage_performances, through: :user_timetable_entries, source: :stage_performance
+  has_many :user_festival_favorites, dependent: :destroy
+  has_many :favorite_festivals, through: :user_festival_favorites, source: :festival
 
   before_create :ensure_uuid!
 
