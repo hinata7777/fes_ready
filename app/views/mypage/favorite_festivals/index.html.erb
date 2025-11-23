@@ -1,0 +1,30 @@
+<div class="min-h-screen px-4 py-8">
+  <div class="mx-auto max-w-4xl space-y-6">
+    <header class="space-y-2">
+      <p class="text-sm font-semibold uppercase tracking-wide text-slate-500">マイフェス</p>
+      <h1 class="text-3xl font-bold text-slate-900">お気に入りフェス</h1>
+      <p class="text-sm text-slate-600">ハートを外すと一覧から削除されます。</p>
+    </header>
+
+    <section class="space-y-4">
+      <% if @festivals.any? %>
+        <% @festivals.each do |festival| %>
+          <div class="w-full">
+            <%= render "shared/nav_stack_button",
+                       label: festival.name,
+                       url: festival_path(festival, from: "mypage_favorites"),
+                       trailing: favorite_button_for(
+                         favorited: festival_favorited?(festival),
+                         toggle_url: festival_favorite_path(festival)
+                       ) %>
+          </div>
+        <% end %>
+      <% else %>
+        <p class="rounded-xl bg-white px-4 py-12 text-center text-sm text-slate-500 shadow">
+          お気に入り登録したフェスはまだありません
+        </p>
+      <% end %>
+    </section>
+  </div>
+  <%= render "shared/pagination", pagy: @pagy %>
+</div>

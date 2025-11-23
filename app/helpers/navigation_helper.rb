@@ -45,6 +45,8 @@ module NavigationHelper
       return artist_festivals_path(params[:artist_id]) if params[:artist_id].present?
     when "timetables"
       return timetables_path
+    when "mypage_favorites"
+      return mypage_favorite_festivals_path
     end
 
     return artist_path(params[:artist_id]) if params[:artist_id].present?

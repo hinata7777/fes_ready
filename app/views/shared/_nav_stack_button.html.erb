@@ -1,3 +1,8 @@
 <%= link_to url, class: "nav-stack-button interactive-lift", data: { controller: "tap-feedback" } do %>
-  <span><%= label %></span>
+  <span class="flex w-full items-center justify-between gap-3">
+    <span><%= label %></span>
+    <% if local_assigns[:trailing].present? %>
+      <span class="shrink-0"><%= trailing %></span>
+    <% end %>
+  </span>
 <% end %>

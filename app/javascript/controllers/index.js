@@ -21,3 +21,6 @@ application.register("stage-performance-form", StagePerformanceFormController)
 
 import TapFeedbackController from "./tap_feedback_controller"
 application.register("tap-feedback", TapFeedbackController)
+
+import FavoriteToggleController from "./favorite_toggle_controller"
+application.register("favorite-toggle", FavoriteToggleController)

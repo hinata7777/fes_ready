@@ -1,0 +1,13 @@
+<button type="button"
+        class="inline-flex h-9 w-9 items-center justify-center transition hover:scale-105"
+        data-controller="favorite-toggle"
+        data-action="click->favorite-toggle#toggle"
+        data-favorite-toggle-url-value="<%= toggle_url %>"
+        data-favorite-toggle-favorited-value="<%= favorited %>"
+        data-favorite-toggle-heart-src-value="<%= icons[:empty] %>"
+        data-favorite-toggle-heart-filled-src-value="<%= icons[:filled] %>">
+  <%= image_tag(favorited ? icons[:filled] : icons[:empty],
+                alt: favorited ? "お気に入り解除" : "お気に入り登録",
+                class: "h-5 w-5",
+                data: { favorite_toggle_target: "icon" }) %>
+</button>

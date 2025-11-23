@@ -37,7 +37,11 @@
                end %>
             <%= render "shared/nav_stack_button",
                        label: festival.name,
-                       url: festival_url %>
+                       url: festival_url,
+                       trailing: favorite_button_for(
+                         favorited: festival_favorited?(festival),
+                         toggle_url: festival_favorite_path(festival)
+                       ) %>
           </div>
         <% end %>
       <% else %>
