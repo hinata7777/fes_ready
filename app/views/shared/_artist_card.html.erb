@@ -20,18 +20,29 @@
     </p>
   <% end %>
 
+  <% if user_signed_in? %>
+    <div class="absolute left-3 bottom-3 z-10 flex h-9 w-9 items-center justify-center">
+      <%= favorite_button_for(
+            favorited: artist_favorited?(artist),
+            toggle_url: artist_favorite_path(artist)
+          ) %>
+    </div>
+  <% end %>
+
   <% if artist.spotify_artist_id.present? %>
-    <%= link_to "https://open.spotify.com/artist/#{artist.spotify_artist_id}",
-                target: "_blank",
-                rel: "noopener",
-                class: "absolute bottom-3 right-3 z-10 inline-flex items-center justify-center rounded-full transition hover:opacity-80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-400" do %>
-      <span class="sr-only"><%= "#{artist.name} をSpotifyで開く" %></span>
-      <%= image_tag "spotify_icon.png",
-                    alt: "",
-                    class: "h-6 w-6",
-                    width: 24,
-                    height: 24,
-                    loading: "lazy" %>
-    <% end %>
+    <div class="absolute bottom-3 right-3 z-10 flex h-9 w-9 items-center justify-center">
+      <%= link_to "https://open.spotify.com/artist/#{artist.spotify_artist_id}",
+                  target: "_blank",
+                  rel: "noopener",
+                  class: "inline-flex h-9 w-9 items-center justify-center rounded-full transition hover:opacity-80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-400" do %>
+        <span class="sr-only"><%= "#{artist.name} をSpotifyで開く" %></span>
+        <%= image_tag "spotify_icon.png",
+                      alt: "",
+                      class: "h-6 w-6",
+                      width: 24,
+                      height: 24,
+                      loading: "lazy" %>
+      <% end %>
+    </div>
   <% end %>
 </div>

@@ -18,6 +18,12 @@ class Artist < ApplicationRecord
   def self.ransackable_attributes(_ = nil); %w[name]; end
   def self.ransackable_associations(_ = nil); []; end
 
+  scope :favorited_by, ->(user) {
+    joins(:user_artist_favorites)
+      .where(user_artist_favorites: { user_id: user.id })
+      .order(:name)
+  }
+
   # 空文字・前後空白を取り除いて nil 正規化
   normalizes :spotify_artist_id, with: ->(v) { v&.strip.presence }
 
@@ -31,6 +37,11 @@ class Artist < ApplicationRecord
 
   def to_param
     uuid
+  end
+
+  def favorited_by?(user)
+    return false unless user
+    user_artist_favorites.exists?(user_id: user.id)
   end
 
   private

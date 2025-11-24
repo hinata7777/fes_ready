@@ -1,0 +1,24 @@
+<div class="min-h-screen px-4 pb-24 pt-6">
+  <div class="mx-auto max-w-6xl space-y-6">
+    <header class="space-y-2">
+      <p class="text-sm font-semibold uppercase tracking-wide text-slate-500">マイアーティスト</p>
+      <h1 class="text-3xl font-bold text-slate-900">お気に入りアーティスト</h1>
+      <p class="text-sm text-slate-600">ハートを外すと一覧から削除されます。</p>
+    </header>
+
+    <section>
+      <% if @artists.any? %>
+        <div class="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
+          <% @artists.each do |artist| %>
+            <%= render "shared/artist_card", artist: artist %>
+          <% end %>
+        </div>
+      <% else %>
+        <p class="rounded-3xl border border-dashed border-slate-300 bg-white px-6 py-16 text-center text-sm text-slate-500">
+          お気に入り登録したアーティストはまだありません
+        </p>
+      <% end %>
+    </section>
+  </div>
+  <%= render "shared/pagination", pagy: @pagy %>
+</div>
