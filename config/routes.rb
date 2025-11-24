@@ -15,6 +15,7 @@ Rails.application.routes.draw do
 
   resources :artists, only: [ :index, :show ] do
     resources :festivals, only: [ :index ], module: :artists
+    resource :favorite, only: [ :create, :destroy ], module: :artists
   end
 
   resources :timetables, only: [ :index, :show ]
@@ -22,6 +23,7 @@ Rails.application.routes.draw do
   resource :mypage, only: [ :show ]
   namespace :mypage do
     resources :favorite_festivals, only: [ :index ], path: "festivals"
+    resources :favorite_artists, only: [ :index ], path: "artists"
   end
 
   resources :festivals, only: [ :index, :show ] do
