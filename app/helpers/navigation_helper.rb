@@ -12,6 +12,10 @@ module NavigationHelper
       artists_back_path
     when "my_timetables"
       my_timetables_back_path
+    when "mypages"
+      root_path
+    when "mypage/favorite_festivals", "mypage/favorite_artists"
+      mypage_back_path
     else
       root_path
     end
@@ -65,6 +69,8 @@ module NavigationHelper
       return timetable_back_path if params[:festival_id].present?
     when "my_timetable"
       return my_timetable_back_path
+    when "mypage_favorites"
+      return mypage_favorite_artists_path
     end
 
     return festival_path(params[:festival_id]) if params[:festival_id].present?
@@ -100,5 +106,9 @@ module NavigationHelper
       identifier = params[:festival_id] || params[:id]
       identifier.present? ? timetable_path(identifier) : root_path
     end
+  end
+
+  def mypage_back_path
+    mypage_path
   end
 end
