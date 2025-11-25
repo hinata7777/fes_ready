@@ -18,6 +18,16 @@ module StageColumns
       text_color = selected ? stage_text_color : unselected_text_color
       border_color = selected ? "rgba(255,255,255,0.7)" : "rgba(148,163,184,0.7)"
       classes = [ default_block_classes, (selected ? nil : "opacity-80") ].compact.join(" ")
+      block_body = default_block_content(block, block.artist_name)
+      block_style_rules = block_style(block,
+                                      background_color: background_color,
+                                      text_color: text_color,
+                                      border: "1px solid #{border_color}")
+
+      return content_tag(:div,
+                         block_body,
+                         class: classes,
+                         style: block_style_rules) unless performance.artist.published?
 
       params = {
         from: "my_timetable",
@@ -29,12 +39,9 @@ module StageColumns
       link_to(helpers.artist_path(performance.artist, params),
               class: classes,
               data: { controller: "tap-feedback" },
-              style: block_style(block,
-                                background_color: background_color,
-                                text_color: text_color,
-                                border: "1px solid #{border_color}")
+              style: block_style_rules
               ) do
-        default_block_content(block, block.artist_name)
+        block_body
       end
     end
 

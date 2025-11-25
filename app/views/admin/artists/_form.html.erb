@@ -42,6 +42,11 @@
     </div>
   </div>
 
+  <div class="flex items-center gap-2">
+    <%= f.check_box :published, class: "h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500" %>
+    <%= f.label :published, "公開する", class: "text-sm font-semibold text-slate-800" %>
+  </div>
+
   <div class="pt-4">
     <%= f.submit "登録する", class: "px-4 py-2 rounded bg-[#F95858] text-white shadow-sm interactive-lift hover:bg-[#e14f4f] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F95858]", data: { controller: "tap-feedback" } %>
   </div>

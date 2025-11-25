@@ -84,6 +84,7 @@ class Festival < ApplicationRecord
     Artist
       .joins(stage_performances: :festival_day)
       .where(stage_performances: { festival_day_id: festival_day.id })
+      .merge(Artist.published)
       .distinct
       .order(:name)
   end

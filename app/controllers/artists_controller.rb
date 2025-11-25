@@ -4,7 +4,7 @@ class ArtistsController < ApplicationController
     @festival_days = []
     @selected_festival_day = nil
 
-    artists_scope = Artist.order(:name)
+    artists_scope = Artist.published.order(:name)
     @q     = artists_scope.ransack(params[:q])
     result = @q.result(distinct: true)
 
@@ -12,6 +12,6 @@ class ArtistsController < ApplicationController
   end
 
   def show
-    @artist = Artist.find_by_identifier!(params[:id])
+    @artist = Artist.find_published!(params[:id])
   end
 end
