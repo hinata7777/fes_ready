@@ -24,3 +24,6 @@ application.register("tap-feedback", TapFeedbackController)
 
 import FavoriteToggleController from "./favorite_toggle_controller"
 application.register("favorite-toggle", FavoriteToggleController)
+
+import RevealOnScrollController from "./reveal_on_scroll_controller"
+application.register("reveal-on-scroll", RevealOnScrollController)
