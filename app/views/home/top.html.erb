@@ -12,18 +12,79 @@
   </div>
 
   <!-- 説明ブロック -->
-  <section class="mx-auto w-full max-w-screen-md px-6 py-8">
+  <section class="mx-auto w-full max-w-screen-xl px-6 py-12">
     <p class="text-sm md:text-base leading-relaxed text-slate-900">
       最高のフェス体験を、これ１つで。
     </p>
 
     <!-- 使い方（下向き矢印） -->
-    <div class="mt-6">
-      <p class="text-base font-semibold text-slate-900">使い方</p>
-      
+    <div class="mt-14">
+      <p class="text-base font-semibold text-slate-900">FES READY でできること</p>
+
       <%= icon 'chevron-down',
-          class_name: 'size-10 mx-auto text-slate-700 animate-bounce motion-reduce:animate-none',
+          class_name: 'size-10 mx-auto mt-4 text-slate-700 animate-bounce motion-reduce:animate-none',
           aria: { label: '下へ' } %>
+
+      <!-- 使い方カード -->
+      <div class="mx-auto mt-8 w-full px-2 sm:px-4" data-controller="reveal-on-scroll">
+        <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4 lg:gap-5">
+          <div
+            class="flex aspect-square flex-col justify-between overflow-hidden rounded-2xl bg-white/80 p-5 text-left shadow-md ring-1 ring-slate-200 transition duration-700 ease-out opacity-0 translate-y-6 hover:-translate-y-2 hover:shadow-xl"
+            style="aspect-ratio: 1 / 1;"
+            data-reveal-on-scroll-target="item"
+          >
+            <p class="text-lg font-semibold text-slate-900">フェス情報の閲覧</p>
+            <div class="flex flex-1 items-center justify-center">
+              <%= image_tag("usage_singer.png", alt: "フェス情報の閲覧", class: "h-30 w-30 object-contain") %>
+            </div>
+            <p class="text-xs md:text-sm leading-relaxed text-slate-700">
+              開催予定の国内フェス情報や、好きなアーティストのフェス出演情報を簡単に確認することができます。
+            </p>
+          </div>
+
+          <div
+            class="flex aspect-square flex-col justify-between overflow-hidden rounded-2xl bg-white/80 p-5 text-left shadow-md ring-1 ring-slate-200 transition duration-700 ease-out opacity-0 translate-y-6 hover:-translate-y-2 hover:shadow-xl"
+            style="aspect-ratio: 1 / 1;"
+            data-reveal-on-scroll-target="item"
+          >
+            <p class="text-lg font-semibold text-slate-900">マイタイムテーブルの作成</p>
+            <div class="flex flex-1 items-center justify-center">
+              <%= image_tag("usage_timer.png", alt: "マイタイムテーブルの作成", class: "h-30 w-30 object-contain") %>
+            </div>
+            <p class="text-xs md:text-sm leading-relaxed text-slate-700">
+              参加予定のフェスの自分だけのタイムテーブルを作成し、当日のスムーズな動きに備えます。
+            </p>
+          </div>
+
+          <div
+            class="flex aspect-square flex-col justify-between overflow-hidden rounded-2xl bg-white/80 p-5 text-left shadow-md ring-1 ring-slate-200 transition duration-700 ease-out opacity-0 translate-y-6 hover:-translate-y-2 hover:shadow-xl"
+            style="aspect-ratio: 1 / 1;"
+            data-reveal-on-scroll-target="item"
+          >
+            <p class="text-lg font-semibold text-slate-900">オリジナル予習プレイリスト</p>
+            <div class="flex flex-1 items-center justify-center">
+              <%= image_tag("usage_music.png", alt: "オリジナル予習プレイリスト", class: "h-30 w-30 object-contain") %>
+            </div>
+            <p class="text-xs md:text-sm leading-relaxed text-slate-700">
+              各アーティストの過去のセットリスト情報から、効率的な楽曲の予習ができます。
+            </p>
+          </div>
+
+          <div
+            class="flex aspect-square flex-col justify-between overflow-hidden rounded-2xl bg-white/80 p-5 text-left shadow-md ring-1 ring-slate-200 transition duration-700 ease-out opacity-0 translate-y-6 hover:-translate-y-2 hover:shadow-xl"
+            style="aspect-ratio: 1 / 1;"
+            data-reveal-on-scroll-target="item"
+          >
+            <p class="text-lg font-semibold text-slate-900">持ち物リストの管理</p>
+            <div class="flex flex-1 items-center justify-center">
+              <%= image_tag("usage_bag.png", alt: "持ち物リストの管理", class: "h-30 w-30 object-contain") %>
+            </div>
+            <p class="text-xs md:text-sm leading-relaxed text-slate-700">
+              当日の気温や天気によって最適な持ち物リストを提案したり、自分の持ち物リストを作成できます。
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 </main>
