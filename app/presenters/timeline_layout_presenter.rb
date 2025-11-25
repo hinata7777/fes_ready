@@ -22,7 +22,7 @@ class TimelineLayoutPresenter
 
   attr_reader :timeline_start, :timeline_end, :timezone, :hour_height_px
 
-  def initialize(timeline_start:, timeline_end:, timezone:, hour_height_px: 90)
+  def initialize(timeline_start:, timeline_end:, timezone:, hour_height_px: 120)
     @timeline_start = timeline_start
     @timeline_end   = timeline_end
     @timezone       = timezone
