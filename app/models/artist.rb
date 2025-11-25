@@ -3,6 +3,8 @@ require "securerandom"
 class Artist < ApplicationRecord
   validates :name, presence: true, uniqueness: true
 
+  scope :published, -> { where(published: true) }
+
   has_many :stage_performances, dependent: :destroy
   has_many :festival_days, through: :stage_performances
   has_many :festivals, -> { distinct }, through: :festival_days
@@ -13,6 +15,10 @@ class Artist < ApplicationRecord
 
   def self.find_by_identifier!(identifier)
     find_by(uuid: identifier) || find(identifier)
+  end
+
+  def self.find_published!(identifier)
+    published.find_by(uuid: identifier) || published.find(identifier)
   end
 
   def self.ransackable_attributes(_ = nil); %w[name]; end

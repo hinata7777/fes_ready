@@ -39,7 +39,7 @@ class Admin::ArtistsController < Admin::BaseController
   end
 
   def artist_params
-    params.require(:artist).permit(:name, :spotify_artist_id, :image_url).tap do |p|
+    params.require(:artist).permit(:name, :spotify_artist_id, :image_url, :published).tap do |p|
       p[:spotify_artist_id] = p[:spotify_artist_id].presence
     end
   end
