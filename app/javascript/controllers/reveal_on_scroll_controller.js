@@ -26,7 +26,7 @@ export default class extends Controller {
 
       const element = entry.target
       element.classList.remove("opacity-0", "translate-y-6")
-      element.classList.add("opacity-100", "translate-y-0")
+      element.classList.add("opacity-100")
 
       this.observer.unobserve(element)
     })
