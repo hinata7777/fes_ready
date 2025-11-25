@@ -12,11 +12,11 @@ module Shared
     def call
       content_tag(:section, class: section_classes) do
         content_tag(:div, class: "overflow-x-auto overflow-y-hidden") do
-          content_tag(:div, class: "flex items-start gap-2 md:gap-3") do
-            safe_join([ marker_column, stages_column ])
-          end
-        end
+      content_tag(:div, class: "flex items-start gap-2 md:gap-3") do
+        safe_join([ marker_column, stages_column ])
       end
+    end
+  end
     end
 
     private
@@ -28,7 +28,8 @@ module Shared
     end
 
     def marker_column
-      content_tag(:div, class: "flex flex-shrink-0 flex-col items-center") do
+      content_tag(:div,
+                  class: "sticky left-0 z-10 flex flex-shrink-0 flex-col items-center bg-white/90 backdrop-blur-sm shadow-sm") do
         safe_join([ marker_column_header_spacer, marker_timeline ])
       end
     end
