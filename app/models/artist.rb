@@ -1,7 +1,7 @@
 require "securerandom"
 
 class Artist < ApplicationRecord
-  validates :name, presence: true
+  validates :name, presence: true, uniqueness: true
 
   has_many :stage_performances, dependent: :destroy
   has_many :festival_days, through: :stage_performances

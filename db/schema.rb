@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_11_24_012926) do
+ActiveRecord::Schema[8.0].define(version: 2025_11_25_083646) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "pg_catalog.plpgsql"
@@ -23,7 +23,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_24_012926) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.uuid "uuid", null: false
-    t.index ["name"], name: "index_artists_on_name"
+    t.index ["name"], name: "index_artists_on_name", unique: true
     t.index ["spotify_artist_id"], name: "index_artists_on_spotify_artist_id_unique_when_present", unique: true, where: "(spotify_artist_id IS NOT NULL)"
     t.index ["uuid"], name: "index_artists_on_uuid", unique: true
   end
@@ -131,7 +131,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_24_012926) do
     t.datetime "remember_created_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.uuid "uuid", default: -> { "gen_random_uuid()" }, null: false
+    t.uuid "uuid", null: false
     t.string "provider"
     t.string "uid"
     t.index ["email"], name: "index_users_on_email", unique: true
