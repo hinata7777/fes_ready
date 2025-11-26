@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_11_25_092105) do
+ActiveRecord::Schema[8.0].define(version: 2025_11_26_092000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "pg_catalog.plpgsql"
@@ -59,6 +59,45 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_25_092105) do
     t.index ["slug"], name: "index_festivals_on_slug", unique: true
     t.index ["start_date"], name: "index_festivals_on_start_date"
     t.index ["timetable_published"], name: "index_festivals_on_timetable_published"
+  end
+
+  create_table "items", force: :cascade do |t|
+    t.bigint "user_id"
+    t.string "name", null: false
+    t.text "description"
+    t.string "category"
+    t.boolean "template", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["template"], name: "index_items_on_template"
+    t.index ["user_id", "name"], name: "index_items_on_user_and_name_when_owned", unique: true, where: "(user_id IS NOT NULL)"
+    t.index ["user_id"], name: "index_items_on_user_id"
+  end
+
+  create_table "packing_list_items", force: :cascade do |t|
+    t.bigint "packing_list_id", null: false
+    t.bigint "item_id", null: false
+    t.boolean "checked", default: false, null: false
+    t.integer "position", default: 0, null: false
+    t.string "note"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["item_id"], name: "index_packing_list_items_on_item_id"
+    t.index ["packing_list_id", "item_id"], name: "index_packing_list_items_on_list_and_item", unique: true
+    t.index ["packing_list_id", "position"], name: "index_packing_list_items_on_packing_list_id_and_position"
+    t.index ["packing_list_id"], name: "index_packing_list_items_on_packing_list_id"
+  end
+
+  create_table "packing_lists", force: :cascade do |t|
+    t.bigint "user_id"
+    t.string "title", null: false
+    t.boolean "template", default: false, null: false
+    t.string "template_name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["template"], name: "index_packing_lists_on_template"
+    t.index ["user_id", "title"], name: "index_packing_lists_on_user_and_title_when_owned", unique: true, where: "(user_id IS NOT NULL)"
+    t.index ["user_id"], name: "index_packing_lists_on_user_id"
   end
 
   create_table "stage_performances", force: :cascade do |t|
@@ -133,7 +172,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_25_092105) do
     t.datetime "remember_created_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.uuid "uuid", default: -> { "gen_random_uuid()" }, null: false
+    t.uuid "uuid", null: false
     t.string "provider"
     t.string "uid"
     t.index ["email"], name: "index_users_on_email", unique: true
@@ -143,6 +182,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_25_092105) do
   end
 
   add_foreign_key "festival_days", "festivals"
+  add_foreign_key "items", "users"
+  add_foreign_key "packing_list_items", "items"
+  add_foreign_key "packing_list_items", "packing_lists"
+  add_foreign_key "packing_lists", "users"
   add_foreign_key "stage_performances", "artists"
   add_foreign_key "stage_performances", "festival_days"
   add_foreign_key "stage_performances", "stages"
