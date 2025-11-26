@@ -18,6 +18,8 @@ class User < ApplicationRecord
   has_many :favorite_festivals, through: :user_festival_favorites, source: :festival
   has_many :user_artist_favorites, dependent: :destroy
   has_many :favorite_artists, through: :user_artist_favorites, source: :artist
+  has_many :items, dependent: :destroy
+  has_many :packing_lists, dependent: :destroy
 
   before_create :ensure_uuid!
 
