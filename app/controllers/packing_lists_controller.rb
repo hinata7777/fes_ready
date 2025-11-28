@@ -1,11 +1,12 @@
 class PackingListsController < ApplicationController
-  before_action :authenticate_user!
+  before_action :authenticate_user!, except: :index
   before_action :set_packing_list, only: [ :show, :edit, :update, :destroy, :duplicate_from_template ]
   before_action :set_owned_packing_list, only: [ :edit, :update, :destroy ]
+  before_action :set_available_items, only: [ :new, :create, :edit, :update ]
 
   def index
     @template_lists = PackingList.templates.order(:title)
-    @packing_lists = current_user.packing_lists.order(created_at: :desc)
+    @packing_lists = current_user ? current_user.packing_lists.order(created_at: :desc) : []
   end
 
   def show
@@ -14,28 +15,33 @@ class PackingListsController < ApplicationController
 
   def new
     @packing_list = current_user.packing_lists.build
-    @template_lists = PackingList.templates.order(:title)
+    prepare_form_data
   end
 
   def create
     @packing_list = current_user.packing_lists.build(packing_list_params)
+    assign_owner_to_new_items(@packing_list)
     if @packing_list.save
       redirect_to @packing_list, notice: "持ち物リストを作成しました"
     else
-      @template_lists = PackingList.templates.order(:title)
+      flash.now[:alert] = title_error_message if @packing_list.errors[:title].present?
+      prepare_form_data
       render :new, status: :unprocessable_entity
     end
   end
 
   def edit
-    @template_lists = PackingList.templates.order(:title)
+    prepare_form_data
   end
 
   def update
-    if @packing_list.update(packing_list_params)
+    @packing_list.assign_attributes(packing_list_params)
+    assign_owner_to_new_items(@packing_list)
+    if @packing_list.save
       redirect_to @packing_list, notice: "持ち物リストを更新しました"
     else
-      @template_lists = PackingList.templates.order(:title)
+      flash.now[:alert] = title_error_message if @packing_list.errors[:title].present?
+      prepare_form_data
       render :edit, status: :unprocessable_entity
     end
   end
@@ -77,7 +83,44 @@ class PackingListsController < ApplicationController
     @packing_list = current_user.packing_lists.find(params[:id])
   end
 
+  def set_available_items
+    @available_items = Item.templates.order(:name)
+  end
+
+  def assign_owner_to_new_items(packing_list)
+    packing_list.packing_list_items.each do |pli|
+      pli.packing_list ||= packing_list
+      next unless pli.item&.new_record?
+
+      item_name = pli.item.name.to_s.strip
+      if item_name.present?
+        existing_item = current_user.items.find_by(name: item_name) || Item.templates.find_by(name: item_name)
+        if existing_item
+          pli.item = existing_item
+          next
+        end
+      end
+
+      pli.item.user = current_user
+      pli.item.template = false
+    end
+  end
+
+  def title_error_message
+    if @packing_list.errors.added?(:title, :taken)
+      "既に登録されているリスト名です"
+    else
+      "リスト名を確認してください"
+    end
+  end
+
+  def prepare_form_data
+    @sorted_items = @packing_list.packing_list_items.sort_by { |pli| [ pli.position || 0, pli.id || 0 ] }
+    @next_position_value = (@sorted_items.map { |pli| pli.position || 0 }.max || -1) + 1
+  end
+
   def packing_list_params
-    params.require(:packing_list).permit(:title)
+    # ネストしたランダムキー付きの attributes を丸ごと許可する
+    params.require(:packing_list).permit!.to_h
   end
 end

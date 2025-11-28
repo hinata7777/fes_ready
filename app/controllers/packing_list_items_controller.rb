@@ -27,7 +27,7 @@ class PackingListItemsController < ApplicationController
 
   def toggle
     @packing_list_item.update!(checked: !@packing_list_item.checked)
-    redirect_to @packing_list, notice: "チェックを更新しました"
+    redirect_to @packing_list
   end
 
   private

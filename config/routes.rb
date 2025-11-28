@@ -32,7 +32,6 @@ Rails.application.routes.draw do
     resource :favorite, only: [ :create, :destroy ], module: :festivals
   end
 
-  resources :items, only: [ :index, :new, :create, :destroy ]
   resources :packing_lists do
     resources :packing_list_items, only: [ :create, :update, :destroy ] do
       member do
