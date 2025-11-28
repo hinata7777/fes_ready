@@ -120,7 +120,25 @@ class PackingListsController < ApplicationController
   end
 
   def packing_list_params
-    # ネストしたランダムキー付きの attributes を丸ごと許可する
-    params.require(:packing_list).permit!.to_h
+    raw = params.require(:packing_list)
+
+    safe = raw.permit(:title).to_h
+    safe[:packing_list_items_attributes] = sanitize_packing_list_items(raw[:packing_list_items_attributes])
+    safe
+  end
+
+  # 動的キー付きのネストを手動でサニタイズして通す
+  def sanitize_packing_list_items(raw_items)
+    return [] if raw_items.blank?
+
+    raw_items.to_unsafe_h.map do |_, attrs|
+      attrs = attrs.to_unsafe_h if attrs.respond_to?(:to_unsafe_h)
+      next unless attrs.is_a?(Hash)
+
+      item_attrs = attrs["item_attributes"] || {}
+      sanitized_item = item_attrs.slice("id", "name", "description", "category") if item_attrs.is_a?(Hash)
+      base = attrs.slice("id", "item_id", "note", "position", "_destroy")
+      sanitized_item.present? ? base.merge("item_attributes" => sanitized_item) : base
+    end.compact
   end
 end
