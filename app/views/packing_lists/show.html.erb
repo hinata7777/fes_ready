@@ -1,0 +1,75 @@
+<div class="min-h-screen px-4 pb-24 pt-6">
+  <div class="mx-auto max-w-3xl space-y-6">
+    <header class="space-y-2">
+      <h1 class="text-2xl font-bold text-slate-900">持ち物リスト詳細</h1>
+      <p class="text-lg font-bold text-slate-900"><%= @packing_list.title %></p>
+    </header>
+
+    <% owned_list = (@packing_list.user == current_user) %>
+
+    <section class="rounded-3xl border border-slate-200 bg-white px-5 py-4 shadow-sm">
+      <h2 class="sr-only">持ち物一覧</h2>
+      <% if @packing_list_items.any? %>
+        <ul class="space-y-3">
+          <% @packing_list_items.each do |pli| %>
+            <li class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 shadow-sm">
+              <% if owned_list %>
+                <%= form_with url: toggle_packing_list_packing_list_item_path(@packing_list, pli),
+                              method: :patch,
+                              class: "flex items-start gap-3" do %>
+                  <%= check_box_tag "checked",
+                                    "1",
+                                    pli.checked,
+                                    class: "mt-1 h-5 w-5 rounded border-slate-400 text-indigo-500 focus:ring-indigo-500",
+                                    data: { controller: "auto-submit", action: "change->auto-submit#submit" } %>
+                  <div class="min-w-0 space-y-1">
+                    <p class="break-words text-sm font-semibold <%= pli.checked ? 'text-slate-500' : 'text-slate-900' %>">
+                      <%= pli.item.name %>
+                    </p>
+                    <% if pli.note.present? %>
+                      <p class="break-words text-xs text-slate-600"><%= pli.note %></p>
+                    <% end %>
+                  </div>
+                <% end %>
+              <% else %>
+                <div class="flex items-start gap-3">
+                  <div class="mt-1 h-5 w-5 rounded border border-slate-300 bg-white"></div>
+                  <div class="min-w-0 space-y-1">
+                    <p class="break-words text-sm font-semibold text-slate-900"><%= pli.item.name %></p>
+                    <% if pli.note.present? %>
+                      <p class="break-words text-xs text-slate-600"><%= pli.note %></p>
+                    <% end %>
+                  </div>
+                </div>
+              <% end %>
+            </li>
+          <% end %>
+        </ul>
+      <% else %>
+        <div class="rounded-2xl border border-dashed border-slate-300 bg-slate-50 px-4 py-8 text-center text-sm text-slate-600">
+          まだ持ち物がありません。「編集」から持ち物を追加してください。
+        </div>
+      <% end %>
+    </section>
+
+    <div class="flex flex-wrap items-center justify-center gap-3">
+      <% if owned_list %>
+        <%= link_to "編集",
+                    edit_packing_list_path(@packing_list),
+                    class: "inline-flex min-w-[8rem] items-center justify-center rounded-2xl bg-indigo-500 px-5 py-2.5 text-sm font-bold text-white shadow-md interactive-lift hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500",
+                    data: { controller: "tap-feedback" } %>
+        <%= button_to "削除",
+                      packing_list_path(@packing_list),
+                      method: :delete,
+                      data: { controller: "tap-feedback", turbo_confirm: "この持ち物リストを削除しますか？" },
+                      class: "inline-flex min-w-[8rem] items-center justify-center rounded-2xl bg-rose-500 px-5 py-2.5 text-sm font-bold text-white shadow-md interactive-lift hover:bg-rose-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-500" %>
+      <% elsif @packing_list.template? %>
+        <%= button_to "このテンプレートから作成",
+                      duplicate_from_template_packing_list_path(@packing_list),
+                      method: :post,
+                      class: "inline-flex min-w-[12rem] items-center justify-center rounded-2xl bg-indigo-500 px-6 py-3 text-sm font-bold text-white shadow-md interactive-lift hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500",
+                      data: { controller: "tap-feedback" } %>
+      <% end %>
+    </div>
+  </div>
+</div>

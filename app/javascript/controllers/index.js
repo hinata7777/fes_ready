@@ -27,3 +27,9 @@ application.register("favorite-toggle", FavoriteToggleController)
 
 import RevealOnScrollController from "./reveal_on_scroll_controller"
 application.register("reveal-on-scroll", RevealOnScrollController)
+
+import PackingListFormController from "./packing_list_form_controller"
+application.register("packing-list-form", PackingListFormController)
+
+import AutoSubmitController from "./auto_submit_controller"
+application.register("auto-submit", AutoSubmitController)
