@@ -2,7 +2,7 @@ class BackfillAndEnforceUuidOnPackingLists < ActiveRecord::Migration[8.0]
   def up
     enable_extension "pgcrypto" unless extension_enabled?("pgcrypto")
 
-    PackingList.where(uuid: [nil, ""]).find_in_batches(batch_size: 1000) do |batch|
+    PackingList.where(uuid: [ nil, "" ]).find_in_batches(batch_size: 1000) do |batch|
       batch.each { |pl| pl.update_columns(uuid: SecureRandom.uuid) }
     end
 
