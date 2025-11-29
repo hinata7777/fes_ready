@@ -77,11 +77,11 @@ class PackingListsController < ApplicationController
   private
 
   def set_packing_list
-    @packing_list = PackingList.templates.or(PackingList.owned_by(current_user)).find(params[:id])
+    @packing_list = PackingList.templates.or(PackingList.owned_by(current_user)).find_by!(uuid: params[:id])
   end
 
   def set_owned_packing_list
-    @packing_list = current_user.packing_lists.find(params[:id])
+    @packing_list = current_user.packing_lists.find_by!(uuid: params[:id])
   end
 
   def set_available_items

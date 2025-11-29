@@ -44,7 +44,7 @@ class Admin::PackingListsController < Admin::BaseController
   private
 
   def set_packing_list
-    @packing_list = PackingList.templates.find(params[:id])
+    @packing_list = PackingList.templates.find_by!(uuid: params[:id])
   end
 
   def set_available_items
