@@ -1,0 +1,28 @@
+<%= form_with model: [:admin, @item], class: "space-y-6" do |f| %>
+  <div class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm space-y-6">
+    <div>
+      <%= f.label :name, "持ち物名", class: "block text-sm font-semibold text-slate-700" %>
+      <%= f.text_field :name,
+                       class: "mt-2 w-full rounded border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-200",
+                       required: true %>
+    </div>
+
+    <div>
+      <%= f.label :category, "カテゴリ（任意）", class: "block text-sm font-semibold text-slate-700" %>
+      <%= f.text_field :category,
+                       placeholder: "例）基本セット、雨対策など",
+                       class: "mt-2 w-full rounded border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-200" %>
+    </div>
+
+    <div>
+      <%= f.label :description, "メモ（任意）", class: "block text-sm font-semibold text-slate-700" %>
+      <%= f.text_area :description,
+                      rows: 3,
+                      class: "mt-2 w-full rounded border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-200" %>
+    </div>
+  </div>
+
+  <div class="pt-2">
+    <%= f.submit class: "inline-flex items-center rounded bg-[#F95858] px-5 py-2 text-sm font-semibold text-white shadow transition hover:bg-[#e04f4f]" %>
+  </div>
+<% end %>

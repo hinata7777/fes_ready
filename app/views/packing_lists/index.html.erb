@@ -60,11 +60,10 @@
                 <div class="min-w-0">
                   <p class="break-words text-sm font-bold text-slate-900"><%= template.title %></p>
                 </div>
-                <%= button_to "複製",
-                              duplicate_from_template_packing_list_path(template),
-                              method: :post,
-                              class: "shrink-0 rounded-xl bg-indigo-500 px-3 py-1.5 text-xs font-bold text-white shadow-sm interactive-lift hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500",
-                              data: { controller: "tap-feedback" } %>
+                <%= link_to "複製",
+                            new_packing_list_path(template_id: template.id),
+                            class: "shrink-0 rounded-xl bg-indigo-500 px-3 py-1.5 text-xs font-bold text-white shadow-sm interactive-lift hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500",
+                            data: { controller: "tap-feedback" } %>
               </div>
             </div>
           <% end %>

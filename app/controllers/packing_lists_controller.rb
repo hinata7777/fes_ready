@@ -15,6 +15,7 @@ class PackingListsController < ApplicationController
 
   def new
     @packing_list = current_user.packing_lists.build
+    apply_template_if_present
     prepare_form_data
   end
 
@@ -107,16 +108,29 @@ class PackingListsController < ApplicationController
   end
 
   def title_error_message
-    if @packing_list.errors.added?(:title, :taken)
-      "既に登録されているリスト名です"
-    else
-      "リスト名を確認してください"
-    end
+    "既に登録されているリスト名です"
   end
 
   def prepare_form_data
     @sorted_items = @packing_list.packing_list_items.sort_by { |pli| [ pli.position || 0, pli.id || 0 ] }
     @next_position_value = (@sorted_items.map { |pli| pli.position || 0 }.max || -1) + 1
+  end
+
+  def apply_template_if_present
+    template_id = params[:template_id]
+    return if template_id.blank?
+
+    template = PackingList.templates.find_by(id: template_id)
+    return unless template
+
+    @packing_list.title = template.title
+    template.packing_list_items.includes(:item).order(:position, :id).each do |pli|
+      @packing_list.packing_list_items.build(
+        item_id: pli.item_id,
+        position: pli.position,
+        note: pli.note
+      )
+    end
   end
 
   def packing_list_params
