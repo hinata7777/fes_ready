@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_11_29_080000) do
+ActiveRecord::Schema[8.0].define(version: 2025_11_29_090000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "pg_catalog.plpgsql"
@@ -95,11 +95,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_29_080000) do
     t.string "template_name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.uuid "uuid", default: -> { "gen_random_uuid()" }, null: false
     t.index ["template"], name: "index_packing_lists_on_template"
     t.index ["user_id", "title"], name: "index_packing_lists_on_user_and_title_when_owned", unique: true, where: "(user_id IS NOT NULL)"
     t.index ["user_id"], name: "index_packing_lists_on_user_id"
-    t.index ["uuid"], name: "index_packing_lists_on_uuid", unique: true
   end
 
   create_table "stage_performances", force: :cascade do |t|
