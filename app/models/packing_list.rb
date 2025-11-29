@@ -13,4 +13,8 @@ class PackingList < ApplicationRecord
   validates :title, uniqueness: { scope: :user_id, message: "は既に存在します" }, unless: :template?
   validates :user_id, presence: true, unless: :template?
   validates :template, inclusion: { in: [ true, false ] }
+
+  def to_param
+    uuid.presence || super
+  end
 end
