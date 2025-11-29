@@ -55,5 +55,7 @@ Rails.application.routes.draw do
         patch :apply
       end
     end
+    resources :items, only: [ :index, :new, :create, :edit, :update, :destroy ]
+    resources :packing_lists, only: [ :index, :new, :create, :edit, :update, :destroy ]
   end
 end
