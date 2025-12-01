@@ -88,6 +88,15 @@
         draft=出演者のみ登録 / scheduled=タイムテーブル確定（時間・ステージ必須）
       </p>
     </div>
+
+    <div class="flex items-center gap-2">
+      <%= f.check_box :canceled,
+            class: "h-4 w-4 rounded border-slate-300 text-rose-600 focus:ring-rose-500" %>
+      <div>
+        <%= f.label :canceled, "出演キャンセル", class: "text-sm font-semibold text-slate-700" %>
+        <p class="text-xs text-slate-500">チェックするとタイムテーブル上で赤字＋取り消し線表示になります。</p>
+      </div>
+    </div>
   </div>
 
   <div class="pt-2">
