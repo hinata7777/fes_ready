@@ -15,7 +15,7 @@ class Festival < ApplicationRecord
   validate  :end_not_before_start
 
   scope :ordered,  -> { order(start_date: :asc, name: :asc) }
-  scope :upcoming, ->(today = Date.current) { where("start_date >= ?", today) }
+  scope :upcoming, ->(today = Date.current) { where("end_date >= ?", today) }
   scope :past,     ->(today = Date.current) { where("end_date < ?",  today) }
   scope :with_published_timetable, -> { where(timetable_published: true) }
   scope :with_slug, ->(slug) { where(slug: slug) }
