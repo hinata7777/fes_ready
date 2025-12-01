@@ -55,7 +55,7 @@ class Admin::StagePerformancesController < Admin::BaseController
   def sp_params
     params.require(:stage_performance).permit(
       :festival_day_id, :stage_id, :artist_id,
-      :starts_at, :ends_at, :status
+      :starts_at, :ends_at, :status, :canceled
     )
   end
 

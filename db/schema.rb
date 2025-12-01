@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_11_29_090500) do
+ActiveRecord::Schema[8.0].define(version: 2025_11_30_000000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "pg_catalog.plpgsql"
@@ -111,6 +111,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_29_090500) do
     t.integer "status", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "canceled", default: false, null: false
     t.index ["artist_id", "starts_at"], name: "index_stage_performances_on_artist_id_and_starts_at"
     t.index ["artist_id"], name: "index_stage_performances_on_artist_id"
     t.index ["festival_day_id", "artist_id"], name: "index_stage_performances_on_festival_day_id_and_artist_id", unique: true

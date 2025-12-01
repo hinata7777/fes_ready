@@ -78,20 +78,25 @@ module StageColumns
       style_rules.join(" ")
     end
 
-    def default_block_content(block, artist_name)
+    def default_block_content(block, artist_name, canceled: false)
+      canceled_classes = canceled ? "text-red-700 line-through decoration-2" : nil
       time_label = block.end_label ? "#{block.start_label}-#{block.end_label}" : block.start_label
 
       time_block = content_tag(:div,
                                content_tag(:div, time_label, class: "whitespace-nowrap"),
-                               class: "font-mono text-[9px] font-medium leading-none opacity-90 sm:text-[10px]")
+                               class: [ "font-mono text-[9px] font-medium leading-none opacity-90 sm:text-[10px]", canceled_classes ].compact.join(" "))
 
       name_block = content_tag(:div,
                                artist_name,
-                               class: "flex-1 overflow-hidden text-ellipsis text-[11px] font-bold leading-tight sm:text-xs")
+                               class: [ "flex-1 overflow-hidden text-ellipsis text-[11px] font-bold leading-tight sm:text-xs", canceled_classes ].compact.join(" "))
 
       content_tag(:div, class: "flex h-full flex-col justify-start gap-px text-left") do
         safe_join([ time_block, name_block ])
       end
+    end
+
+    def canceled?(performance)
+      performance.respond_to?(:canceled?) && performance.canceled?
     end
 
     def stage_color
