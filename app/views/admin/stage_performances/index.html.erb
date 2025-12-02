@@ -4,9 +4,14 @@
       <h1 class="text-2xl font-bold text-slate-900">出演枠一覧</h1>
       <p class="mt-2 text-sm text-slate-600">draft = 出演者のみ登録 / scheduled = 確定</p>
     </div>
-    <%= link_to "新規作成",
-        new_admin_stage_performance_path,
-        class: "inline-flex items-center justify-center rounded-lg bg-[#F95858] px-5 py-2 text-sm font-semibold text-white shadow transition hover:bg-[#e04f4f]" %>
+    <div class="flex flex-wrap gap-2">
+      <%= link_to "新規作成",
+          new_admin_stage_performance_path,
+          class: "inline-flex items-center justify-center rounded-lg bg-[#F95858] px-5 py-2 text-sm font-semibold text-white shadow transition hover:bg-[#e04f4f]" %>
+      <%= link_to "一括追加",
+          bulk_new_admin_stage_performances_path,
+          class: "inline-flex items-center justify-center rounded-lg border border-[#F95858] bg-white px-5 py-2 text-sm font-semibold text-[#F95858] shadow-sm transition hover:bg-[#fff1f1]" %>
+    </div>
   </div>
 
   <div class="mt-4 rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
