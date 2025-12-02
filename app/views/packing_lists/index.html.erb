@@ -4,10 +4,12 @@
       <h1 class="text-2xl font-bold text-slate-900">持ち物リスト</h1>
       <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <p class="text-sm text-slate-600">フェスごとの持ち物をまとめてチェックできます。</p>
-        <%= link_to "＋ マイ持ち物リストを新規作成",
-                    new_packing_list_path,
-                    class: "inline-flex items-center justify-center rounded-2xl bg-rose-500 px-4 py-2 text-sm font-bold text-white shadow-md interactive-lift hover:bg-rose-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-500",
-                    data: { controller: "tap-feedback" } %>
+        <% if user_signed_in? %>
+          <%= link_to "＋ マイ持ち物リストを新規作成",
+                      new_packing_list_path,
+                      class: "inline-flex items-center justify-center rounded-2xl bg-rose-500 px-4 py-2 text-sm font-bold text-white shadow-md interactive-lift hover:bg-rose-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-500",
+                      data: { controller: "tap-feedback" } %>
+        <% end %>
       </div>
     </header>
 
@@ -34,16 +36,10 @@
           </p>
         <% end %>
       <% else %>
-        <div class="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-5 text-sm text-amber-800 shadow-sm space-y-3 text-center">
-          <p class="font-bold">ログイン必須機能です</p>
-          <p>リストの作成・閲覧にはログインが必要です。</p>
-          <div class="flex justify-center">
-            <%= link_to "ログインへ進む",
-                        new_user_session_path,
-                        class: "inline-flex items-center justify-center rounded-xl bg-rose-500 px-4 py-2 text-sm font-bold text-white shadow-sm interactive-lift hover:bg-rose-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-500",
-                        data: { controller: "tap-feedback" } %>
-          </div>
-        </div>
+        <%= render "shared/login_callout",
+                   title: "ログインしてマイ持ち物リストを作成しましょう",
+                   description: "持ち物リストの作成・閲覧にはログインが必要です。",
+                   cta_label: "ログイン" %>
       <% end %>
     </section>
 
