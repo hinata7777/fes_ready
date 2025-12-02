@@ -14,10 +14,9 @@ class StagePerformance < ApplicationRecord
     validate  :ends_after_starts
   end
 
-  scope :chronological, -> { order(:starts_at) }
-  scope :for_day,       ->(day_id)    { where(festival_day_id: day_id) }
-  scope :for_stage,     ->(stage_id)  { where(stage_id: stage_id) }
-  scope :for_artist,    ->(artist_id) { where(artist_id: artist_id) }
+  scope :for_day,       ->(day_id)    { day_id.present? ? where(festival_day_id: day_id) : all }
+  scope :for_stage,     ->(stage_id)  { stage_id.present? ? where(stage_id: stage_id) : all }
+  scope :for_artist,    ->(artist_id) { artist_id.present? ? where(artist_id: artist_id) : all }
 
   private
 
