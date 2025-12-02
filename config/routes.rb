@@ -48,7 +48,13 @@ Rails.application.routes.draw do
     get "spotify/search", to: "spotify#search"
     resources :users, only: :index
     resources :artists
-    resources :stage_performances
+    resources :stage_performances do
+      # 一括追加用
+      collection do
+        get :bulk_new
+        post :bulk_create
+      end
+    end
     resources :festivals do
       member do
         get  :setup

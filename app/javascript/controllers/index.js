@@ -33,3 +33,6 @@ application.register("packing-list-form", PackingListFormController)
 
 import AutoSubmitController from "./auto_submit_controller"
 application.register("auto-submit", AutoSubmitController)
+
+import BulkStagePerformanceFormController from "./bulk_stage_performance_form_controller"
+application.register("bulk-stage-performance-form", BulkStagePerformanceFormController)
