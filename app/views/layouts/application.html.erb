@@ -26,7 +26,17 @@
     <link rel="icon" type="image/png" sizes="16x16" href="<%= asset_path('fesready_favicon.png') %>">
 
     <link rel="apple-touch-icon" sizes="180x180" href="<%= asset_path('fesready_icon.png') %>">
+    
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-PB0CKT8EH2"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
 
+      gtag('config', 'G-PB0CKT8EH2');
+    </script>
+    
     <%# Includes all stylesheet files in app/assets/stylesheets %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= javascript_include_tag "application", "data-turbo-track": "reload", type: "module" %>
