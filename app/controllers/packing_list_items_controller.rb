@@ -33,7 +33,7 @@ class PackingListItemsController < ApplicationController
   private
 
   def set_packing_list
-    @packing_list = current_user.packing_lists.find(params[:packing_list_id])
+    @packing_list = current_user.packing_lists.find_by!(uuid: params[:packing_list_id])
   end
 
   def set_packing_list_item
