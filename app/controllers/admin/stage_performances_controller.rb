@@ -3,10 +3,14 @@ class Admin::StagePerformancesController < Admin::BaseController
   before_action :prepare_form_options, only: %i[new create edit update]
 
   def index
-    @pagy, @stage_performances =
-      pagy(StagePerformance
-        .includes(:festival_day, :stage, :artist)
-        .order(:starts_at))
+    @festival_days = FestivalDay.includes(:festival).order(:date)
+    @artists = Artist.order(:name)
+
+    scope = StagePerformance.includes(:festival_day, :stage, :artist)
+                            .order(:starts_at)
+                            .for_day(params[:festival_day_id])
+                            .for_artist(params[:artist_id])
+    @pagy, @stage_performances = pagy(scope)
   end
 
   def show; end
