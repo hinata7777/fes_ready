@@ -2,6 +2,12 @@
   <div class="mx-auto max-w-5xl space-y-6">
     <header class="space-y-4">
       <h1 class="text-2xl font-bold text-slate-900">タイムテーブルを見たいフェスを選択</h1>
+      <% unless user_signed_in? %>
+        <%= render "shared/login_callout",
+                   title: "ログインしてマイタイムテーブルを作成しましょう",
+                   description: "お気に入りのステージや出演枠を選んで、自分専用のタイムテーブルを作成できます。",
+                   cta_label: "ログイン" %>
+      <% end %>
       <div class="flex flex-col gap-3 text-sm text-slate-600 sm:flex-row sm:items-center sm:justify-between">
         <p>公開中のタイムテーブルのみ表示しています。</p>
         <% if user_signed_in? %>
