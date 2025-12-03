@@ -3,6 +3,14 @@
     <header class="space-y-2">
       <h1 class="text-2xl font-bold text-slate-900">持ち物リスト詳細</h1>
       <p class="text-lg font-bold text-slate-900"><%= @packing_list.title %></p>
+      <% if @packing_list.festival_day.present? %>
+        <% day = @packing_list.festival_day %>
+        <div class="inline-flex items-center gap-2 rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700">
+          <span><%= day.festival.name %></span>
+          <span class="text-slate-500">/</span>
+          <span><%= format_date_with_weekday(day.date) %></span>
+        </div>
+      <% end %>
     </header>
 
     <% owned_list = (@packing_list.user == current_user) %>

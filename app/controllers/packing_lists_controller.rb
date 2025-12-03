@@ -77,11 +77,15 @@ class PackingListsController < ApplicationController
   private
 
   def set_packing_list
-    @packing_list = PackingList.templates.or(PackingList.owned_by(current_user)).find_by!(uuid: params[:id])
+    @packing_list = PackingList
+      .includes(festival_day: :festival)
+      .templates
+      .or(PackingList.owned_by(current_user))
+      .find_by!(uuid: params[:id])
   end
 
   def set_owned_packing_list
-    @packing_list = current_user.packing_lists.find_by!(uuid: params[:id])
+    @packing_list = current_user.packing_lists.includes(festival_day: :festival).find_by!(uuid: params[:id])
   end
 
   def set_available_items
@@ -114,6 +118,7 @@ class PackingListsController < ApplicationController
   def prepare_form_data
     @sorted_items = @packing_list.packing_list_items.sort_by { |pli| [ pli.position || 0, pli.id || 0 ] }
     @next_position_value = (@sorted_items.map { |pli| pli.position || 0 }.max || -1) + 1
+    @festival_days = FestivalDay.joins(:festival).includes(:festival).order("festivals.start_date ASC", "festival_days.date ASC")
   end
 
   def apply_template_if_present
@@ -136,7 +141,7 @@ class PackingListsController < ApplicationController
   def packing_list_params
     raw = params.require(:packing_list)
 
-    safe = raw.permit(:title).to_h
+    safe = raw.permit(:title, :festival_day_id).to_h
     safe[:packing_list_items_attributes] = sanitize_packing_list_items(raw[:packing_list_items_attributes])
     safe
   end

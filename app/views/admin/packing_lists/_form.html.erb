@@ -8,6 +8,17 @@
                        required: true %>
     </div>
 
+    <div>
+      <%= f.label :festival_day_id, "フェス日程（任意）", class: "block text-sm font-semibold text-slate-700" %>
+      <%= f.collection_select :festival_day_id,
+                              @festival_days,
+                              :id,
+                              ->(day) { "#{day.festival.name} / #{format_date_with_weekday(day.date)}" },
+                              { include_blank: "未選択" },
+                              class: "mt-2 w-full rounded border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-200" %>
+      <p class="mt-1 text-xs text-slate-500">テンプレートに紐づけたい場合のみ選択してください。</p>
+    </div>
+
     <div class="border-t border-slate-100 pt-4"
          data-controller="packing-list-form"
          data-packing-list-form-next-position-value="<%= @next_position_value || 0 %>">

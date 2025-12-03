@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_11_30_000000) do
+ActiveRecord::Schema[8.0].define(version: 2025_11_30_093000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "pg_catalog.plpgsql"
@@ -96,6 +96,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_30_000000) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.uuid "uuid", default: -> { "gen_random_uuid()" }, null: false
+    t.bigint "festival_day_id"
+    t.index ["festival_day_id"], name: "index_packing_lists_on_festival_day_id"
     t.index ["template"], name: "index_packing_lists_on_template"
     t.index ["user_id", "title"], name: "index_packing_lists_on_user_and_title_when_owned", unique: true, where: "(user_id IS NOT NULL)"
     t.index ["user_id"], name: "index_packing_lists_on_user_id"
@@ -175,7 +177,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_30_000000) do
     t.datetime "remember_created_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.uuid "uuid", default: -> { "gen_random_uuid()" }, null: false
+    t.uuid "uuid", null: false
     t.string "provider"
     t.string "uid"
     t.index ["email"], name: "index_users_on_email", unique: true
@@ -188,6 +190,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_30_000000) do
   add_foreign_key "items", "users"
   add_foreign_key "packing_list_items", "items"
   add_foreign_key "packing_list_items", "packing_lists"
+  add_foreign_key "packing_lists", "festival_days"
   add_foreign_key "packing_lists", "users"
   add_foreign_key "stage_performances", "artists"
   add_foreign_key "stage_performances", "festival_days"
