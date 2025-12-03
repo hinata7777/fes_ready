@@ -14,7 +14,7 @@ class Users::PasswordsController < Devise::PasswordsController
     if successfully_sent?(resource)
       respond_to do |format|
         format.html do
-          redirect_path = user_signed_in? ? mypage_path : after_sending_reset_password_instructions_path_for(resource_name)
+          redirect_path = user_signed_in? ? mypage_dashboard_path : after_sending_reset_password_instructions_path_for(resource_name)
           redirect_to redirect_path, notice: "パスワード再設定用メールを送信しました。"
         end
         format.all { head :ok }
