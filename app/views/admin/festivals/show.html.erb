@@ -83,6 +83,18 @@
             </dd>
           </div>
           <div class="grid grid-cols-1 gap-2 px-4 py-3 sm:grid-cols-3">
+            <dt class="font-semibold text-slate-500">緯度 / 経度</dt>
+            <dd class="sm:col-span-2">
+              <% if @festival.latitude.present? && @festival.longitude.present? %>
+                <span class="font-mono text-xs text-slate-700">
+                  <%= @festival.latitude %>, <%= @festival.longitude %>
+                </span>
+              <% else %>
+                <span class="text-slate-500">未設定</span>
+              <% end %>
+            </dd>
+          </div>
+          <div class="grid grid-cols-1 gap-2 px-4 py-3 sm:grid-cols-3">
             <dt class="font-semibold text-slate-500">タイムテーブル公開状態</dt>
             <dd class="sm:col-span-2">
               <% if @festival.timetable_published? %>
