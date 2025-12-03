@@ -63,7 +63,8 @@ class Admin::FestivalsController < Admin::BaseController
     params.require(:festival).permit(
       :name, :slug, :venue_name, :city, :prefecture,
       :start_date, :end_date, :timezone,
-      :official_url, :timetable_published
+      :official_url, :timetable_published,
+      :latitude, :longitude
     )
   end
 
@@ -71,6 +72,7 @@ class Admin::FestivalsController < Admin::BaseController
   def festival_params_nested
     params.require(:festival).permit(
       :name, :venue_name, :city, :prefecture, :timezone, :start_date, :end_date, :official_url, :timetable_published,
+      :latitude, :longitude,
       festival_days_attributes: [ :id, :date, :doors_at, :start_at, :end_at, :note, :_destroy ],
       stages_attributes:        [ :id, :name, :sort_order, :environment, :note, :color_key, :_destroy ]
     )

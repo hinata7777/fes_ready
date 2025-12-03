@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_11_30_093000) do
+ActiveRecord::Schema[8.0].define(version: 2025_11_30_100000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "pg_catalog.plpgsql"
@@ -56,6 +56,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_30_093000) do
     t.datetime "updated_at", null: false
     t.string "official_url"
     t.boolean "timetable_published", default: false, null: false
+    t.decimal "latitude", precision: 10, scale: 6
+    t.decimal "longitude", precision: 10, scale: 6
+    t.index ["latitude", "longitude"], name: "index_festivals_on_latitude_and_longitude"
     t.index ["slug"], name: "index_festivals_on_slug", unique: true
     t.index ["start_date"], name: "index_festivals_on_start_date"
     t.index ["timetable_published"], name: "index_festivals_on_timetable_published"
