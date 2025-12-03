@@ -12,7 +12,7 @@ module NavigationHelper
       artists_back_path
     when "my_timetables"
       my_timetables_back_path
-    when "mypages"
+    when "mypage/dashboard"
       root_path
     when "mypage/favorite_festivals", "mypage/favorite_artists"
       mypage_back_path
@@ -99,6 +99,7 @@ module NavigationHelper
   def my_timetables_back_path
     case action_name
     when "index"
+      return mypage_dashboard_path if params[:from] == "mypage"
       timetables_path
     when "show"
       my_timetables_path
@@ -109,6 +110,6 @@ module NavigationHelper
   end
 
   def mypage_back_path
-    mypage_path
+    mypage_dashboard_path
   end
 end

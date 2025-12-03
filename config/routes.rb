@@ -20,8 +20,8 @@ Rails.application.routes.draw do
 
   resources :timetables, only: [ :index, :show ]
   resources :my_timetables, only: [ :index ]
-  resource :mypage, only: [ :show ]
-  namespace :mypage do
+  namespace :mypage, path: "mypage" do
+    get "/", to: "dashboard#show", as: :dashboard
     resources :favorite_festivals, only: [ :index ], path: "festivals"
     resources :favorite_artists, only: [ :index ], path: "artists"
   end
