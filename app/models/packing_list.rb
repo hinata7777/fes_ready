@@ -1,5 +1,6 @@
 class PackingList < ApplicationRecord
   belongs_to :user, optional: true
+  belongs_to :festival_day, optional: true
 
   has_many :packing_list_items, dependent: :destroy, inverse_of: :packing_list
   has_many :items, through: :packing_list_items
