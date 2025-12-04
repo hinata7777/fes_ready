@@ -71,8 +71,11 @@
           <% end %>
         <% end %>
         <%= link_to "#",
-                    class: "block w-full rounded-2xl bg-indigo-500 py-3 text-center text-sm font-bold text-white shadow-md interactive-lift hover:bg-indigo-400",
+                    class: "relative block w-full overflow-hidden rounded-2xl bg-indigo-500 py-3 text-center text-sm font-bold text-white shadow-md interactive-lift hover:bg-indigo-400",
                     data: { controller: "tap-feedback" } do %>
+          <div class="pointer-events-none absolute inset-0 flex items-center justify-center bg-black/30">
+            <span class="rounded-full bg-white/95 px-2 py-[3px] text-[10px] font-black uppercase tracking-[0.16em] text-indigo-500 shadow-sm">準備中</span>
+          </div>
           フェス予習リストへ
         <% end %>
       </div>
