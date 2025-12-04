@@ -63,7 +63,7 @@
              ) %>
 
       <% if @timetable_owner == current_user %>
-        <% share_text = "FES READYで #{@festival.name} のマイタイムテーブルを作成しました！" %>
+        <% share_text = "FES READYで #{@festival.name} のマイタイムテーブルを作成しました！\n#FESREADY" %>
         <% share_link = festival_my_timetable_url(@festival,
                                                   date: @selected_day.date.to_s,
                                                   user_id: current_user.uuid) %>
