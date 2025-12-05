@@ -36,3 +36,9 @@ application.register("auto-submit", AutoSubmitController)
 
 import BulkStagePerformanceFormController from "./bulk_stage_performance_form_controller"
 application.register("bulk-stage-performance-form", BulkStagePerformanceFormController)
+
+import SpotifySongSearchController from "./spotify_song_search_controller"
+application.register("spotify-song-search", SpotifySongSearchController)
+
+import SpotifySongRowSearchController from "./spotify_song_row_search_controller"
+application.register("spotify-song-row-search", SpotifySongRowSearchController)

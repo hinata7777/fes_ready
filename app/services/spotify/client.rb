@@ -37,6 +37,30 @@ module Spotify
       end
     end
 
+    def search_tracks(query:, limit: 10, market: "JP")
+      return [] if query.to_s.strip.empty?
+      uri = URI(SEARCH_URL)
+      uri.query = URI.encode_www_form(q: query, type: "track", limit: limit, market: market)
+
+      req = Net::HTTP::Get.new(uri)
+      req["Authorization"] = "Bearer #{access_token}"
+
+      res = http(uri).request(req)
+      raise "Spotify search failed: #{res.code} #{res.body}" unless res.is_a?(Net::HTTPSuccess)
+
+      json = JSON.parse(res.body)
+      (json.dig("tracks", "items") || []).map do |t|
+        {
+          id: t["id"],
+          name: t["name"],
+          artists: (t["artists"] || []).map { |a| { id: a["id"], name: a["name"] } },
+          album_name: t.dig("album", "name"),
+          image_url: (t.dig("album", "images")&.first && t.dig("album", "images")&.first["url"]),
+          preview_url: t["preview_url"]
+        }
+      end
+    end
+
     private
 
     def http(uri) = Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == "https")

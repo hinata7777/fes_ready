@@ -1,0 +1,58 @@
+<div class="mx-auto max-w-5xl px-4 py-10" data-controller="nested-form">
+  <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6">
+    <div>
+      <h1 class="text-2xl font-bold">曲をまとめて追加</h1>
+      <p class="text-slate-600 mt-1 text-sm">曲名とアーティストを行ごとに入力します。空行は無視されます。</p>
+    </div>
+    <div class="flex gap-3">
+      <%= link_to "一覧に戻る", admin_songs_path, class: "text-sm font-semibold text-slate-600 hover:text-slate-800" %>
+      <button type="button"
+              class="inline-flex items-center rounded bg-slate-800 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-slate-900"
+              data-action="nested-form#add">
+        行を追加
+      </button>
+    </div>
+  </div>
+
+  <%= form_with url: bulk_create_admin_songs_path, scope: :bulk, class: "space-y-4" do %>
+    <% if flash.now[:alert].present? %>
+      <div class="rounded border border-rose-200 bg-rose-50 px-4 py-3 text-rose-700">
+        <%= flash.now[:alert] %>
+      </div>
+    <% end %>
+
+    <div class="overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-sm">
+      <table class="min-w-full divide-y divide-slate-200 text-sm">
+        <thead class="bg-slate-50 text-xs font-semibold uppercase tracking-wide text-slate-600">
+          <tr>
+            <th class="px-3 py-2 text-left w-1/3">曲名</th>
+            <th class="px-3 py-2 text-left w-1/3">Spotify ID（任意）</th>
+            <th class="px-3 py-2 text-left w-1/3">アーティスト</th>
+            <th class="px-3 py-2 text-right w-[80px]"></th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100" data-nested-form-target="container">
+          <% @bulk_entries.each_with_index do |attrs, idx| %>
+            <%= render "row", artists: @artists, attrs: attrs, index: idx %>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="flex items-center gap-3">
+      <button type="submit"
+              class="inline-flex items-center rounded bg-[#F95858] px-5 py-2 text-sm font-semibold text-white shadow transition hover:bg-[#e04f4f]">
+        まとめて追加する
+      </button>
+      <button type="button"
+              class="text-sm font-semibold text-slate-600 hover:text-slate-800"
+              data-action="nested-form#add">
+        行を追加
+      </button>
+    </div>
+  <% end %>
+
+  <template data-nested-form-target="template">
+    <%= render "row", artists: @artists, attrs: {}, index: "NEW_RECORD" %>
+  </template>
+</div>
