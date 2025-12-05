@@ -8,6 +8,7 @@ class Artist < ApplicationRecord
   has_many :stage_performances, dependent: :destroy
   has_many :festival_days, through: :stage_performances
   has_many :festivals, -> { distinct }, through: :festival_days
+  has_many :songs, dependent: :restrict_with_exception
   has_many :user_artist_favorites, dependent: :destroy
   has_many :favorited_users, through: :user_artist_favorites, source: :user
 
