@@ -46,8 +46,15 @@ Rails.application.routes.draw do
   namespace :admin do
     root "home#top"
     get "spotify/search", to: "spotify#search"
+    get "spotify/search_tracks", to: "spotify#search_tracks"
     resources :users, only: :index
     resources :artists
+    resources :songs do
+      collection do
+        get :bulk_new
+        post :bulk_create
+      end
+    end
     resources :stage_performances do
       # 一括追加用
       collection do

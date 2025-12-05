@@ -1,0 +1,45 @@
+<tr data-nested-form-wrapper data-controller="spotify-song-row-search">
+  <td class="px-3 py-2 align-top">
+    <div class="flex items-center gap-2">
+      <input type="text"
+             name="bulk[entries][][name]"
+             value="<%= attrs[:name] %>"
+             class="w-full rounded border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+             placeholder="曲名"
+             data-spotify-song-row-search-target="name" />
+      <button type="button"
+              class="inline-flex items-center rounded bg-slate-200 px-3 py-1 text-xs font-semibold text-slate-800 shadow hover:bg-slate-300"
+              data-action="spotify-song-row-search#onSearch">
+        検索
+      </button>
+    </div>
+    <div class="mt-2 border rounded bg-white hidden"
+         data-spotify-song-row-search-target="results"></div>
+  </td>
+  <td class="px-3 py-2">
+    <input type="text"
+           name="bulk[entries][][spotify_id]"
+           value="<%= attrs[:spotify_id] %>"
+           class="w-full rounded border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+           placeholder="Spotify ID (任意)"
+           data-spotify-song-row-search-target="spotifyId" />
+  </td>
+  <td class="px-3 py-2">
+    <select name="bulk[entries][][artist_id]"
+            class="w-full rounded border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+            data-spotify-song-row-search-target="artistSelect">
+      <option value="">未選択</option>
+      <% artists.each do |artist| %>
+        <option value="<%= artist.id %>" data-spotify-id="<%= artist.spotify_artist_id %>" <%= "selected" if attrs[:artist_id].to_s == artist.id.to_s %>><%= artist.name %></option>
+      <% end %>
+    </select>
+  </td>
+  <td class="px-3 py-2 text-right align-middle">
+    <input type="hidden" name="bulk[entries][][_destroy]" value="0" />
+    <button type="button"
+            class="text-sm font-semibold text-slate-500 hover:text-rose-600"
+            data-action="nested-form#remove">
+      削除
+    </button>
+  </td>
+</tr>
