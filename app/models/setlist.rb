@@ -5,4 +5,6 @@ class Setlist < ApplicationRecord
   has_many :songs, through: :setlist_songs
 
   validates :stage_performance, presence: true, uniqueness: true
+
+  accepts_nested_attributes_for :setlist_songs, allow_destroy: true
 end

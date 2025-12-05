@@ -1,0 +1,55 @@
+<div class="mx-auto max-w-5xl px-4 py-10 min-h-[calc(100vh-var(--header-offset,4.5rem)-var(--footer-offset,6rem))]">
+  <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+    <div>
+      <h1 class="text-2xl font-bold">セットリスト管理</h1>
+      <p class="mt-2 text-slate-600">出演枠ごとのセットリストを管理します。</p>
+    </div>
+    <%= link_to "新規作成", new_admin_setlist_path, class: "inline-flex items-center justify-center rounded-lg bg-[#F95858] px-4 py-2 text-sm font-semibold text-white shadow transition hover:bg-[#e04f4f]" %>
+  </div>
+
+  <div class="mt-6">
+    <%= render "admin/shared/artist_filter",
+          path: admin_setlists_path,
+          artists: @artists,
+          selected: params[:artist_id] %>
+  </div>
+
+  <div class="mt-8 overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-sm">
+    <table class="min-w-full divide-y divide-slate-200 text-sm">
+      <thead class="bg-slate-50">
+        <tr class="text-left text-xs font-semibold uppercase tracking-wider text-slate-600">
+          <th class="px-4 py-3">ID</th>
+          <th class="px-4 py-3">アーティスト</th>
+          <th class="px-4 py-3">出演枠</th>
+          <th class="px-4 py-3">登録曲数</th>
+          <th class="px-4 py-3"></th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-slate-100 text-slate-800">
+        <% @setlists.each do |setlist| %>
+          <% sp = setlist.stage_performance %>
+          <tr class="hover:bg-slate-50">
+            <td class="px-4 py-3 font-mono text-xs text-slate-500"><%= setlist.id %></td>
+            <td class="px-4 py-3 font-semibold"><%= sp&.artist&.name || "-" %></td>
+            <td class="px-4 py-3 text-slate-700">
+              <% if sp&.festival_day %>
+                <div><%= sp.festival_day.festival.name %></div>
+                <div class="text-xs text-slate-500"><%= sp.festival_day.date %> / <%= sp.stage&.name || "(未定)" %></div>
+              <% else %>
+                <span class="text-slate-400">-</span>
+              <% end %>
+            </td>
+            <td class="px-4 py-3 text-slate-700"><%= setlist.setlist_songs.reject(&:marked_for_destruction?).size %></td>
+            <td class="px-4 py-3">
+              <div class="flex items-center gap-3 text-sm font-semibold">
+                <%= link_to "編集", edit_admin_setlist_path(setlist), class: "text-blue-600 transition hover:text-blue-700" %>
+                <%= link_to "削除", admin_setlist_path(setlist), data: { turbo_method: :delete, turbo_confirm: "削除しますか？" }, class: "text-red-600 transition hover:text-red-700" %>
+              </div>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+  <%= render "shared/pagination", pagy: @pagy %>
+</div>

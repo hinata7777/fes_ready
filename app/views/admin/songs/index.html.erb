@@ -11,18 +11,10 @@
   </div>
 
   <div class="mt-6">
-    <%= form_with url: admin_songs_path, method: :get, class: "flex flex-wrap gap-3 items-end", data: { controller: "auto-submit" } do |f| %>
-      <div>
-        <label class="block text-xs font-semibold text-slate-600">アーティストで絞り込み</label>
-        <%= select_tag :artist_id,
-              options_for_select([["すべて", ""]] + @artists.map { |a| [a.name, a.id] }, params[:artist_id]),
-              class: "mt-1 w-60 rounded border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-200",
-              data: { action: "change->auto-submit#submit" } %>
-      </div>
-      <div>
-        <%= f.submit "適用", class: "hidden" %>
-      </div>
-    <% end %>
+    <%= render "admin/shared/artist_filter",
+          path: admin_songs_path,
+          artists: @artists,
+          selected: params[:artist_id] %>
   </div>
 
   <div class="mt-8 overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-sm">

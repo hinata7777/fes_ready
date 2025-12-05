@@ -55,6 +55,7 @@ Rails.application.routes.draw do
         post :bulk_create
       end
     end
+    resources :setlists
     resources :stage_performances do
       # 一括追加用
       collection do

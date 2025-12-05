@@ -1,0 +1,15 @@
+<% label_text = local_assigns[:label] || "アーティストで絞り込み" %>
+<% select_classes = local_assigns[:select_classes] || "mt-1 w-60 rounded border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-200" %>
+
+<%= form_with url: local_assigns.fetch(:path), method: :get, class: "flex flex-wrap gap-3 items-end", data: { controller: "auto-submit" } do |f| %>
+  <div>
+    <label class="block text-xs font-semibold text-slate-600"><%= label_text %></label>
+    <%= select_tag :artist_id,
+          options_for_select([["すべて", ""]] + local_assigns.fetch(:artists).map { |a| [a.name, a.id] }, local_assigns[:selected]),
+          class: select_classes,
+          data: { action: "change->auto-submit#submit" } %>
+  </div>
+  <div>
+    <%= f.submit "適用", class: "hidden" %>
+  </div>
+<% end %>
