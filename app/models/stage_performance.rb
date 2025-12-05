@@ -5,6 +5,7 @@ class StagePerformance < ApplicationRecord
   belongs_to :stage, optional: true
   belongs_to :artist
   has_many :user_timetable_entries, dependent: :destroy
+  has_one :setlist, dependent: :destroy
 
   # scheduledのときだけ必須＆妥当性チェック
   with_options if: :scheduled? do
