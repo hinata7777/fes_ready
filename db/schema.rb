@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_12_01_000000) do
+ActiveRecord::Schema[8.0].define(version: 2025_12_01_002000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "pg_catalog.plpgsql"
@@ -107,6 +107,25 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_01_000000) do
     t.index ["uuid"], name: "index_packing_lists_on_uuid", unique: true
   end
 
+  create_table "setlist_songs", force: :cascade do |t|
+    t.bigint "setlist_id", null: false
+    t.bigint "song_id", null: false
+    t.integer "position", null: false
+    t.text "note"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["setlist_id", "position"], name: "index_setlist_songs_on_setlist_id_and_position", unique: true
+    t.index ["setlist_id"], name: "index_setlist_songs_on_setlist_id"
+    t.index ["song_id"], name: "index_setlist_songs_on_song_id"
+  end
+
+  create_table "setlists", force: :cascade do |t|
+    t.bigint "stage_performance_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["stage_performance_id"], name: "index_setlists_on_stage_performance_id", unique: true
+  end
+
   create_table "songs", force: :cascade do |t|
     t.string "name", null: false
     t.string "normalized_name", null: false
@@ -192,7 +211,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_01_000000) do
     t.datetime "remember_created_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.uuid "uuid", default: -> { "gen_random_uuid()" }, null: false
+    t.uuid "uuid", null: false
     t.string "provider"
     t.string "uid"
     t.index ["email"], name: "index_users_on_email", unique: true
@@ -207,6 +226,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_01_000000) do
   add_foreign_key "packing_list_items", "packing_lists"
   add_foreign_key "packing_lists", "festival_days"
   add_foreign_key "packing_lists", "users"
+  add_foreign_key "setlist_songs", "setlists"
+  add_foreign_key "setlist_songs", "songs"
+  add_foreign_key "setlists", "stage_performances"
   add_foreign_key "songs", "artists"
   add_foreign_key "stage_performances", "artists"
   add_foreign_key "stage_performances", "festival_days"
