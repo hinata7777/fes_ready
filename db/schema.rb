@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_11_30_100000) do
+ActiveRecord::Schema[8.0].define(version: 2025_12_01_000000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "pg_catalog.plpgsql"
@@ -107,6 +107,18 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_30_100000) do
     t.index ["uuid"], name: "index_packing_lists_on_uuid", unique: true
   end
 
+  create_table "songs", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "normalized_name", null: false
+    t.bigint "artist_id", null: false
+    t.string "spotify_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["artist_id", "normalized_name"], name: "index_songs_on_artist_id_and_normalized_name", unique: true
+    t.index ["artist_id"], name: "index_songs_on_artist_id"
+    t.index ["spotify_id"], name: "index_songs_on_spotify_id"
+  end
+
   create_table "stage_performances", force: :cascade do |t|
     t.bigint "festival_day_id", null: false
     t.bigint "stage_id"
@@ -180,7 +192,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_30_100000) do
     t.datetime "remember_created_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.uuid "uuid", default: -> { "gen_random_uuid()" }, null: false
+    t.uuid "uuid", null: false
     t.string "provider"
     t.string "uid"
     t.index ["email"], name: "index_users_on_email", unique: true
@@ -195,6 +207,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_30_100000) do
   add_foreign_key "packing_list_items", "packing_lists"
   add_foreign_key "packing_lists", "festival_days"
   add_foreign_key "packing_lists", "users"
+  add_foreign_key "songs", "artists"
   add_foreign_key "stage_performances", "artists"
   add_foreign_key "stage_performances", "festival_days"
   add_foreign_key "stage_performances", "stages"
