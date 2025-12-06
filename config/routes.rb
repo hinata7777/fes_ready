@@ -14,6 +14,7 @@ Rails.application.routes.draw do
   get "/manifest.webmanifest", to: "rails/pwa#manifest", defaults: { format: :json }, as: :pwa_manifest
 
   resources :artists, only: [ :index, :show ] do
+    get :prep, on: :member
     resources :festivals, only: [ :index ], module: :artists
     resource :favorite, only: [ :create, :destroy ], module: :artists
   end

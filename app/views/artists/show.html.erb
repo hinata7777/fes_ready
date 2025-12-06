@@ -45,13 +45,10 @@
           出演フェス一覧
         <% end %>
 
-        <%= link_to "#",
-                    class: "relative block w-full overflow-hidden rounded-2xl bg-indigo-500 py-3 text-center text-sm font-bold text-white shadow-md interactive-lift hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-400",
+        <%= link_to prep_artist_path(@artist),
+                    class: "block w-full rounded-2xl bg-indigo-500 py-3 text-center text-sm font-bold text-white shadow-md interactive-lift hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-400",
                     data: { controller: "tap-feedback" } do %>
-          <div class="pointer-events-none absolute inset-0 flex items-center justify-center bg-black/30">
-            <span class="rounded-full bg-white/95 px-2 py-[3px] text-[10px] font-black uppercase tracking-[0.16em] text-indigo-500 shadow-sm">準備中</span>
-          </div>
-          アーティスト予習リストへ
+          アーティスト予習ページへ
         <% end %>
       </div>
     </article>
