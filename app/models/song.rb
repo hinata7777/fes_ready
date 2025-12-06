@@ -1,5 +1,7 @@
 class Song < ApplicationRecord
   belongs_to :artist
+  has_many :setlist_songs, dependent: :restrict_with_exception
+  has_many :setlists, through: :setlist_songs
 
   normalizes :spotify_id, with: ->(v) { v&.strip.presence }
 
