@@ -15,7 +15,10 @@
                 end.to_json),
                 "setlist-form-songs-value": json_escape(@songs_by_artist.transform_values do |list|
                   list.map { |s| { id: s.id, name: s.name } }
-                end.to_json)
+                end.to_json),
+                "setlist-form-all-songs-value": json_escape(
+                  @songs_by_artist.values.flatten.uniq { |s| s.id }.map { |s| { id: s.id, name: s.name } }.to_json
+                )
               } do |f| %>
   <% if @setlist.errors.any? %>
     <div class="rounded border border-rose-200 bg-rose-50 px-4 py-3 text-rose-700">
@@ -65,6 +68,7 @@
         <%= f.fields_for :setlist_songs do |sf| %>
           <% next if sf.object.nil? %>
           <% position = sf.object.position || sf.index + 1 %>
+          <% select_id = "setlist-song-select-#{position}" %>
           <div class="grid grid-cols-[60px,1fr] items-center gap-3 rounded border border-slate-200 bg-slate-50 px-3 py-2">
             <div class="text-center text-sm font-semibold text-slate-600">
               <%= position %>
@@ -73,19 +77,31 @@
             </div>
             <div class="grid grid-cols-1 md:grid-cols-[1fr,auto] gap-2">
               <select name="<%= sf.object_name %>[song_id]"
+                      id="<%= select_id %>"
                       class="w-full rounded border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-200"
                       data-setlist-form-target="songSelect"
+                      data-show-all="false"
                       data-selected="<%= sf.object.song_id %>">
                 <option value="">曲を選択</option>
                 <% if sf.object.song %>
                   <option value="<%= sf.object.song_id %>" selected><%= sf.object.song.name %></option>
                 <% end %>
               </select>
-              <input type="text"
-                     name="<%= sf.object_name %>[note]"
-                     value="<%= sf.object.note %>"
-                     placeholder="メモ（任意）"
-                     class="w-full rounded border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-200" />
+              <div class="flex items-center gap-3">
+                <label class="inline-flex items-center gap-2 text-xs text-slate-600">
+                  <input type="checkbox"
+                         class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-200"
+                         data-setlist-form-target="showAllToggle"
+                         data-action="change->setlist-form#onShowAllToggle"
+                         data-select-id="<%= select_id %>" />
+                  他アーティストも表示
+                </label>
+                <input type="text"
+                       name="<%= sf.object_name %>[note]"
+                       value="<%= sf.object.note %>"
+                       placeholder="メモ（任意）"
+                       class="w-full rounded border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-200" />
+              </div>
             </div>
           </div>
         <% end %>
