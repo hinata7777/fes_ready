@@ -1,0 +1,71 @@
+<div class="min-h-screen px-4 pb-24 pt-6">
+  <div class="mx-auto max-w-5xl space-y-8">
+    <header class="space-y-4 rounded-3xl border border-slate-200 bg-white p-6 shadow-lg shadow-slate-200/70">
+      <p class="text-xs font-semibold tracking-wide text-indigo-600"><%= @stage_performance.artist.name %></p>
+      <h1 class="text-2xl font-bold text-slate-900"><%= "#{@festival_day.festival.name} のセットリスト" %></h1>
+
+      <dl class="grid grid-cols-1 gap-4 text-sm text-slate-600 sm:grid-cols-3">
+        <div class="flex flex-col gap-1">
+          <dt class="text-xs font-semibold uppercase tracking-wide text-slate-500">フェス</dt>
+          <dd class="font-semibold text-slate-900"><%= @festival_day.festival.name %></dd>
+        </div>
+        <div class="flex flex-col gap-1">
+          <dt class="text-xs font-semibold uppercase tracking-wide text-slate-500">日程</dt>
+          <dd class="font-semibold text-slate-900"><%= format_date_with_weekday(@festival_day.date) %></dd>
+        </div>
+        <div class="flex flex-col gap-1">
+          <dt class="text-xs font-semibold uppercase tracking-wide text-slate-500">ステージ / 時間</dt>
+          <dd class="font-semibold text-slate-900"><%= stage_time_label(@stage_performance) %></dd>
+        </div>
+      </dl>
+    </header>
+
+    <section class="space-y-4">
+      <div class="flex items-center justify-between">
+        <h2 class="text-lg font-semibold text-slate-900">セットリスト</h2>
+        <p class="text-xs text-slate-500">全<%= @setlist_songs.size %>曲</p>
+      </div>
+
+      <% if @setlist_songs.any? %>
+        <div class="grid gap-4 md:grid-cols-2">
+          <% setlist_entries(@setlist_songs, @stage_performance.artist).each do |entry| %>
+            <% setlist_song = entry[:setlist_song] %>
+            <% song         = entry[:song] %>
+            <% embed        = entry[:embed] %>
+
+            <article class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow shadow-slate-200/70">
+              <div class="flex items-center justify-between gap-3 border-b border-slate-100 px-4 py-3">
+                <div class="flex items-center gap-3">
+                  <span class="flex h-10 w-10 items-center justify-center rounded-full bg-indigo-50 text-sm font-bold text-indigo-700"><%= setlist_song.position %></span>
+                  <div>
+                    <p class="text-sm font-semibold text-slate-900"><%= song.name %></p>
+                    <p class="text-xs text-slate-500"><%= @stage_performance.artist.name %></p>
+                  </div>
+                </div>
+                <% unless embed %>
+                  <span class="rounded-full bg-slate-100 px-3 py-1 text-[11px] font-semibold text-slate-500">Spotify未登録</span>
+                <% end %>
+              </div>
+
+              <% if embed %>
+                <div class="bg-slate-50 px-2 py-1">
+                  <div class="overflow-hidden rounded-xl border border-slate-200 shadow-sm">
+                    <%= embed %>
+                  </div>
+                </div>
+              <% else %>
+                <div class="px-4 py-2 text-sm text-slate-600">
+                  Spotify IDが登録されていないため埋め込みを表示できません。
+                </div>
+              <% end %>
+            </article>
+          <% end %>
+        </div>
+      <% else %>
+        <div class="rounded-2xl border border-dashed border-slate-200 bg-white px-4 py-6 text-center text-sm text-slate-600 shadow">
+          まだセットリストが登録されていません。
+        </div>
+      <% end %>
+    </section>
+  </div>
+</div>

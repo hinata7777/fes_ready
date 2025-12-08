@@ -21,7 +21,7 @@ module ArtistsHelper
     label
   end
 
-  def spotify_embed_for(song)
+  def spotify_embed_for(song, height: 152, css_class: nil)
     return nil if song.spotify_id.blank?
 
     content_tag(
@@ -29,7 +29,8 @@ module ArtistsHelper
       "",
       src: "https://open.spotify.com/embed/track/#{song.spotify_id}?utm_source=generator&theme=0",
       width: "100%",
-      height: "152",
+      height: height.to_s,
+      class: css_class,
       allowtransparency: true,
       allow: "autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture",
       loading: "lazy"
