@@ -49,7 +49,7 @@
           <% @setlists.each do |setlist| %>
             <%= render "shared/nav_stack_button",
                        label: setlist_label(setlist),
-                       url: festival_path(setlist.stage_performance.festival_day.festival) %>
+                       url: setlist_path(setlist) %>
           <% end %>
         </div>
       <% else %>

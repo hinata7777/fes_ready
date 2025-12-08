@@ -19,6 +19,7 @@ Rails.application.routes.draw do
     resource :favorite, only: [ :create, :destroy ], module: :artists
   end
 
+  resources :setlists, only: [ :show ]
   resources :timetables, only: [ :index, :show ]
   resources :my_timetables, only: [ :index ]
   namespace :mypage, path: "mypage" do
