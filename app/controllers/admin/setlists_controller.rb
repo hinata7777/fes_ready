@@ -47,7 +47,8 @@ class Admin::SetlistsController < Admin::BaseController
   private
 
   def set_setlist
-    @setlist = Setlist.includes(stage_performance: :artist, setlist_songs: :song).find(params[:id])
+    @setlist = Setlist.includes(stage_performance: :artist, setlist_songs: :song)
+                      .find_by!(uuid: params[:id])
   end
 
   def setlist_params
