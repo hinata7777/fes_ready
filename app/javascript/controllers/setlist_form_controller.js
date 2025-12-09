@@ -71,10 +71,10 @@ export default class extends Controller {
     select.appendChild(blank)
 
     let hasCurrent = false
-    songs.forEach((s) => {
+    ;[...songs].sort((a, b) => a.name.localeCompare(b.name, "ja")).forEach((s) => {
       const opt = document.createElement("option")
       opt.value = s.id
-      opt.textContent = s.name
+      opt.textContent = showAll && s.artist_name ? `${s.name} / ${s.artist_name}` : s.name
       if (current && String(current) === String(s.id)) hasCurrent = true
       select.appendChild(opt)
     })

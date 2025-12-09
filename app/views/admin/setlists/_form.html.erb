@@ -14,10 +14,12 @@
                   end
                 end.to_json),
                 "setlist-form-songs-value": json_escape(@songs_by_artist.transform_values do |list|
-                  list.map { |s| { id: s.id, name: s.name } }
+                  list.map { |s| { id: s.id, name: s.name, artist_name: s.artist.name } }
                 end.to_json),
                 "setlist-form-all-songs-value": json_escape(
-                  @songs_by_artist.values.flatten.uniq { |s| s.id }.map { |s| { id: s.id, name: s.name } }.to_json
+                  @songs_by_artist.values.flatten.uniq { |s| s.id }
+                                 .sort_by { |s| s.name.downcase }
+                                 .map { |s| { id: s.id, name: s.name, artist_name: s.artist.name } }.to_json
                 )
               } do |f| %>
   <% if @setlist.errors.any? %>
