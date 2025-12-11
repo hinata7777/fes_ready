@@ -1,0 +1,31 @@
+<div class="min-h-screen px-4 pb-24 pt-6">
+  <div class="mx-auto max-w-6xl space-y-6">
+    <header class="space-y-4">
+      <h1 class="text-2xl font-bold text-slate-900">アーティスト予習一覧</h1>
+      <p class="text-sm text-slate-600">
+        予習したいアーティストを選んで、効率よく聴き込みましょう。
+      </p>
+    </header>
+
+    <%= render Shared::SearchFormComponent.new(
+               query: @q,
+               url: prep_artists_path,
+               placeholder: "アーティスト名を入力"
+             ) %>
+
+    <section>
+      <% if @artists.any? %>
+        <div class="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
+          <% @artists.each do |artist| %>
+            <%= render "prep/artists/card", artist: artist %>
+          <% end %>
+        </div>
+      <% else %>
+        <p class="rounded-3xl border border-dashed border-slate-300 bg-white px-6 py-16 text-center text-sm text-slate-500">
+          表示できるアーティストがありません
+        </p>
+      <% end %>
+    </section>
+  </div>
+  <%= render "shared/pagination", pagy: @pagy %>
+</div>
