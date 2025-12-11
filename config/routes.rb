@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   root "home#top"
   get "/terms", to: "home#terms", as: :terms
   get "/privacy", to: "home#privacy", as: :privacy
+  get "/prep", to: "prep#top", as: :prep_top
 
   get "up" => "rails/health#show", as: :rails_health_check
   get "/service-worker.js", to: "rails/pwa#service_worker", defaults: { format: :js }, as: :pwa_service_worker
