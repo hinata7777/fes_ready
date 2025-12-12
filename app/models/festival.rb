@@ -6,6 +6,8 @@ class Festival < ApplicationRecord
   has_many :stages,        dependent: :destroy, inverse_of: :festival
   has_many :user_festival_favorites, dependent: :destroy
   has_many :favorited_users, through: :user_festival_favorites, source: :user
+  has_many :festival_festival_tags, dependent: :destroy
+  has_many :festival_tags, through: :festival_festival_tags
 
   accepts_nested_attributes_for :festival_days, allow_destroy: true
   accepts_nested_attributes_for :stages,        allow_destroy: true

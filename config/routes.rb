@@ -55,6 +55,7 @@ Rails.application.routes.draw do
     get "spotify/search_tracks", to: "spotify#search_tracks"
     resources :users, only: :index
     resources :artists
+    resources :festival_tags
     resources :songs do
       collection do
         get :bulk_new

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_12_01_004000) do
+ActiveRecord::Schema[8.0].define(version: 2025_12_12_002000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "pg_catalog.plpgsql"
@@ -43,6 +43,23 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_01_004000) do
     t.index ["festival_id"], name: "index_festival_days_on_festival_id"
   end
 
+  create_table "festival_festival_tags", force: :cascade do |t|
+    t.bigint "festival_id", null: false
+    t.bigint "festival_tag_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["festival_id", "festival_tag_id"], name: "idx_on_festival_id_festival_tag_id_2815cd1c2a", unique: true
+    t.index ["festival_id"], name: "index_festival_festival_tags_on_festival_id"
+    t.index ["festival_tag_id"], name: "index_festival_festival_tags_on_festival_tag_id"
+  end
+
+  create_table "festival_tags", force: :cascade do |t|
+    t.string "name", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_festival_tags_on_name", unique: true
+  end
+
   create_table "festivals", force: :cascade do |t|
     t.string "name", null: false
     t.string "slug", null: false
@@ -58,6 +75,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_01_004000) do
     t.boolean "timetable_published", default: false, null: false
     t.decimal "latitude", precision: 10, scale: 6
     t.decimal "longitude", precision: 10, scale: 6
+    t.integer "environment", default: 0, null: false
     t.index ["latitude", "longitude"], name: "index_festivals_on_latitude_and_longitude"
     t.index ["slug"], name: "index_festivals_on_slug", unique: true
     t.index ["start_date"], name: "index_festivals_on_start_date"
@@ -222,6 +240,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_01_004000) do
   end
 
   add_foreign_key "festival_days", "festivals"
+  add_foreign_key "festival_festival_tags", "festival_tags"
+  add_foreign_key "festival_festival_tags", "festivals"
   add_foreign_key "items", "users"
   add_foreign_key "packing_list_items", "items"
   add_foreign_key "packing_list_items", "packing_lists"
