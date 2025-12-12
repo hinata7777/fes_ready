@@ -1,0 +1,13 @@
+<%= form_with model: [:admin, festival_tag], class: "space-y-4" do |f| %>
+  <div>
+    <%= f.label :name, "タグ名", class: "block text-sm font-semibold text-slate-800" %>
+    <%= f.text_field :name,
+                     class: "mt-1 w-full rounded border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-200" %>
+    <% if festival_tag.errors[:name].present? %>
+      <p class="mt-1 text-xs text-rose-600"><%= festival_tag.errors[:name].join(', ') %></p>
+    <% end %>
+  </div>
+
+  <%= f.submit submit_label,
+               class: "inline-flex items-center rounded bg-[#F95858] px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-[#e04f4f]" %>
+<% end %>
