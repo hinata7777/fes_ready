@@ -74,7 +74,7 @@ class Admin::FestivalsController < Admin::BaseController
       :name, :venue_name, :city, :prefecture, :timezone, :start_date, :end_date, :official_url, :timetable_published,
       :latitude, :longitude,
       festival_days_attributes: [ :id, :date, :doors_at, :start_at, :end_at, :note, :_destroy ],
-      stages_attributes:        [ :id, :name, :sort_order, :environment, :note, :color_key, :_destroy ]
+      stages_attributes:        [ :id, :name, :sort_order, :note, :color_key, :_destroy ]
     )
   end
 end

@@ -3,11 +3,6 @@
 
   <%= f.text_field :name, placeholder: "メインステージ", class: "border rounded px-2 py-1" %>
 
-  <%= f.select :environment,
-               Stage.environments.keys.map { |k| [k, k] },
-               {},
-               class: "border rounded px-2 py-1" %>
-
   <div class="flex items-center gap-2">
     <%# color_key をセレクトで選ぶ %>
     <%= f.select :color_key,
