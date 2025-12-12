@@ -3,11 +3,6 @@ class Stage < ApplicationRecord
   has_many :stage_performances, dependent: :destroy
   validates :name, presence: true
 
-  # 任意: 屋内/屋外など（UIは後で）
-  enum :environment, { unspecified: 0, outdoor: 1, indoor: 2 },
-  prefix: true,
-  default: 0
-
   COLOR_PALETTE = {
     "red"      => "#F95858",
     "emerald"  => "#10B981",
