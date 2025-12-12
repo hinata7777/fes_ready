@@ -1,5 +1,6 @@
 class Admin::FestivalsController < Admin::BaseController
   before_action :set_festival, only: %i[show edit update destroy setup apply]
+  before_action :load_festival_tags, only: %i[new edit setup create update apply]
 
   def index
     @pagy, @festivals = pagy(
@@ -58,13 +59,18 @@ class Admin::FestivalsController < Admin::BaseController
     @festival = Festival.find_by_slug!(params[:id])
   end
 
+  def load_festival_tags
+    @festival_tags = FestivalTag.order(:name)
+  end
+
   # 1ページ目（基本情報のみ）
   def festival_params_basic
     params.require(:festival).permit(
       :name, :slug, :venue_name, :city, :prefecture,
       :start_date, :end_date, :timezone,
       :official_url, :timetable_published,
-      :latitude, :longitude
+      :latitude, :longitude,
+      festival_tag_ids: []
     )
   end
 
@@ -72,7 +78,7 @@ class Admin::FestivalsController < Admin::BaseController
   def festival_params_nested
     params.require(:festival).permit(
       :name, :venue_name, :city, :prefecture, :timezone, :start_date, :end_date, :official_url, :timetable_published,
-      :latitude, :longitude,
+      :latitude, :longitude, festival_tag_ids: [],
       festival_days_attributes: [ :id, :date, :doors_at, :start_at, :end_at, :note, :_destroy ],
       stages_attributes:        [ :id, :name, :sort_order, :note, :color_key, :_destroy ]
     )

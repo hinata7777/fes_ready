@@ -78,6 +78,19 @@
     <p class="text-xs text-slate-500 mt-1">チェックを外すと一般ユーザー向けのタイムテーブルは非表示になります。</p>
   </div>
 
+  <div>
+    <span class="block font-semibold">タグ</span>
+    <div class="mt-2 grid grid-cols-2 gap-2 md:grid-cols-3">
+      <%= f.collection_check_boxes :festival_tag_ids, @festival_tags, :id, :name do |cb| %>
+        <label class="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-800 shadow-sm hover:bg-slate-50">
+          <%= cb.check_box(class: "h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-200") %>
+          <span><%= cb.text %></span>
+        </label>
+      <% end %>
+    </div>
+    <p class="mt-1 text-xs text-slate-500">チェックボックスで複数選択できます。</p>
+  </div>
+
   <div class="pt-4">
     <%= f.submit "登録する", class: "px-4 py-2 rounded bg-[#F95858] text-white hover:opacity-90" %>
   </div>
