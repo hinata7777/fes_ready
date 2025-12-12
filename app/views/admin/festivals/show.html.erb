@@ -111,6 +111,20 @@
             </dd>
           </div>
           <div class="grid grid-cols-1 gap-2 px-4 py-3 sm:grid-cols-3">
+            <dt class="font-semibold text-slate-500">タグ</dt>
+            <dd class="sm:col-span-2 flex flex-wrap gap-2">
+              <% if @festival.festival_tags.any? %>
+                <% @festival.festival_tags.order(:name).each do |tag| %>
+                  <span class="inline-flex items-center rounded-full bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700">
+                    <%= tag.name %>
+                  </span>
+                <% end %>
+              <% else %>
+                <span class="text-slate-500">未設定</span>
+              <% end %>
+            </dd>
+          </div>
+          <div class="grid grid-cols-1 gap-2 px-4 py-3 sm:grid-cols-3">
             <dt class="font-semibold text-slate-500">登録日時</dt>
             <dd class="sm:col-span-2 text-xs text-slate-500"><%= l(@festival.created_at, format: :long) %></dd>
           </div>
