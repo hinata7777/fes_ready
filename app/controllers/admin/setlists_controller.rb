@@ -81,7 +81,7 @@ class Admin::SetlistsController < Admin::BaseController
     # nilが紛れ込んでいる場合を排除
     setlist.setlist_songs.target.compact!
 
-    (1..15).each do |pos|
+    (1..20).each do |pos|
       setlist.setlist_songs.build(position: pos) unless setlist.setlist_songs.any? { |s| s.position == pos }
     end
   end
