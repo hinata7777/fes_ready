@@ -16,4 +16,20 @@ module ApplicationHelper
     weekday_names = %w[日 月 火 水 木 金 土]
     "#{date.strftime('%Y/%m/%d')}(#{weekday_names[date.wday]})"
   end
+
+  def festival_date_and_location(festival)
+    return if festival.blank?
+
+    start_label = festival.start_date&.strftime("%Y/%m/%d")
+    end_label   = festival.end_date&.strftime("%Y/%m/%d")
+
+    date_range =
+      if start_label.present? && end_label.present?
+        start_label == end_label ? start_label : "#{start_label}〜#{end_label}"
+      else
+        start_label || end_label
+      end
+
+    [ date_range, festival.prefecture.presence ].compact_blank.join(" / ")
+  end
 end
