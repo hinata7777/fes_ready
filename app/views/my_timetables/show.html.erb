@@ -63,11 +63,9 @@
              ) %>
 
       <% if @timetable_owner == current_user %>
-        <% share_text = "FES READYで #{@festival.name} のマイタイムテーブルを作成しました！\n#FESREADY" %>
-        <% share_link = festival_my_timetable_url(@festival,
-                                                  date: @selected_day.date.to_s,
-                                                  user_id: current_user.uuid) %>
-        <% share_href = "https://twitter.com/intent/tweet?text=#{ERB::Util.url_encode(share_text + "\n")}&url=#{ERB::Util.url_encode(share_link)}" %>
+        <% share_href = my_timetable_share_url(festival: @festival,
+                                               day: @selected_day.date,
+                                               owner_uuid: current_user.uuid) %>
         <div class="mt-6 flex justify-center">
           <%= link_to share_href,
                       class: "inline-flex items-center justify-center gap-2 rounded-2xl bg-black px-5 py-2.5 text-sm font-bold text-white shadow-md interactive-lift hover:bg-neutral-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black",
