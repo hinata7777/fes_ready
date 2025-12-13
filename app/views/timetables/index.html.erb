@@ -40,6 +40,7 @@
           <div class="w-full">
             <%= render "shared/nav_stack_button",
                        label: festival.name,
+                       subtext: festival_date_and_location(festival),
                        url: timetable_path(festival, from: "timetables") %>
           </div>
         <% end %>
