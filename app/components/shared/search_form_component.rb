@@ -29,8 +29,10 @@ module Shared
     def hidden_field_elements
       return if hidden_fields.blank?
 
-      fields = hidden_fields.map do |key, value|
-        helpers.hidden_field_tag(key, value)
+      fields = hidden_fields.flat_map do |key, value|
+        Array(value).compact_blank.map do |val|
+          helpers.hidden_field_tag(key, val)
+        end
       end
       safe_join(fields)
     end

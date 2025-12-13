@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_12_12_002000) do
+ActiveRecord::Schema[8.0].define(version: 2025_12_13_000000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "btree_gist"
   enable_extension "pg_catalog.plpgsql"
@@ -50,6 +50,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_12_002000) do
     t.datetime "updated_at", null: false
     t.index ["festival_id", "festival_tag_id"], name: "idx_on_festival_id_festival_tag_id_2815cd1c2a", unique: true
     t.index ["festival_id"], name: "index_festival_festival_tags_on_festival_id"
+    t.index ["festival_tag_id", "festival_id"], name: "idx_on_festival_tag_id_festival_id_8c749532ca"
     t.index ["festival_tag_id"], name: "index_festival_festival_tags_on_festival_tag_id"
   end
 
@@ -75,7 +76,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_12_002000) do
     t.boolean "timetable_published", default: false, null: false
     t.decimal "latitude", precision: 10, scale: 6
     t.decimal "longitude", precision: 10, scale: 6
+    t.integer "environment", default: 0, null: false
+    t.index ["end_date"], name: "index_festivals_on_end_date"
     t.index ["latitude", "longitude"], name: "index_festivals_on_latitude_and_longitude"
+    t.index ["prefecture"], name: "index_festivals_on_prefecture"
     t.index ["slug"], name: "index_festivals_on_slug", unique: true
     t.index ["start_date"], name: "index_festivals_on_start_date"
     t.index ["timetable_published"], name: "index_festivals_on_timetable_published"
@@ -229,7 +233,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_12_002000) do
     t.datetime "remember_created_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.uuid "uuid", default: -> { "gen_random_uuid()" }, null: false
+    t.uuid "uuid", null: false
     t.string "provider"
     t.string "uid"
     t.index ["email"], name: "index_users_on_email", unique: true

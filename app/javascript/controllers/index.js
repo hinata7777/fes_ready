@@ -45,3 +45,6 @@ application.register("spotify-song-row-search", SpotifySongRowSearchController)
 
 import SetlistFormController from "./setlist_form_controller"
 application.register("setlist-form", SetlistFormController)
+
+import ToggleController from "./toggle_controller"
+application.register("toggle", ToggleController)

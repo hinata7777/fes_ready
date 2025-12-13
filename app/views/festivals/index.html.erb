@@ -24,12 +24,33 @@
     </header>
 
     <% search_url = @artist ? artist_festivals_path(@artist) : festivals_path %>
+    <% search_query = params.dig(:q, :name_i_cont) %>
+    <% hidden_filter_fields = {
+         start_date_from: @filter_params[:start_date_from],
+         end_date_to: @filter_params[:end_date_to],
+         area: @filter_params[:area],
+         "tag_ids[]": @selected_tag_ids
+       } %>
     <%= render Shared::SearchFormComponent.new(
                query: @q,
                url: search_url,
                placeholder: "フェス名を入力",
-               status: @status
+               status: @status,
+               hidden_fields: hidden_filter_fields
              ) %>
+
+    <% reset_params = { status: @status } %>
+    <% reset_params[:q] = { name_i_cont: search_query } if search_query.present? %>
+    <% reset_url = @artist ? artist_festivals_path(@artist, reset_params) : festivals_path(reset_params) %>
+
+    <%= render "shared/festival_filters",
+               form_url: search_url,
+               status: @status,
+               search_query: search_query,
+               filter_params: @filter_params,
+               festival_tags: @festival_tags,
+               selected_tag_ids: @selected_tag_ids,
+               reset_url: reset_url %>
 
     <section class="grid gap-3 md:grid-cols-2 md:gap-4">
       <% if @festivals.any? %>
