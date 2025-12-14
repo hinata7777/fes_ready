@@ -76,7 +76,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_13_000000) do
     t.boolean "timetable_published", default: false, null: false
     t.decimal "latitude", precision: 10, scale: 6
     t.decimal "longitude", precision: 10, scale: 6
-    t.integer "environment", default: 0, null: false
     t.index ["end_date"], name: "index_festivals_on_end_date"
     t.index ["latitude", "longitude"], name: "index_festivals_on_latitude_and_longitude"
     t.index ["prefecture"], name: "index_festivals_on_prefecture"
@@ -233,7 +232,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_13_000000) do
     t.datetime "remember_created_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.uuid "uuid", null: false
+    t.uuid "uuid", default: -> { "gen_random_uuid()" }, null: false
     t.string "provider"
     t.string "uid"
     t.index ["email"], name: "index_users_on_email", unique: true

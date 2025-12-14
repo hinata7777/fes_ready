@@ -60,7 +60,9 @@ class Festival < ApplicationRecord
   def self.for_status(status, reference_date: Date.current)
     normalized = normalized_status(status)
     relation = normalized == "past" ? past(reference_date) : upcoming(reference_date)
-    relation.merge(ordered)
+    # 開催済みのフェスは新しい日付が上に来るよう降順、開催前のフェスは古い日付が上に来るように昇順でソート
+    order_direction = normalized == "past" ? :desc : :asc
+    relation.order(start_date: order_direction, name: :asc)
   end
 
   def self.find_by_slug!(slug, scope: all)
