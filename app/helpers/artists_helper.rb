@@ -15,10 +15,11 @@ module ArtistsHelper
   def setlist_label(setlist)
     sp           = setlist.stage_performance
     festival     = sp.festival_day.festival
-    festival_day = sp.festival_day
-    label = "#{festival.name}  #{festival_day.date.to_fs(:db)}"
-    label += " / #{sp.stage.name}" if sp.stage.present?
-    label
+    festival.name
+  end
+
+  def setlist_subtext(setlist)
+    setlist.stage_performance.festival_day.date.to_fs(:db)
   end
 
   def spotify_embed_for(song, height: 152, css_class: nil)

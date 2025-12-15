@@ -1,7 +1,7 @@
 <%= link_to url, class: "nav-stack-button interactive-lift", data: { controller: "tap-feedback" } do %>
   <span class="flex w-full items-start justify-between gap-3">
     <span class="min-w-0 space-y-1 leading-tight">
-      <span class="block truncate text-base font-semibold text-slate-900"><%= label %></span>
+      <span class="block text-base font-semibold leading-snug text-slate-900 line-clamp-2"><%= label %></span>
       <% if local_assigns[:subtext].present? %>
         <span class="block text-xs font-medium text-slate-500"><%= subtext %></span>
       <% end %>
