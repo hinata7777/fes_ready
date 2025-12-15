@@ -59,6 +59,7 @@
           <% @setlists.each do |setlist| %>
             <%= render "shared/nav_stack_button",
                        label: setlist_label(setlist),
+                       subtext: setlist_subtext(setlist),
                        url: setlist_path(setlist) %>
           <% end %>
         </div>
