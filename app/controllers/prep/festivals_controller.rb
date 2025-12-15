@@ -14,7 +14,7 @@ module Prep
       result = @q.result(distinct: true)
 
       pagy_params = request.query_parameters.merge(status: @status)
-      @pagy, @festivals = pagy(result, items: 20, params: pagy_params)
+      @pagy, @festivals = pagy(result, limit: 20, params: pagy_params)
     end
 
     def show
@@ -67,16 +67,22 @@ module Prep
                         .select("songs.*", "COUNT(DISTINCT setlist_songs.setlist_id) AS appearances_count")
                         .group("songs.id")
                         .order("appearances_count DESC", "songs.name ASC")
-                        .limit(2)
+                        .limit(5)
 
-        ranked_songs.map do |song|
+        spotify_pick = ranked_songs
+                        .select { |song| song.spotify_id.present? }
+                        .first(2)
+
+        next if spotify_pick.empty?
+
+        spotify_pick.map do |song|
           count = song.read_attribute(:appearances_count).to_i
           rate  = ((count.to_f / setlists_count) * 100).round(1)
           { artist: artist, song: song, count: count, rate: rate }
         end
       end.compact
 
-      @pagy, @song_entries = pagy_array(entries, items: 10, page: params[:page])
+      @pagy, @song_entries = pagy_array(entries, limit: 10, page: params[:page])
     end
 
     def filter_params

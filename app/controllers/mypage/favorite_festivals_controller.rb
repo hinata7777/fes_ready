@@ -4,7 +4,7 @@ module Mypage
 
     def index
       favorites_scope = Festival.favorited_by(current_user)
-      @pagy, @festivals = pagy(favorites_scope, items: 20)
+      @pagy, @festivals = pagy(favorites_scope, limit: 20)
     end
   end
 end

@@ -4,7 +4,7 @@ module Mypage
 
     def index
       favorites_scope = Artist.favorited_by(current_user)
-      @pagy, @artists = pagy(favorites_scope, items: 20)
+      @pagy, @artists = pagy(favorites_scope, limit: 20)
     end
   end
 end

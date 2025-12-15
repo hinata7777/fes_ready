@@ -16,7 +16,7 @@ class FestivalsController < ApplicationController
     result = @q.result(distinct: true)
 
     pagy_params = request.query_parameters.merge(status: @status)
-    @pagy, @festivals = pagy(result, items: 20, params: pagy_params)
+    @pagy, @festivals = pagy(result, limit: 20, params: pagy_params)
   end
 
   def show

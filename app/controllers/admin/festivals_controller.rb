@@ -5,7 +5,7 @@ class Admin::FestivalsController < Admin::BaseController
   def index
     @pagy, @festivals = pagy(
       Festival.includes(:festival_days, :stages).order(start_date: :desc),
-      items: 10
+      limit: 10
     )
   end
 
