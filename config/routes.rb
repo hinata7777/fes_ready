@@ -11,7 +11,7 @@ Rails.application.routes.draw do
   get "/prep", to: "prep#top", as: :prep_top
   namespace :prep, path: "prep" do
     resources :festivals, only: [ :index, :show ]
-    resources :artists, only: [ :index ]
+    resources :artists, only: [ :index, :show ]
   end
 
   get "up" => "rails/health#show", as: :rails_health_check
@@ -19,7 +19,6 @@ Rails.application.routes.draw do
   get "/manifest.webmanifest", to: "rails/pwa#manifest", defaults: { format: :json }, as: :pwa_manifest
 
   resources :artists, only: [ :index, :show ] do
-    get :prep, on: :member
     resources :festivals, only: [ :index ], module: :artists
     resource :favorite, only: [ :create, :destroy ], module: :artists
   end
