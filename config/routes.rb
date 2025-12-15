@@ -10,6 +10,7 @@ Rails.application.routes.draw do
   get "/privacy", to: "home#privacy", as: :privacy
   get "/prep", to: "prep#top", as: :prep_top
   namespace :prep, path: "prep" do
+    resources :festivals, only: [ :index, :show ]
     resources :artists, only: [ :index ]
   end
 
