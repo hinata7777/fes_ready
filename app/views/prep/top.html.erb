@@ -10,8 +10,7 @@
     <section class="space-y-3">
       <%= render "shared/nav_stack_button",
                  label: "フェスから予習する",
-                 url: "#",
-                 trailing: content_tag(:span, "準備中", class: "rounded-full bg-slate-100 px-3 py-1 text-[11px] font-semibold text-slate-600") %>
+                 url: prep_festivals_path %>
       <%= render "shared/nav_stack_button", label: "アーティストから予習する", url: prep_artists_path %>
     </section>
   </div>
