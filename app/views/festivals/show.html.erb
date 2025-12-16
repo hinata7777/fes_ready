@@ -73,13 +73,13 @@
           出演アーティスト一覧へ
         <% end %>
         <% if @festival.timetable_published? %>
-          <%= link_to timetable_path(@festival),
+          <%= link_to timetable_path(@festival, back_to: "festival"),
                       class: "block w-full rounded-2xl bg-indigo-500 py-3 text-center text-sm font-bold text-white shadow-md interactive-lift hover:bg-indigo-400",
                       data: { controller: "tap-feedback" } do %>
             タイムテーブルへ
           <% end %>
         <% end %>
-        <%= link_to prep_festival_path(@festival),
+        <%= link_to prep_festival_path(@festival, back_to: "festival"),
                     class: "block w-full rounded-2xl bg-indigo-500 py-3 text-center text-sm font-bold text-white shadow-md interactive-lift hover:bg-indigo-400",
                     data: { controller: "tap-feedback" } do %>
           フェス予習リストへ

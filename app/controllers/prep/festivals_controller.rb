@@ -24,6 +24,7 @@ module Prep
 
       resolve_selected_day
       build_song_entries
+      set_header_back_path
     end
 
     private
@@ -120,6 +121,11 @@ module Prep
       Date.parse(value)
     rescue ArgumentError
       nil
+    end
+
+    def set_header_back_path
+      return unless params[:back_to] == "festival"
+      @header_back_path = festival_path(@festival) if @festival
     end
   end
 end

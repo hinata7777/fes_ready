@@ -14,7 +14,7 @@
             active_tab_key: @selected_day.id,
             url_builder: ->(festival_day_id) do
               day = day_lookup[festival_day_id]
-              prep_festival_path(@festival, date: day.date.to_s)
+              prep_festival_path(@festival, date: day.date.to_s, back_to: params[:back_to])
             end
           ) %>
     </div>

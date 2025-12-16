@@ -1,5 +1,8 @@
 class Artists::FestivalsController < ApplicationController
   before_action :set_artist
+  before_action :set_header_back_path
+  # 一覧→詳細で戻るときに元の一覧URLを渡すためのパラメータ
+  before_action :set_back_to_param
 
   def index
     @status = Festival.normalized_status(params[:status])
@@ -61,5 +64,14 @@ class Artists::FestivalsController < ApplicationController
     Date.parse(value)
   rescue ArgumentError
     nil
+  end
+
+  def set_header_back_path
+    @header_back_path = artist_path(@artist) if @artist
+  end
+
+  def set_back_to_param
+    # 現在の一覧URLを保存し、詳細遷移時の戻り先として渡す
+    @back_to = request.fullpath
   end
 end

@@ -49,7 +49,7 @@
       <% if @artists.any? %>
         <div class="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
           <% @artists.each do |artist| %>
-            <%= render "shared/artist_card", artist: artist %>
+            <%= render "shared/artist_card", artist: artist, back_to: @back_to %>
           <% end %>
         </div>
       <% else %>

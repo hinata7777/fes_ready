@@ -1,6 +1,9 @@
 class Festivals::ArtistsController < ApplicationController
   before_action :set_festival
   before_action :set_festival_days
+  before_action :set_header_back_path
+  # 一覧→詳細で戻るときに元の一覧URLを渡すためのパラメータ
+  before_action :set_back_to_param
 
   def index
     artists_scope = @festival.artists_for_day(@selected_festival_day)
@@ -22,5 +25,14 @@ class Festivals::ArtistsController < ApplicationController
   def set_festival_days
     @festival_days = @festival.festival_days.order(:date)
     @selected_festival_day = @festival_days.find_by(id: params[:festival_day_id]) || @festival_days.first
+  end
+
+  def set_header_back_path
+    @header_back_path = festival_path(@festival) if @festival
+  end
+
+  def set_back_to_param
+    # 現在の一覧URLを保存し、詳細遷移時の戻り先として渡す
+    @back_to = request.fullpath
   end
 end
