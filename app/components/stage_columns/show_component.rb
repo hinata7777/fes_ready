@@ -29,14 +29,7 @@ module StageColumns
                          class: classes,
                          style: block_style_rules) unless performance.artist.published?
 
-      params = {
-        from: "my_timetable",
-        festival_id: festival.slug,
-        date: selected_day&.date&.to_s
-      }.compact
-      params[:user_id] = owner_identifier if owner_identifier.present?
-
-      link_to(helpers.artist_path(performance.artist, params),
+      link_to(helpers.artist_path(performance.artist),
               class: classes,
               data: { controller: "tap-feedback" },
               style: block_style_rules

@@ -3,6 +3,7 @@ class PackingListsController < ApplicationController
   before_action :set_packing_list, only: [ :show, :edit, :update, :destroy, :duplicate_from_template ]
   before_action :set_owned_packing_list, only: [ :edit, :update, :destroy ]
   before_action :set_available_items, only: [ :new, :create, :edit, :update ]
+  before_action :set_header_back_path, only: [ :edit, :update ]
 
   def index
     @template_lists = PackingList.templates.order(:title)
@@ -50,6 +51,10 @@ class PackingListsController < ApplicationController
   def destroy
     @packing_list.destroy!
     redirect_to packing_lists_path, notice: "持ち物リストを削除しました"
+  end
+
+  def set_header_back_path
+    @header_back_path = packing_list_path(@packing_list) if @packing_list&.persisted?
   end
 
   def duplicate_from_template

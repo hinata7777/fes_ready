@@ -3,6 +3,7 @@ class MyTimetablesController < ApplicationController
   before_action :set_festival!, except: :index
   before_action :set_selected_day!, except: :index
   before_action :prepare_timetable_context!, only: [ :edit, :show ]
+  before_action :set_header_back_path, only: :edit
   before_action :set_timetable_owner!, only: :show
 
   def index
@@ -93,6 +94,13 @@ class MyTimetablesController < ApplicationController
   def find_user_by_identifier!(identifier)
     user = User.find_by(uuid: identifier) || User.find_by(id: identifier)
     user || raise(ActiveRecord::RecordNotFound)
+  end
+
+  def set_header_back_path
+    options = {}
+    options[:date] = @selected_day.date.to_s if @selected_day&.date
+    options[:user_id] = current_user&.uuid if user_signed_in?
+    @header_back_path = festival_my_timetable_path(@festival, options)
   end
 
   def prepare_timetable_context!

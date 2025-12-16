@@ -19,13 +19,7 @@ module StageColumns
                          class: default_block_classes,
                          style: block_style_rules) unless performance.artist.published?
 
-      params = {
-        from: "festival_timetable",
-        festival_id: festival.slug,
-        date: selected_day&.date&.to_s
-      }.compact
-
-      link_to(helpers.artist_path(performance.artist, params),
+      link_to(helpers.artist_path(performance.artist),
               class: default_block_classes,
               data: { controller: "tap-feedback" },
               style: block_style_rules) do
