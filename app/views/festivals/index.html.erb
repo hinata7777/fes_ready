@@ -56,16 +56,10 @@
       <% if @festivals.any? %>
         <% @festivals.each do |festival| %>
           <div class="w-full">
-            <% festival_url =
-               if @artist
-                 festival_path(festival, from: "artist_festivals", artist_id: @artist.to_param)
-               else
-                 festival_path(festival)
-               end %>
             <%= render "shared/nav_stack_button",
                        label: festival.name,
                        subtext: festival_date_and_location(festival),
-                       url: festival_url,
+                       url: festival_path(festival),
                        trailing: favorite_button_for(
                          favorited: festival_favorited?(festival),
                          toggle_url: festival_favorite_path(festival)
