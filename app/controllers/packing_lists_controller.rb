@@ -118,7 +118,12 @@ class PackingListsController < ApplicationController
   def prepare_form_data
     @sorted_items = @packing_list.packing_list_items.sort_by { |pli| [ pli.position || 0, pli.id || 0 ] }
     @next_position_value = (@sorted_items.map { |pli| pli.position || 0 }.max || -1) + 1
-    @festival_days = FestivalDay.joins(:festival).includes(:festival).order("festivals.start_date ASC", "festival_days.date ASC")
+    upcoming_days = FestivalDay.for_packing_list_select.to_a
+    @festival_days = upcoming_days
+
+    past_selected_day = @packing_list&.past_selected_festival_day
+
+    @festival_days |= [ past_selected_day ].compact
   end
 
   def apply_template_if_present

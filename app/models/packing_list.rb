@@ -14,8 +14,22 @@ class PackingList < ApplicationRecord
   validates :title, uniqueness: { scope: :user_id, message: "は既に存在します" }, unless: :template?
   validates :user_id, presence: true, unless: :template?
   validates :template, inclusion: { in: [ true, false ] }
+  validate :festival_day_must_be_upcoming_if_changed
 
   def to_param
     uuid.presence || super
+  end
+
+  def past_selected_festival_day(today = Date.current)
+    return unless festival_day
+    festival_day if festival_day.finished?(today)
+  end
+
+  private
+
+  def festival_day_must_be_upcoming_if_changed
+    return unless will_save_change_to_festival_day_id?
+    return if festival_day.blank?
+    errors.add(:festival_day, "は開催前の日程を選んでください") if festival_day.finished?
   end
 end

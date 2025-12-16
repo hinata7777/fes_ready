@@ -3,7 +3,7 @@
     <div class="space-y-4">
       <%= f.label :title, "リスト名", class: "block text-lg font-semibold text-slate-800 mb-2" %>
       <%= f.text_field :title,
-                       placeholder: "例）9/20 ROCK IN JAPAN FESTIVAL 2025",
+                       placeholder: "例）野外フェス 持ち物リスト",
                        class: [
                          "w-full rounded-xl border px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 focus:border-indigo-300 focus:outline-none focus:ring-2 focus:ring-indigo-200",
                          (@packing_list.errors[:title].present? ? "border-rose-300 ring-rose-200" : "border-slate-200")
@@ -14,9 +14,13 @@
         <%= f.collection_select :festival_day_id,
                                 @festival_days,
                                 :id,
-                                ->(day) { "#{day.festival.name} / #{format_date_with_weekday(day.date)}" },
+                                ->(day) do
+                                  label = "#{day.festival.name} / #{format_date_with_weekday(day.date)}"
+                                  day.finished? ? "#{label} (開催終了)" : label
+                                end,
                                 { include_blank: "未選択" },
                                 class: "w-full rounded-xl border border-slate-200 px-4 py-2 text-sm text-slate-900 focus:border-indigo-300 focus:outline-none focus:ring-2 focus:ring-indigo-200" %>
+        <p class="text-xs text-slate-500">任意入力です。設定すると天気連携が使えるようになります。</p>
       </div>
     </div>
   </div>

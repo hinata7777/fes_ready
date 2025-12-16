@@ -12,4 +12,20 @@ class FestivalDay < ApplicationRecord
       .distinct
       .order("festivals.start_date ASC", "festival_days.date ASC")
   }
+
+  scope :upcoming, ->(today = Date.current) {
+    joins(:festival).where("festivals.end_date >= ?", today)
+  }
+
+  scope :ordered_for_select, -> {
+    joins(:festival).order("festivals.start_date ASC", "festival_days.date ASC")
+  }
+
+  scope :for_packing_list_select, ->(today = Date.current) {
+    upcoming(today).includes(:festival).ordered_for_select
+  }
+
+  def finished?(today = Date.current)
+    festival.end_date < today
+  end
 end
