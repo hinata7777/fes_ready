@@ -1,5 +1,7 @@
 class FestivalsController < ApplicationController
   before_action :set_festival, only: :show
+  # 一覧から渡された戻り先があれば採用する
+  before_action :set_header_back_path, only: :show
 
   def index
     @artist = nil
@@ -64,5 +66,13 @@ class FestivalsController < ApplicationController
     Date.parse(value)
   rescue ArgumentError
     nil
+  end
+
+  def set_header_back_path
+    back = params[:back_to].to_s
+    return if back.blank?
+    return unless back.start_with?("/")
+
+    @header_back_path = back
   end
 end

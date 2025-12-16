@@ -38,12 +38,19 @@ module Prep
         else
           []
         end
+
+      set_header_back_path
     end
 
     private
 
     def set_artist
       @artist = Artist.find_published!(params[:id])
+    end
+
+    def set_header_back_path
+      return unless params[:back_to] == "artist"
+      @header_back_path = artist_path(@artist) if @artist
     end
   end
 end

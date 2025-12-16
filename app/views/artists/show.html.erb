@@ -45,7 +45,7 @@
           出演フェス一覧
         <% end %>
 
-        <%= link_to prep_artist_path(@artist),
+        <%= link_to prep_artist_path(@artist, back_to: "artist"),
                     class: "block w-full rounded-2xl bg-indigo-500 py-3 text-center text-sm font-bold text-white shadow-md interactive-lift hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-400",
                     data: { controller: "tap-feedback" } do %>
           アーティスト予習ページへ

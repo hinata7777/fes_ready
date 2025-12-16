@@ -27,6 +27,10 @@ module NavigationHelper
     "packing_lists#new" => -> { packing_lists_path },
     "packing_lists#edit" => -> { packing_lists_path },
 
+    "mypage/favorite_festivals#index" => -> { mypage_dashboard_path },
+    "mypage/favorite_artists#index" => -> { mypage_dashboard_path },
+    "mypage/dashboard#show" => -> { root_path },
+
     # 管理者向け
     "admin/home#top" => -> { root_path },
     "admin/festivals#index" => -> { admin_root_path },
@@ -64,11 +68,7 @@ module NavigationHelper
     "admin/packing_lists#new" => -> { admin_packing_lists_path },
     "admin/packing_lists#edit" => -> { admin_packing_lists_path },
 
-    "admin/users#index" => -> { admin_root_path },
-
-    "mypage/favorite_festivals#index" => -> { mypage_dashboard_path },
-    "mypage/favorite_artists#index" => -> { mypage_dashboard_path },
-    "mypage/dashboard#show" => -> { root_path }
+    "admin/users#index" => -> { admin_root_path }
   }.freeze
 
   def header_back_path

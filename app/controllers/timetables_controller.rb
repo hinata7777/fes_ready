@@ -2,6 +2,7 @@ class TimetablesController < ApplicationController
   before_action :set_festival, only: :show
   before_action :ensure_timetable_published!, only: :show
   before_action :load_festival_days, only: :show
+  before_action :set_header_back_path, only: :show
 
   def index
     @status = Festival.normalized_status(params[:status])
@@ -91,7 +92,7 @@ class TimetablesController < ApplicationController
   end
 
   def timetable_query_params
-    params.permit(:from, :artist_id, :festival_id, :user_id).to_h
+    params.permit(:from, :artist_id, :festival_id, :user_id, :back_to).to_h
   end
 
   def filter_params
@@ -129,5 +130,12 @@ class TimetablesController < ApplicationController
     Date.parse(value)
   rescue ArgumentError
     nil
+  end
+
+  def set_header_back_path
+    return unless @festival
+    return unless params[:back_to] == "festival"
+
+    @header_back_path = festival_path(@festival)
   end
 end
