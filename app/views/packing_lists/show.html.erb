@@ -23,6 +23,10 @@
 
     <%= render "packing_lists/affiliate_links" %>
 
+    <% if @festival_weather_forecast.present? %>
+      <%= render "packing_lists/festival_weather", forecast: @festival_weather_forecast %>
+    <% end %>
+
     <section class="rounded-3xl border border-slate-200 bg-white px-5 py-4 shadow-sm">
       <h2 class="sr-only">持ち物一覧</h2>
       <% if @packing_list_items.any? %>

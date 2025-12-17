@@ -12,6 +12,9 @@ class PackingListsController < ApplicationController
 
   def show
     @packing_list_items = @packing_list.packing_list_items.includes(:item).order(:position, :id)
+    # 天気は「日程あり + フェスに緯度経度あり」のときだけ表示する想定。
+    # 取得失敗などのケースでは service が nil を返すため、画面は落ちずに天気だけ非表示になる。
+    @festival_weather_forecast = Weather::FestivalDayForecast.new(festival_day: @packing_list.festival_day).call
   end
 
   def new
