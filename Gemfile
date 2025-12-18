@@ -74,6 +74,8 @@ group :development, :test do
   gem "rubocop-rails-omakase", require: false
 
   gem "dotenv-rails"
+  # RSpec
+  gem 'rspec-rails'
 end
 
 group :development do
@@ -85,6 +87,7 @@ group :test do
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
   gem "capybara"
   gem "selenium-webdriver"
+  gem 'factory_bot_rails'
 end
 
 gem "dockerfile-rails", ">= 1.7", group: :development
