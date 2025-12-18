@@ -115,6 +115,7 @@ GEM
     devise-i18n (1.15.0)
       devise (>= 4.9.0)
       rails-i18n
+    diff-lcs (1.6.2)
     dockerfile-rails (1.7.10)
       rails (>= 3.0.0)
     dotenv (3.1.8)
@@ -127,6 +128,11 @@ GEM
     erubi (1.13.1)
     et-orbi (1.4.0)
       tzinfo
+    factory_bot (6.5.6)
+      activesupport (>= 6.1.0)
+    factory_bot_rails (6.5.1)
+      factory_bot (~> 6.5)
+      railties (>= 6.1.0)
     faraday (2.14.0)
       faraday-net_http (>= 2.0, < 3.5)
       json
@@ -334,6 +340,23 @@ GEM
       actionpack (>= 5.2)
       railties (>= 5.2)
     rexml (3.4.4)
+    rspec-core (3.13.6)
+      rspec-support (~> 3.13.0)
+    rspec-expectations (3.13.5)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.13.0)
+    rspec-mocks (3.13.7)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.13.0)
+    rspec-rails (8.0.2)
+      actionpack (>= 7.2)
+      activesupport (>= 7.2)
+      railties (>= 7.2)
+      rspec-core (~> 3.13)
+      rspec-expectations (~> 3.13)
+      rspec-mocks (~> 3.13)
+      rspec-support (~> 3.13)
+    rspec-support (3.13.6)
     rubocop (1.81.1)
       json (~> 2.3)
       language_server-protocol (~> 3.17.0.2)
@@ -463,6 +486,7 @@ DEPENDENCIES
   devise-i18n
   dockerfile-rails (>= 1.7)
   dotenv-rails
+  factory_bot_rails
   inline_svg (~> 1.9)
   jbuilder
   jsbundling-rails
@@ -476,6 +500,7 @@ DEPENDENCIES
   rails (~> 8.0.3)
   rails-i18n
   ransack
+  rspec-rails
   rubocop-rails-omakase
   selenium-webdriver
   sitemap_generator
