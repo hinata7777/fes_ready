@@ -21,10 +21,12 @@
 
     <% owned_list = (@packing_list.user == current_user) %>
 
-    <%= render "packing_lists/affiliate_links" %>
-
     <% if @festival_weather_forecast.present? %>
       <%= render "packing_lists/festival_weather", forecast: @festival_weather_forecast %>
+    <% elsif @packing_list.festival_day.present? %>
+      <div class="rounded-2xl border border-dashed border-slate-300 bg-slate-50 px-4 py-3 text-sm text-slate-700">
+        開催日の約2週間前から天気予報を表示します。
+      </div>
     <% end %>
 
     <section class="rounded-3xl border border-slate-200 bg-white px-5 py-4 shadow-sm">
@@ -90,6 +92,10 @@
                       class: "inline-flex min-w-[12rem] items-center justify-center rounded-2xl bg-indigo-500 px-6 py-3 text-sm font-bold text-white shadow-md interactive-lift hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500",
                       data: { controller: "tap-feedback" } %>
       <% end %>
+    </div>
+
+    <div class="mt-12 sm:mt-16">
+      <%= render "packing_lists/affiliate_links" %>
     </div>
   </div>
 </div>
