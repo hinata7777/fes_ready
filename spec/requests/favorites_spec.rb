@@ -19,6 +19,17 @@ RSpec.describe "お気に入りのリクエスト", type: :request do
           "favorited" => true
         )
       end
+
+      it "既にお気に入り済みでも重複追加せず201を返す" do
+        existing = create(:user_festival_favorite, user: user, festival: festival)
+
+        expect {
+          post festival_favorite_path(festival), as: :json
+        }.not_to change(UserFestivalFavorite, :count)
+
+        expect(response).to have_http_status(:created)
+        expect(response.parsed_body["favorite_id"]).to eq(existing.id)
+      end
     end
 
     context "未ログインのとき" do
@@ -53,6 +64,17 @@ RSpec.describe "お気に入りのリクエスト", type: :request do
         )
       end
     end
+
+    context "未ログインのとき" do
+      it "401 を返し、削除されない" do
+        expect {
+          delete festival_favorite_path(festival), as: :json
+        }.not_to change(UserFestivalFavorite, :count)
+
+        expect(response).to have_http_status(:unauthorized)
+        expect(response.parsed_body["error"]).to include("ログイン")
+      end
+    end
   end
 
   describe "POST /artists/:artist_id/favorite" do
@@ -72,6 +94,17 @@ RSpec.describe "お気に入りのリクエスト", type: :request do
           "artist_id" => artist.id,
           "favorited" => true
         )
+      end
+
+      it "既にお気に入り済みでも重複追加せず201を返す" do
+        existing = create(:user_artist_favorite, user: user, artist: artist)
+
+        expect {
+          post artist_favorite_path(artist), as: :json
+        }.not_to change(UserArtistFavorite, :count)
+
+        expect(response).to have_http_status(:created)
+        expect(response.parsed_body["favorite_id"]).to eq(existing.id)
       end
     end
 
@@ -105,6 +138,17 @@ RSpec.describe "お気に入りのリクエスト", type: :request do
           "artist_id" => artist.id,
           "favorited" => false
         )
+      end
+    end
+
+    context "未ログインのとき" do
+      it "401 を返し、削除されない" do
+        expect {
+          delete artist_favorite_path(artist), as: :json
+        }.not_to change(UserArtistFavorite, :count)
+
+        expect(response).to have_http_status(:unauthorized)
+        expect(response.parsed_body["error"]).to include("ログイン")
       end
     end
   end

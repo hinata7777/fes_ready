@@ -7,7 +7,7 @@ RSpec.describe "持ち物リスト項目のリクエスト", type: :request do
 
   describe "POST /packing_lists/:packing_list_id/packing_list_items" do
     context "ログイン済みのとき" do
-      before { sign_in user }
+      before { sign_in user, scope: :user }
 
       it "項目を追加してリストへリダイレクトする" do
         expect {
@@ -38,7 +38,7 @@ RSpec.describe "持ち物リスト項目のリクエスト", type: :request do
     let!(:packing_list_item) { create(:packing_list_item, packing_list: packing_list, item: item, note: "旧メモ", position: 0) }
 
     it "項目の内容を更新してリストへリダイレクトする" do
-      sign_in user
+      sign_in user, scope: :user
 
       patch packing_list_packing_list_item_path(packing_list, packing_list_item),
             params: { packing_list_item: { note: "新しいメモ", position: 2 } }
@@ -54,7 +54,7 @@ RSpec.describe "持ち物リスト項目のリクエスト", type: :request do
     let!(:packing_list_item) { create(:packing_list_item, packing_list: packing_list, item: item, checked: false) }
 
     it "チェック状態をトグルしてリストへリダイレクトする" do
-      sign_in user
+      sign_in user, scope: :user
 
       patch toggle_packing_list_packing_list_item_path(packing_list, packing_list_item)
 
@@ -67,7 +67,7 @@ RSpec.describe "持ち物リスト項目のリクエスト", type: :request do
     let!(:packing_list_item) { create(:packing_list_item, packing_list: packing_list, item: item) }
 
     it "項目を削除してリストへリダイレクトする" do
-      sign_in user
+      sign_in user, scope: :user
 
       expect {
         delete packing_list_packing_list_item_path(packing_list, packing_list_item)
