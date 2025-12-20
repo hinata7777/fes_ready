@@ -51,6 +51,19 @@ RSpec.describe "公開ページのリクエスト", type: :request do
       get timetable_path(timetable_festival, date: timetable_day.date.to_s)
       expect(response).to have_http_status(:ok)
     end
+
+    it "未公開タイムテーブルなら404を返す" do
+      unpublished = create(:festival, timetable_published: false)
+      create(:festival_day, festival: unpublished, date: unpublished.start_date)
+
+      get timetable_path(unpublished, date: unpublished.start_date.to_s)
+      expect(response).to have_http_status(:not_found)
+    end
+
+    it "不正な日付パラメータなら404を返す" do
+      get timetable_path(timetable_festival, date: "invalid-date")
+      expect(response).to have_http_status(:not_found)
+    end
   end
 
   describe "セットリスト詳細" do
@@ -86,6 +99,11 @@ RSpec.describe "公開ページのリクエスト", type: :request do
     it "プレップ用フェス詳細が200を返す" do
       get prep_festival_path(prep_festival, date: prep_festival_day.date.to_s)
       expect(response).to have_http_status(:ok)
+    end
+
+    it "プレップ用フェス詳細で不正な日付なら404を返す" do
+      get prep_festival_path(prep_festival, date: "invalid-date")
+      expect(response).to have_http_status(:not_found)
     end
 
     it "プレップ用アーティスト一覧が200を返す" do
