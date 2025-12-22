@@ -55,6 +55,14 @@ RSpec.describe "持ち物リストのリクエスト", type: :request do
     end
   end
 
+  describe "GET /packing_lists/new" do
+    it "未ログインならログイン画面へリダイレクトする" do
+      get new_packing_list_path
+
+      expect(response).to redirect_to(new_user_session_path)
+    end
+  end
+
   describe "POST /packing_lists" do
     let(:user) { create(:user) }
     let(:params) do
@@ -190,6 +198,18 @@ RSpec.describe "持ち物リストのリクエスト", type: :request do
       expect(response).to have_http_status(:unprocessable_entity)
       expect(list.reload.title).to eq("旧タイトル")
     end
+
+    it "自分のリストなら更新できる" do
+      user = create(:user)
+      list = create(:packing_list, user: user, title: "旧タイトル")
+
+      sign_in user, scope: :user
+
+      patch packing_list_path(list), params: { packing_list: { title: "更新タイトル" } }
+
+      expect(response).to have_http_status(:found)
+      expect(list.reload.title).to eq("更新タイトル")
+    end
   end
 
   describe "DELETE /packing_lists/:id" do
@@ -214,6 +234,19 @@ RSpec.describe "持ち物リストのリクエスト", type: :request do
       expect(response).to have_http_status(:not_found)
 
       expect(PackingList.exists?(list.id)).to be(true)
+    end
+
+    it "自分のリストなら削除できる" do
+      user = create(:user)
+      list = create(:packing_list, user: user)
+
+      sign_in user, scope: :user
+
+      expect {
+        delete packing_list_path(list)
+      }.to change(PackingList, :count).by(-1)
+
+      expect(response).to redirect_to(packing_lists_path)
     end
   end
 end
