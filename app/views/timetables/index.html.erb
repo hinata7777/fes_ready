@@ -57,14 +57,15 @@
 
     <section class="grid gap-3 md:grid-cols-2 md:gap-4">
       <% if @festivals.any? %>
-        <% @festivals.each do |festival| %>
-          <div class="w-full">
-            <%= render "shared/nav_stack_button",
-                       label: festival.name,
-                       subtext: festival_date_and_location(festival),
-                       url: timetable_path(festival) %>
-          </div>
-        <% end %>
+          <% back_to = params[:back_to].presence %>
+          <% @festivals.each do |festival| %>
+            <div class="w-full">
+              <%= render "shared/nav_stack_button",
+                         label: festival.name,
+                         subtext: festival_date_and_location(festival),
+                         url: (back_to ? timetable_path(festival, back_to: back_to) : timetable_path(festival)) %>
+            </div>
+          <% end %>
       <% else %>
         <p class="rounded-xl bg-white px-4 py-12 text-center text-sm text-slate-500 shadow md:col-span-2">
           公開中のタイムテーブルはありません

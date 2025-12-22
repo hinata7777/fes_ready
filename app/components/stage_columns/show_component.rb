@@ -1,16 +1,17 @@
 module StageColumns
   class ShowComponent < BaseComponent
-    def initialize(stage:, performances:, time_markers:, timeline_layout:, festival:, selected_day:, selected_ids:, owner_identifier: nil)
+    def initialize(stage:, performances:, time_markers:, timeline_layout:, festival:, selected_day:, selected_ids:, owner_identifier: nil, back_to: nil)
       super(stage: stage, performances: performances, time_markers: time_markers, timeline_layout: timeline_layout)
       @festival = festival
       @selected_day = selected_day
       @selected_ids = Array(selected_ids)
       @owner_identifier = owner_identifier
+      @back_to = back_to
     end
 
     private
 
-    attr_reader :festival, :selected_day, :selected_ids, :owner_identifier
+    attr_reader :festival, :selected_day, :selected_ids, :owner_identifier, :back_to
 
     def render_block(performance, block)
       selected = selected_ids.include?(performance.id)
@@ -29,7 +30,8 @@ module StageColumns
                          class: classes,
                          style: block_style_rules) unless performance.artist.published?
 
-      link_to(helpers.artist_path(performance.artist),
+      artist_url = back_to.present? ? helpers.artist_path(performance.artist, back_to: back_to) : helpers.artist_path(performance.artist)
+      link_to(artist_url,
               class: classes,
               data: { controller: "tap-feedback" },
               style: block_style_rules
