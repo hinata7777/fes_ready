@@ -48,6 +48,27 @@ RSpec.describe "持ち物リスト項目のリクエスト", type: :request do
       expect(packing_list_item.note).to eq("新しいメモ")
       expect(packing_list_item.position).to eq(2)
     end
+
+    it "更新に失敗したら内容は変わらない" do
+      sign_in user, scope: :user
+
+      patch packing_list_packing_list_item_path(packing_list, packing_list_item),
+            params: { packing_list_item: { position: -1 } }
+
+      expect(response).to redirect_to(packing_list_path(packing_list))
+      expect(packing_list_item.reload.position).to eq(0)
+    end
+
+    it "他人のリストは404を返す" do
+      other_user = create(:user)
+      sign_in other_user, scope: :user
+
+      patch packing_list_packing_list_item_path(packing_list, packing_list_item),
+            params: { packing_list_item: { note: "侵入" } }
+
+      expect(response).to have_http_status(:not_found)
+      expect(packing_list_item.reload.note).to eq("旧メモ")
+    end
   end
 
   describe "PATCH /packing_lists/:packing_list_id/packing_list_items/:id/toggle" do
@@ -60,6 +81,16 @@ RSpec.describe "持ち物リスト項目のリクエスト", type: :request do
 
       expect(response).to redirect_to(packing_list_path(packing_list))
       expect(packing_list_item.reload.checked).to be(true)
+    end
+
+    it "他人のリストは404を返す" do
+      other_user = create(:user)
+      sign_in other_user, scope: :user
+
+      patch toggle_packing_list_packing_list_item_path(packing_list, packing_list_item)
+
+      expect(response).to have_http_status(:not_found)
+      expect(packing_list_item.reload.checked).to be(false)
     end
   end
 
@@ -74,6 +105,17 @@ RSpec.describe "持ち物リスト項目のリクエスト", type: :request do
       }.to change { packing_list.packing_list_items.count }.by(-1)
 
       expect(response).to redirect_to(packing_list_path(packing_list))
+    end
+
+    it "他人のリストは404を返す" do
+      other_user = create(:user)
+      sign_in other_user, scope: :user
+
+      expect {
+        delete packing_list_packing_list_item_path(packing_list, packing_list_item)
+      }.not_to change(PackingListItem, :count)
+
+      expect(response).to have_http_status(:not_found)
     end
   end
 end

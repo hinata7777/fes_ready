@@ -4,6 +4,9 @@ Rails.application.routes.draw do
     omniauth_callbacks: "users/omniauth_callbacks",
     passwords: "users/passwords"
   }
+  devise_scope :user do
+    get "/users/auth/failure", to: "users/omniauth_callbacks#failure"
+  end
 
   root "home#top"
   get "/terms", to: "home#terms", as: :terms
