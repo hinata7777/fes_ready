@@ -134,7 +134,12 @@ class TimetablesController < ApplicationController
 
   def set_header_back_path
     return unless @festival
-    return unless params[:back_to] == "festival"
+    back = params[:back_to].to_s
+    if back.start_with?("/")
+      @header_back_path = back
+      return
+    end
+    return unless back == "festival"
 
     @header_back_path = festival_path(@festival)
   end

@@ -1,14 +1,15 @@
 module StageColumns
   class FestivalComponent < BaseComponent
-    def initialize(stage:, performances:, time_markers:, timeline_layout:, festival:, selected_day: nil)
+    def initialize(stage:, performances:, time_markers:, timeline_layout:, festival:, selected_day: nil, back_to: nil)
       super(stage: stage, performances: performances, time_markers: time_markers, timeline_layout: timeline_layout)
       @festival = festival
       @selected_day = selected_day
+      @back_to = back_to
     end
 
     private
 
-    attr_reader :festival, :selected_day
+    attr_reader :festival, :selected_day, :back_to
 
     def render_block(performance, block)
       block_body = default_block_content(block, block.artist_name, canceled: canceled?(performance))
@@ -19,7 +20,8 @@ module StageColumns
                          class: default_block_classes,
                          style: block_style_rules) unless performance.artist.published?
 
-      link_to(helpers.artist_path(performance.artist),
+      artist_url = back_to.present? ? helpers.artist_path(performance.artist, back_to: back_to) : helpers.artist_path(performance.artist)
+      link_to(artist_url,
               class: default_block_classes,
               data: { controller: "tap-feedback" },
               style: block_style_rules) do

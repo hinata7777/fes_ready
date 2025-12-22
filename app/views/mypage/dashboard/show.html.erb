@@ -26,7 +26,7 @@
                   url: mypage_favorite_artists_path %>
         <%= render "shared/nav_stack_button",
                   label: "マイタイムテーブル",
-                  url: my_timetables_path %>       
+                  url: my_timetables_path(back_to: mypage_dashboard_path) %>       
       </div>
     </section>
   </div>
