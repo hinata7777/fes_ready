@@ -17,7 +17,7 @@
       <% stage_renderer = ->(stage) do
            render StageColumns::PickerComponent.new(
              stage: stage,
-             performances: @performances_by_stage[stage.id],
+             performances: @performances_by_stage[stage],
              time_markers: @time_markers,
              timeline_layout: @timeline_layout,
              picked_ids: @picked_ids

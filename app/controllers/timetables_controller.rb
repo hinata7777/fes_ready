@@ -28,15 +28,14 @@ class TimetablesController < ApplicationController
     resolve_selected_day
     build_timeline_context
 
-    @stages = @festival.stages.order(:sort_order, :id)
+    @stages = @festival.stages.sort_by { |stage| [ stage.sort_order || 0, stage.id ] }
     @performances_by_stage = performances_by_stage
   end
 
   private
 
   def set_festival
-    festival_relation = Festival.includes(:festival_days, :stages)
-    @festival = Festival.find_by_slug!(params[:id], scope: festival_relation)
+    @festival = Festival.includes(:festival_days, :stages).find_by_slug!(params[:id])
   end
 
   def ensure_timetable_published!
@@ -44,7 +43,7 @@ class TimetablesController < ApplicationController
   end
 
   def load_festival_days
-    @festival_days = @festival.timetable_days
+    @festival_days = @festival.festival_days.sort_by(&:date)
     raise ActiveRecord::RecordNotFound if @festival_days.blank?
   end
 
@@ -88,7 +87,7 @@ class TimetablesController < ApplicationController
         .scheduled
         .where.not(stage_id: nil)
         .includes(:stage, :artist)
-        .group_by(&:stage_id)
+        .group_by(&:stage)
   end
 
   def timetable_query_params

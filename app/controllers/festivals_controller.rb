@@ -27,8 +27,7 @@ class FestivalsController < ApplicationController
   private
 
   def set_festival
-    festival_relation = Festival.includes(:festival_days, :stages, :festival_tags)
-    @festival = Festival.find_by_slug!(params[:id], scope: festival_relation)
+    @festival = Festival.includes(:festival_tags).find_by_slug!(params[:id])
   end
 
   def filter_params
