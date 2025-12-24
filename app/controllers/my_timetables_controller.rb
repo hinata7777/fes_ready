@@ -124,7 +124,7 @@ class MyTimetablesController < ApplicationController
 
     @performances_by_stage =
       @performances
-        .group_by(&:stage_id)
+        .group_by(&:stage)
 
     timeline_context = TimelineContextBuilder.build(
       festival: @festival,

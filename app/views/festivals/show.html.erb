@@ -1,11 +1,12 @@
 <div class="min-h-screen px-4 pb-24 pt-6">
   <div class="mx-auto max-w-3xl space-y-6">
     <article class="rounded-3xl border border-slate-200 bg-white p-6 shadow-lg shadow-slate-200/60">
+      <% tags = @festival.festival_tags.sort_by(&:name) %>
       <header class="flex flex-col gap-2">
         <h1 class="text-2xl font-bold text-slate-900"><%= @festival.name %></h1>
-        <% if @festival.festival_tags.any? %>
+        <% if tags.any? %>
           <div class="flex flex-wrap gap-2">
-            <% @festival.festival_tags.order(:name).each do |tag| %>
+            <% tags.each do |tag| %>
               <span class="inline-flex items-center rounded-full bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700">
                 <%= tag.name %>
               </span>
