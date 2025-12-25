@@ -68,6 +68,14 @@ module NavigationHelper
     "admin/packing_lists#new" => -> { admin_packing_lists_path },
     "admin/packing_lists#edit" => -> { admin_packing_lists_path },
 
+    "admin/setlists#index" => -> { admin_root_path },
+    "admin/setlists#show" => -> { admin_setlists_path },
+    "admin/setlists#new" => -> { admin_setlists_path },
+    "admin/setlists#edit" => -> { admin_setlists_path },
+
+    "users/registrations#edit" => -> { mypage_dashboard_path },
+    "users/registrations#update" => -> { mypage_dashboard_path },
+
     "admin/users#index" => -> { admin_root_path }
   }.freeze
 
