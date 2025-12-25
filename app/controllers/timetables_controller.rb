@@ -24,10 +24,12 @@ class TimetablesController < ApplicationController
   end
 
   def show
+    # URLパラメータや選択日を解決して、タイムライン描画に必要な前提を揃える
     extract_timetable_params
     resolve_selected_day
     build_timeline_context
 
+    # ステージ列の並びと、列ごとの出演枠を用意する
     @stages = @festival.stages.sort_by { |stage| [ stage.sort_order || 0, stage.id ] }
     @performances_by_stage = performances_by_stage
   end
@@ -43,6 +45,7 @@ class TimetablesController < ApplicationController
   end
 
   def load_festival_days
+    # 選択可能な開催日（タブ）を並び替えた一覧として保持
     @festival_days = @festival.festival_days.sort_by(&:date)
     raise ActiveRecord::RecordNotFound if @festival_days.blank?
   end
@@ -81,6 +84,7 @@ class TimetablesController < ApplicationController
   end
 
   def performances_by_stage
+    # 指定日の出演枠をステージ単位にまとめ、タイムテーブルの列へ渡す
     @performances_by_stage ||=
       @festival
         .stage_performances_on(@selected_day)
