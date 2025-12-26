@@ -1,6 +1,6 @@
-@import "tailwindcss";
+@import url("https://fonts.googleapis.com/css2?family=Climate+Crisis&family=Noto+Sans+JP:wght@300;400;500;700;900&family=Zen+Kaku+Gothic+New:wght@500;700;900&display=swap");
 
-@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=Zen+Kaku+Gothic+New:wght@500;700;900&display=swap");
+@import "tailwindcss";
 
 @theme {
   --font-sans: "Noto Sans JP", system-ui, -apple-system, "Segoe UI",
@@ -8,14 +8,23 @@
                "BIZ UDPGothic", "Yu Gothic UI", "YuGothic", Meiryo, sans-serif;
 
   --font-display: "Zen Kaku Gothic New", "Noto Sans JP", system-ui, sans-serif;
+  --font-hero: "Climate Crisis", "Noto Sans JP", system-ui, sans-serif;
 }
 
-@utility fontDisplay {
-  font-family: var(--font-display);
+@layer base {
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+  }
 }
 
-h1, h2, h3, h4 {
-  font-family: var(--font-display);
+@layer utilities {
+  .font-display {
+    font-family: var(--font-display);
+  }
+
+  .font-hero {
+    font-family: var(--font-hero);
+  }
 }
 
 @layer components {
@@ -76,7 +85,7 @@ h1, h2, h3, h4 {
     }
   }
 
-  @screen sm {
+  @media (min-width: 640px) {
     .interactive-lift {
       @apply hover:-translate-y-1 hover:shadow-lg active:-translate-y-1 active:shadow-lg;
     }
