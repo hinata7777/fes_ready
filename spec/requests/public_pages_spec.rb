@@ -6,6 +6,21 @@ RSpec.describe "公開ページのリクエスト", type: :request do
       get root_path
       expect(response).to have_http_status(:ok)
     end
+
+    it "利用規約ページが200を返す" do
+      get terms_path
+      expect(response).to have_http_status(:ok)
+    end
+
+    it "プライバシーポリシーページが200を返す" do
+      get privacy_path
+      expect(response).to have_http_status(:ok)
+    end
+
+    it "運営者情報ページが200を返す" do
+      get operator_path
+      expect(response).to have_http_status(:ok)
+    end
   end
 
   describe "フェス・アーティストの一覧/詳細" do
