@@ -11,6 +11,7 @@ Rails.application.routes.draw do
   root "home#top"
   get "/terms", to: "home#terms", as: :terms
   get "/privacy", to: "home#privacy", as: :privacy
+  get "/operator", to: "home#operator", as: :operator
   resource :prep, only: [ :show ], controller: "prep"
   namespace :prep, path: "prep" do
     resources :festivals, only: [ :index, :show ]

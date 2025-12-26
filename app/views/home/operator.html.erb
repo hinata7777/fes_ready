@@ -1,0 +1,46 @@
+<% content_for :title, "運営者情報 | FES READY" %>
+
+<main
+  class="box-border flex items-center justify-center px-4 py-6 md:py-8"
+  style="height: calc(100vh - var(--header-offset) - var(--footer-offset));"
+>
+  <div class="box-border flex h-full w-full max-w-4xl flex-col rounded-3xl bg-white/95 p-6 shadow-xl ring-1 ring-slate-200 backdrop-blur lg:p-8">
+    <header class="space-y-2 text-center shrink-0">
+      <h1 class="text-2xl font-black text-slate-900">運営者情報</h1>
+    </header>
+
+    <div class="mt-6 h-px w-full bg-gradient-to-r from-transparent via-[#F95858]/40 to-transparent"></div>
+
+    <div class="mt-6 flex-1 space-y-6 overflow-y-auto pr-2 text-sm leading-relaxed text-slate-700 md:text-base">
+      <p class="text-base font-semibold text-slate-900 md:text-lg">運営者：hinata</p>
+
+      <div class="space-y-4">
+        <p>
+          本サイト「FES READY」は、音楽フェスの準備を楽しく・スマートにすることを目的としたWebアプリです。
+          <br>個人開発として、RUNTEQでの学習・卒業制作の一環で制作・運営しています。
+        </p>
+      </div>
+
+      <div class="space-y-2">
+        <ul class="list-disc space-y-2 pl-5">
+          <li>
+            X（旧Twitter）：
+            <%= link_to "https://x.com/hinanata72",
+                        "https://x.com/hinanata72",
+                        class: "text-slate-900 underline decoration-slate-300 underline-offset-4 transition hover:text-[#F95858] hover:decoration-[#F95858]",
+                        target: "_blank",
+                        rel: "noopener" %>
+          </li>
+          <li>
+            GitHub：
+            <%= link_to "https://github.com/hinata7777",
+                        "https://github.com/hinata7777",
+                        class: "text-slate-900 underline decoration-slate-300 underline-offset-4 transition hover:text-[#F95858] hover:decoration-[#F95858]",
+                        target: "_blank",
+                        rel: "noopener" %>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</main>
