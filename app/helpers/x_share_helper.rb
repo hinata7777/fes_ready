@@ -14,4 +14,13 @@ module XShareHelper
     url  = festival_my_timetable_url(festival, date: day.to_s, user_id: owner_uuid)
     x_intent_url(text: text, url: url)
   end
+
+  def setlist_share_url(setlist)
+    stage_performance = setlist.stage_performance
+    artist = stage_performance.artist
+    festival = stage_performance.festival_day.festival
+    hashtag_artist = artist.name.to_s.gsub(/\s+/, "")
+    text = "#{artist.name} の #{festival.name} でのセットリストを公開中！\n#FESREADY ##{hashtag_artist}"
+    x_intent_url(text: text, url: setlist_url(setlist))
+  end
 end
