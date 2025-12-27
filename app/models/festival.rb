@@ -24,8 +24,6 @@ class Festival < ApplicationRecord
   scope :favorited_by, ->(user) {
     joins(:user_festival_favorites)
       .where(user_festival_favorites: { user_id: user.id })
-      .includes(:festival_days, :stages)
-      .order(start_date: :asc, name: :asc)
   }
 
   before_validation -> { self.official_url = official_url&.strip.presence }
@@ -40,29 +38,6 @@ class Festival < ApplicationRecord
 
   def to_param
     slug.presence || super
-  end
-
-  def self.status_labels
-    status_filters.keys.index_with do |key|
-      I18n.t("enums.festival.status_filter.#{key}", default: key.humanize)
-    end
-  end
-
-  def self.default_status
-    status_filters.keys.first
-  end
-
-  def self.normalized_status(value)
-    candidate = value.to_s
-    status_filters.key?(candidate) ? candidate : default_status
-  end
-
-  def self.for_status(status, reference_date: Date.current)
-    normalized = normalized_status(status)
-    relation = normalized == "past" ? past(reference_date) : upcoming(reference_date)
-    # 開催済みのフェスは新しい日付が上に来るよう降順、開催前のフェスは古い日付が上に来るように昇順でソート
-    order_direction = normalized == "past" ? :desc : :asc
-    relation.order(start_date: order_direction, name: :asc)
   end
 
   def self.find_by_slug!(slug, scope: all)

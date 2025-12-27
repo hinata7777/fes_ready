@@ -20,7 +20,7 @@
       <% preserved_query = request.query_parameters.except(:page, :status) %>
       <div class="flex justify-center">
         <%= render Shared::SegmentedTabsComponent.new(
-              tabs: @status_labels,
+              tabs: status_labels,
               active_tab_key: @status,
               url_builder: ->(key) { timetables_path(preserved_query.merge(status: key)) }
             ) %>

@@ -5,13 +5,12 @@ class Artists::FestivalsController < ApplicationController
   before_action :set_back_to_param
 
   def index
-    @status = Festival.normalized_status(params[:status])
-    @status_labels = Festival.status_labels
+    @status = Festivals::ListQuery.normalized_status(params[:status])
     @festival_tags = FestivalTag.order(:name)
     @filter_params = filter_params
     @selected_tag_ids = Array(@filter_params[:tag_ids]).reject(&:blank?).map(&:to_i)
 
-    festival_scope = @artist.festivals.merge(Festival.for_status(@status))
+    festival_scope = Festivals::ListQuery.call(status: @status, scope: @artist.festivals)
     filtered_scope = apply_filters(festival_scope, @filter_params)
 
     @q   = filtered_scope.ransack(params[:q])
