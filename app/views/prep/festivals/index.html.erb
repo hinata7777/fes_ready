@@ -5,7 +5,7 @@
       <% preserved_query = request.query_parameters.except(:page, :status) %>
       <div class="flex justify-center">
         <%= render Shared::SegmentedTabsComponent.new(
-              tabs: @status_labels,
+              tabs: status_labels,
               active_tab_key: @status,
               url_builder: ->(key) do
                 path_options = preserved_query.merge(status: key)

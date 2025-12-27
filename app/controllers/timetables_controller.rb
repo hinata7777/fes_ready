@@ -5,14 +5,13 @@ class TimetablesController < ApplicationController
   before_action :set_header_back_path, only: :show
 
   def index
-    @status = Festival.normalized_status(params[:status])
-    @status_labels = Festival.status_labels
+    @status = Festivals::ListQuery.normalized_status(params[:status])
     @festival_tags = FestivalTag.order(:name)
     @filter_params = filter_params
     @selected_tag_ids = Array(@filter_params[:tag_ids]).reject(&:blank?).map(&:to_i)
 
     published_festivals = Festival.with_published_timetable
-    scoped = published_festivals.merge(Festival.for_status(@status))
+    scoped = Festivals::ListQuery.call(status: @status, scope: published_festivals)
 
     filtered_scope = apply_filters(scoped, @filter_params)
 
