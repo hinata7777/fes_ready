@@ -99,6 +99,26 @@
     </div>
   </section>
 
+  <!-- ログイン・新規登録導線 -->
+  <section class="relative px-6 py-10 md:px-10 md:py-12" data-controller="reveal-on-scroll">
+    <div
+      class="relative mx-auto max-w-5xl rounded-[28px] border border-slate-200/80 bg-white/85 p-6 shadow-[0_28px_60px_rgba(15,23,42,0.14)] backdrop-blur-md md:p-10 transition duration-700 ease-out opacity-0 translate-y-6 hover:-translate-y-2 hover:shadow-[0_32px_70px_rgba(15,23,42,0.18)]"
+      data-reveal-on-scroll-target="item"
+    >
+      <div class="text-center">
+        <p class="text-[17px] font-semibold text-slate-900 whitespace-nowrap leading-tight md:text-3xl">ログインして快適な準備を</p>
+        <p class="mt-3 text-sm leading-relaxed text-slate-700 md:text-base">
+          お気に入り保存やマイタイムテーブルで、当日の準備がもっとスムーズになります。
+        </p>
+      </div>
+      <div class="mt-6 flex items-center justify-center">
+        <%= link_to "ログイン",
+                    new_user_session_path,
+                    class: "inline-flex items-center justify-center rounded-full bg-[#F95858] px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-[#e04f4f]" %>
+      </div>
+    </div>
+  </section>
+
   <!-- アプリのインストールガイド -->
   <section class="relative px-6 py-12 md:px-10 md:py-16" data-controller="reveal-on-scroll">
     <div
@@ -106,7 +126,7 @@
       data-reveal-on-scroll-target="item"
     >
       <div class="text-center">
-        <p class="mt-3 text-2xl font-semibold text-slate-900 md:text-3xl">アプリをホーム画面に追加しよう</p>
+        <p class="mt-3 text-[17px] font-semibold text-slate-900 whitespace-nowrap leading-tight md:text-3xl">アプリをホーム画面に追加しよう</p>
         <p class="mt-3 text-sm leading-relaxed text-slate-700 md:text-base">
           オフラインでもすぐに開けるため、<span class="md:hidden"><br></span><span class="hidden md:inline"> </span>ホーム画面への追加を推奨しています。
         </p>

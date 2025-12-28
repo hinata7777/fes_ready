@@ -23,6 +23,7 @@
       <h2 class="text-lg font-semibold text-slate-900">
         <%= @selected_day.date.strftime("%-m/%-d") %> 出演アーティストの予習曲
       </h2>
+      <p class="text-sm text-slate-600">各アーティストの演奏率が高い上位2曲を表示しています。</p>
 
       <% if @song_entries.any? %>
         <div class="grid gap-3 md:grid-cols-2">

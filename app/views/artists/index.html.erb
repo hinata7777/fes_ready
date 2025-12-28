@@ -4,6 +4,7 @@
       <h1 class="text-2xl font-bold text-slate-900">
         <%= @festival ? "#{@festival.name} の出演アーティスト" : "アーティスト一覧" %>
       </h1>
+      <p class="text-sm text-slate-600">アプリに登録されているアーティスト一覧です。</p>
       <% unless user_signed_in? %>
         <%= render "shared/login_callout",
                    title: "ログインしてお気に入りアーティストを登録しましょう",
