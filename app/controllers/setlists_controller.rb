@@ -1,4 +1,5 @@
 class SetlistsController < ApplicationController
+  include HeaderBackPath
   before_action :set_header_back_path, only: :show
 
   def show
@@ -13,12 +14,4 @@ class SetlistsController < ApplicationController
   end
 
   private
-
-  def set_header_back_path
-    back = params[:back_to].to_s
-    return if back.blank?
-    return unless back.start_with?("/")
-
-    @header_back_path = back
-  end
 end
