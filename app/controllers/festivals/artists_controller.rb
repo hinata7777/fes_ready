@@ -1,4 +1,5 @@
 class Festivals::ArtistsController < ApplicationController
+  include HeaderBackPath
   before_action :set_festival
   before_action :set_festival_days
   before_action :set_header_back_path
@@ -27,8 +28,9 @@ class Festivals::ArtistsController < ApplicationController
     @selected_festival_day = @festival_days.find_by(id: params[:festival_day_id]) || @festival_days.first
   end
 
-  def set_header_back_path
-    @header_back_path = festival_path(@festival) if @festival
+  def default_back_path
+    # back_to が無い場合はフェス詳細に戻す
+    festival_path(@festival) if @festival
   end
 
   def set_back_to_param

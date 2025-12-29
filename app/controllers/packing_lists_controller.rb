@@ -1,4 +1,5 @@
 class PackingListsController < ApplicationController
+  include HeaderBackPath
   before_action :authenticate_user!, except: :index
   before_action :set_packing_list, only: [ :show, :edit, :update, :destroy, :duplicate_from_template ]
   before_action :set_owned_packing_list, only: [ :edit, :update, :destroy ]
@@ -54,10 +55,6 @@ class PackingListsController < ApplicationController
   def destroy
     @packing_list.destroy!
     redirect_to packing_lists_path, notice: "持ち物リストを削除しました"
-  end
-
-  def set_header_back_path
-    @header_back_path = packing_list_path(@packing_list) if @packing_list&.persisted?
   end
 
   def duplicate_from_template
@@ -172,5 +169,10 @@ class PackingListsController < ApplicationController
       base = attrs.slice("id", "item_id", "note", "position", "_destroy")
       sanitized_item.present? ? base.merge("item_attributes" => sanitized_item) : base
     end.compact
+  end
+
+  def default_back_path
+    # 編集/更新時は編集中のリストへ戻す
+    packing_list_path(@packing_list) if @packing_list&.persisted?
   end
 end

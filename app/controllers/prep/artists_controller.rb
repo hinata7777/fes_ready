@@ -1,5 +1,6 @@
 module Prep
   class ArtistsController < ApplicationController
+    include HeaderBackPath
     before_action :set_artist, only: :show
 
     def index
@@ -48,9 +49,10 @@ module Prep
       @artist = Artist.find_published!(params[:id])
     end
 
-    def set_header_back_path
-      return unless params[:back_to] == "artist"
-      @header_back_path = artist_path(@artist) if @artist
+    def resolved_back_path(token)
+      # "artist" トークンは対象アーティスト詳細へ戻す
+      return artist_path(@artist) if token == "artist" && @artist
+      nil
     end
   end
 end

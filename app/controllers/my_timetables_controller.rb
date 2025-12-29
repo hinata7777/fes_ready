@@ -1,10 +1,10 @@
 class MyTimetablesController < ApplicationController
+  include HeaderBackPath
   before_action :authenticate_user!, except: :show
   before_action :set_festival!, except: :index
   before_action :set_selected_day!, except: :index
   before_action :prepare_timetable_context!, only: [ :edit, :show ]
-  before_action :set_index_header_back_path, only: :index
-  before_action :set_header_back_path, only: :edit
+  before_action :set_header_back_path, only: [ :index, :edit ]
   before_action :set_timetable_owner!, only: :show
 
   def index
@@ -97,21 +97,6 @@ class MyTimetablesController < ApplicationController
     user || raise(ActiveRecord::RecordNotFound)
   end
 
-  def set_header_back_path
-    options = {}
-    options[:date] = @selected_day.date.to_s if @selected_day&.date
-    options[:user_id] = current_user&.uuid if user_signed_in?
-    @header_back_path = festival_my_timetable_path(@festival, options)
-  end
-
-  def set_index_header_back_path
-    back = params[:back_to].to_s
-    return if back.blank?
-    return unless back.start_with?("/")
-
-    @header_back_path = back
-  end
-
   def prepare_timetable_context!
     @timezone = ActiveSupport::TimeZone[@festival.timezone] || Time.zone
     @stages   = @festival.stages.order(:sort_order, :id)
@@ -136,5 +121,15 @@ class MyTimetablesController < ApplicationController
     @timeline_end   = timeline_context.timeline_end
     @time_markers   = timeline_context.time_markers
     @timeline_layout = timeline_context.timeline_layout
+  end
+
+  def default_back_path
+    # edit のときだけマイタイムテーブルへ戻す
+    return nil unless action_name == "edit"
+
+    options = {}
+    options[:date] = @selected_day.date.to_s if @selected_day&.date
+    options[:user_id] = current_user&.uuid if user_signed_in?
+    festival_my_timetable_path(@festival, options)
   end
 end

@@ -1,4 +1,5 @@
 class ArtistsController < ApplicationController
+  include HeaderBackPath
   before_action :set_artist, only: :show
   # 一覧から渡された戻り先があれば採用する
   before_action :set_header_back_path, only: :show
@@ -21,13 +22,5 @@ class ArtistsController < ApplicationController
 
   def set_artist
     @artist = Artist.find_published!(params[:id])
-  end
-
-  def set_header_back_path
-    back = params[:back_to].to_s
-    return if back.blank?
-    return unless back.start_with?("/")
-
-    @header_back_path = back
   end
 end
