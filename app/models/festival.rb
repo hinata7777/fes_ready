@@ -1,4 +1,6 @@
 class Festival < ApplicationRecord
+  include Favoritable
+  favoritable_by :user_festival_favorites
   attribute :status_filter, :string
   enum :status_filter, { upcoming: "upcoming", past: "past" }, scopes: false
 
@@ -21,10 +23,6 @@ class Festival < ApplicationRecord
   scope :past,     ->(today = Date.current) { where("end_date < ?",  today) }
   scope :with_published_timetable, -> { where(timetable_published: true) }
   scope :with_slug, ->(slug) { where(slug: slug) }
-  scope :favorited_by, ->(user) {
-    joins(:user_festival_favorites)
-      .where(user_festival_favorites: { user_id: user.id })
-  }
 
   before_validation -> { self.official_url = official_url&.strip.presence }
 
@@ -66,12 +64,6 @@ class Festival < ApplicationRecord
       .merge(Artist.published)
       .distinct
       .order(:name)
-  end
-
-  # 指定したユーザーがお気に入り済みかどうかを判定するヘルパー
-  def favorited_by?(user)
-    return false unless user
-    user_festival_favorites.exists?(user_id: user.id)
   end
 
   private
