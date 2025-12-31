@@ -3,8 +3,8 @@ require "securerandom"
 class User < ApplicationRecord
   include Uuidable
 
-  # Include default devise modules. Others available are:
-  # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
+  # Deviseの標準モジュールを有効化。利用可能な追加モジュール:
+  # :confirmable, :lockable, :timeoutable, :trackable, :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable,
          :omniauthable, omniauth_providers: [ :google_oauth2 ]
@@ -24,20 +24,12 @@ class User < ApplicationRecord
   has_many :packing_lists, dependent: :destroy
 
   def self.from_omniauth(auth)
-    user = find_by(provider: auth.provider, uid: auth.uid)
-    user ||= find_by(email: auth.info.email)
+    Users::FromOmniauth.call(auth)
+  end
 
-    nickname = user&.nickname.presence || sanitized_nickname(auth)
-
-    user ||= new(
-      email: auth.info.email,
-      password: Devise.friendly_token[0, 20],
-      nickname: nickname
-    )
-
-    user.assign_attributes(provider: auth.provider, uid: auth.uid, nickname: nickname)
-    user.save!
-    user
+  def self.sanitized_nickname(auth)
+    nickname = auth.info.name.presence || auth.info.first_name.presence || auth.info.email.split("@").first
+    nickname.to_s[0, 10]
   end
 
   def self.create_unique_string
@@ -52,14 +44,7 @@ class User < ApplicationRecord
     user_timetable_entries
       .joins(:stage_performance)
       .where(stage_performances: { festival_day_id: festival_day.id })
+      # マイタイムテーブル作成時に、その日の選択済み公演IDだけを返す
       .pluck(:stage_performance_id)
   end
-
-  private
-
-  def self.sanitized_nickname(auth)
-    nickname = auth.info.name.presence || auth.info.first_name.presence || auth.info.email.split("@").first
-    nickname.to_s[0, 10]
-  end
-  private_class_method :sanitized_nickname
 end
