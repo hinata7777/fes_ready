@@ -47,23 +47,17 @@ class Festival < ApplicationRecord
   end
 
   def stage_performances_on(festival_day)
-    return StagePerformance.none if festival_day.blank?
-    raise ArgumentError, "festival_day must belong to festival" if festival_day.festival_id != id
-
-    festival_day.stage_performances
-                .includes(:stage, :artist)
-                .order(:starts_at)
+    Festivals::StagePerformancesForDayQuery.call(
+      festival: self,
+      festival_day: festival_day
+    )
   end
 
   def artists_for_day(festival_day)
-    return Artist.none if festival_day.blank? || festival_day.festival_id != id
-
-    Artist
-      .joins(stage_performances: :festival_day)
-      .where(stage_performances: { festival_day_id: festival_day.id })
-      .merge(Artist.published)
-      .distinct
-      .order(:name)
+    Festivals::ArtistsForDayQuery.call(
+      festival: self,
+      festival_day: festival_day
+    )
   end
 
   private

@@ -5,13 +5,7 @@ class FestivalDay < ApplicationRecord
   validates :date, presence: true
   validates :date, uniqueness: { scope: :festival_id }
 
-  scope :for_user, ->(user) {
-    joins(:festival, stage_performances: :user_timetable_entries)
-      .where(user_timetable_entries: { user_id: user.id })
-      .includes(:festival)
-      .distinct
-      .order("festivals.start_date ASC", "festival_days.date ASC")
-  }
+  scope :for_user, ->(user) { FestivalDays::ForUserQuery.call(user: user) }
 
   scope :upcoming, ->(today = Date.current) {
     joins(:festival).where("festivals.end_date >= ?", today)
