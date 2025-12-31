@@ -27,7 +27,7 @@ class Artist < ApplicationRecord
 
 
   # 空文字・前後空白を取り除いて nil 正規化
-  normalizes :spotify_artist_id, with: ->(v) { v&.strip.presence }
+  normalizes :spotify_artist_id, with: ->(v) { NameNormalizer.strip_presence(v) }
 
   # SpotifyのIDは Base62 22文字（例: 0OdUWJ0sBjDrqHygGUXeCF）
   validates :spotify_artist_id,

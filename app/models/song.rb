@@ -19,14 +19,7 @@ class Song < ApplicationRecord
   validates :normalized_name, uniqueness: { scope: :artist_id }
 
   def self.normalize_name(value)
-    base = value.to_s.strip
-    # Unicode正規化が利用可能なら実行（環境によってunicode_normalize拡張が無い場合がある）
-    base = base.unicode_normalize(:nfkc) if base.respond_to?(:unicode_normalize)
-
-    base.mb_chars
-        .downcase
-        .to_s
-        .gsub(/\s+/, " ")
+    NameNormalizer.normalize(value)
   end
 
   private
