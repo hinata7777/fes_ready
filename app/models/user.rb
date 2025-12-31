@@ -1,6 +1,8 @@
 require "securerandom"
 
 class User < ApplicationRecord
+  include Uuidable
+
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
@@ -20,8 +22,6 @@ class User < ApplicationRecord
   has_many :favorite_artists, through: :user_artist_favorites, source: :artist
   has_many :items, dependent: :destroy
   has_many :packing_lists, dependent: :destroy
-
-  before_create :ensure_uuid!
 
   def self.from_omniauth(auth)
     user = find_by(provider: auth.provider, uid: auth.uid)
@@ -55,15 +55,7 @@ class User < ApplicationRecord
       .pluck(:stage_performance_id)
   end
 
-  def to_param
-    uuid
-  end
-
   private
-
-  def ensure_uuid!
-    self.uuid ||= SecureRandom.uuid
-  end
 
   def self.sanitized_nickname(auth)
     nickname = auth.info.name.presence || auth.info.first_name.presence || auth.info.email.split("@").first

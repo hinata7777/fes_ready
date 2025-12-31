@@ -1,4 +1,6 @@
 class PackingList < ApplicationRecord
+  include Uuidable
+
   belongs_to :user, optional: true
   belongs_to :festival_day, optional: true
 
@@ -15,10 +17,6 @@ class PackingList < ApplicationRecord
   validates :user_id, presence: true, unless: :template?
   validates :template, inclusion: { in: [ true, false ] }
   validate :festival_day_must_be_upcoming_if_changed
-
-  def to_param
-    uuid.presence || super
-  end
 
   def past_selected_festival_day(today = Date.current)
     return unless festival_day

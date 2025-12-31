@@ -1,6 +1,6 @@
-require "securerandom"
-
 class Artist < ApplicationRecord
+  include Uuidable
+
   validates :name, presence: true, uniqueness: true
 
   scope :published, -> { where(published: true) }
@@ -11,8 +11,6 @@ class Artist < ApplicationRecord
   has_many :songs, dependent: :restrict_with_exception
   has_many :user_artist_favorites, dependent: :destroy
   has_many :favorited_users, through: :user_artist_favorites, source: :user
-
-  before_create :ensure_uuid!
 
   def self.find_by_identifier!(identifier)
     find_by(uuid: identifier) || find(identifier)
@@ -42,18 +40,8 @@ class Artist < ApplicationRecord
 
   # 将来: has_many :performances など
 
-  def to_param
-    uuid
-  end
-
   def favorited_by?(user)
     return false unless user
     user_artist_favorites.exists?(user_id: user.id)
-  end
-
-  private
-
-  def ensure_uuid!
-    self.uuid ||= SecureRandom.uuid
   end
 end
