@@ -1,4 +1,6 @@
 class PackingList < ApplicationRecord
+  include TemplateOwned
+
   include Uuidable
 
   belongs_to :user, optional: true
@@ -9,13 +11,8 @@ class PackingList < ApplicationRecord
 
   accepts_nested_attributes_for :packing_list_items, allow_destroy: true
 
-  scope :templates, -> { where(template: true) }
-  scope :owned_by, ->(user) { where(user_id: user.id) }
-
   validates :title, presence: true, length: { maximum: 100 }
   validates :title, uniqueness: { scope: :user_id, message: "は既に存在します" }, unless: :template?
-  validates :user_id, presence: true, unless: :template?
-  validates :template, inclusion: { in: [ true, false ] }
   validate :festival_day_must_be_upcoming_if_changed
 
   def past_selected_festival_day(today = Date.current)
