@@ -1,12 +1,11 @@
 module StageColumns
   class TimetableColumnBaseComponent < ViewComponent::Base
-    # 子コンポーネントのrender_blockを呼ぶためのコールバックを受け取る
-    def initialize(stage:, performances:, time_markers:, timeline_layout:, block_renderer_callback:)
+    # 共通の入力だけを受け取り、描画は子のrender_blockに委譲する
+    def initialize(stage:, performances:, time_markers:, timeline_layout:)
       @stage = stage
       @performances = Array(performances)
       @time_markers = Array(time_markers)
       @timeline_layout = timeline_layout
-      @block_renderer_callback = block_renderer_callback
     end
 
     private
@@ -15,11 +14,6 @@ module StageColumns
 
     def timeline_layout
       @timeline_layout || raise(ArgumentError, "timeline_layout is required")
-    end
-
-    # 子の描画処理を呼び出すためのコールバック
-    def block_renderer_callback
-      @block_renderer_callback || raise(ArgumentError, "block_renderer_callback is required")
     end
 
     # ブロック共通のコンテナクラス
@@ -98,7 +92,7 @@ module StageColumns
 
     # ブロック描画は呼び出し側に委譲
     def render_block(performance, block)
-      block_renderer_callback.call(performance, block)
+      raise NotImplementedError, "Subclasses must implement #render_block"
     end
   end
 end

@@ -1,32 +1,15 @@
 module StageColumns
   class PublicTimetableColumnComponent < TimetableColumnBaseComponent
     def initialize(stage:, performances:, time_markers:, timeline_layout:, festival:, selected_day: nil, back_to: nil)
-      @stage = stage
-      @performances = Array(performances)
-      @time_markers = Array(time_markers)
-      @timeline_layout = timeline_layout
+      super(stage: stage, performances: performances, time_markers: time_markers, timeline_layout: timeline_layout)
       @festival = festival
       @selected_day = selected_day
       @back_to = back_to
     end
 
-    def call
-      render base_component
-    end
-
     private
 
-    attr_reader :stage, :performances, :time_markers, :timeline_layout, :festival, :selected_day, :back_to
-
-    def base_component
-      TimetableColumnBaseComponent.new(
-        stage: stage,
-        performances: performances,
-        time_markers: time_markers,
-        timeline_layout: timeline_layout,
-        block_renderer_callback: method(:render_block)
-      )
-    end
+    attr_reader :festival, :selected_day, :back_to
 
     def render_block(performance, block)
       block_body = default_block_content(block, block.artist_name, canceled: canceled?(performance))
