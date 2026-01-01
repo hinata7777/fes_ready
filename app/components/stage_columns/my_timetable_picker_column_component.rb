@@ -1,13 +1,30 @@
 module StageColumns
-  class PickerComponent < BaseComponent
+  class MyTimetablePickerColumnComponent < TimetableColumnBaseComponent
     def initialize(stage:, performances:, time_markers:, timeline_layout:, picked_ids: [])
-      super(stage: stage, performances: performances, time_markers: time_markers, timeline_layout: timeline_layout)
+      @stage = stage
+      @performances = Array(performances)
+      @time_markers = Array(time_markers)
+      @timeline_layout = timeline_layout
       @picked_ids = Array(picked_ids)
+    end
+
+    def call
+      render base_component
     end
 
     private
 
-    attr_reader :picked_ids
+    attr_reader :stage, :performances, :time_markers, :timeline_layout, :picked_ids
+
+    def base_component
+      TimetableColumnBaseComponent.new(
+        stage: stage,
+        performances: performances,
+        time_markers: time_markers,
+        timeline_layout: timeline_layout,
+        block_renderer_callback: method(:render_block)
+      )
+    end
 
     def render_block(performance, block)
       input_id = "stage-performance-#{performance.id}"

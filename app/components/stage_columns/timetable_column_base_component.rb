@@ -1,16 +1,12 @@
 module StageColumns
-  class BaseComponent < ViewComponent::Base
-    def initialize(stage:, performances:, time_markers:, timeline_layout:)
+  class TimetableColumnBaseComponent < ViewComponent::Base
+    # 子コンポーネントのrender_blockを呼ぶためのコールバックを受け取る
+    def initialize(stage:, performances:, time_markers:, timeline_layout:, block_renderer_callback:)
       @stage = stage
       @performances = Array(performances)
       @time_markers = Array(time_markers)
       @timeline_layout = timeline_layout
-    end
-
-    def call
-      content_tag(:div, class: wrapper_classes) do
-        safe_join([ stage_header, timeline_body ])
-      end
+      @block_renderer_callback = block_renderer_callback
     end
 
     private
@@ -21,52 +17,17 @@ module StageColumns
       @timeline_layout || raise(ArgumentError, "timeline_layout is required")
     end
 
-    def wrapper_classes
-      "flex h-full min-w-[90px] flex-1 flex-col rounded-xl bg-white shadow-sm sm:min-w-[150px]"
+    # 子の描画処理を呼び出すためのコールバック
+    def block_renderer_callback
+      @block_renderer_callback || raise(ArgumentError, "block_renderer_callback is required")
     end
 
-    def stage_header
-      content_tag(:div,
-                  stage.name,
-                  class: "flex h-10 items-center justify-center rounded-t-xl px-2 text-center text-[11px] font-semibold uppercase tracking-wide sm:h-12 sm:px-3 sm:text-xs",
-                  style: "background-color: #{stage_color}; color: #{stage_text_color};")
-    end
-
-    def timeline_body
-      content_tag(:div,
-                  class: "relative overflow-hidden rounded-b-xl border border-slate-200 bg-slate-50",
-                  style: "height: #{timeline_layout.column_height_px}px;") do
-        safe_join([ marker_lines_html, performance_blocks_container ])
-      end
-    end
-
-    def marker_lines_html
-      lines = timeline_layout.marker_lines(time_markers)
-      elements = lines.map do |line|
-        tag.div(class: "absolute inset-x-0 border-t border-slate-200/70",
-                style: "top: #{line.top_percent}%;")
-      end
-      safe_join(elements)
-    end
-
-    def performance_blocks_container
-      content_tag(:div, class: "relative h-full w-full") do
-        safe_join(performance_blocks_html)
-      end
-    end
-
-    def performance_blocks_html
-      performances.filter_map do |performance|
-        block = timeline_layout.performance_block(performance)
-        next unless block
-        render_block(performance, block)
-      end
-    end
-
+    # ブロック共通のコンテナクラス
     def default_block_classes
       "absolute inset-x-1.5 rounded-md px-2 py-1 text-[11px] font-semibold shadow-sm interactive-lift sm:inset-x-2 sm:px-3 sm:py-2 sm:text-xs"
     end
 
+    # ブロックの位置・サイズ・色のインラインスタイル（必要なら枠線も追加）
     def block_style(block, background_color:, text_color:, border: nil)
       style_rules = [
         "top: #{block.top_percent}%;",
@@ -78,6 +39,7 @@ module StageColumns
       style_rules.join(" ")
     end
 
+    # ブロックの基本表示（時間ラベル + アーティスト名）。キャンセル表示も対応
     def default_block_content(block, artist_name, canceled: false)
       canceled_classes = canceled ? "text-red-700 line-through decoration-2" : nil
       time_label = block.end_label ? "#{block.start_label}-#{block.end_label}" : block.start_label
@@ -95,20 +57,48 @@ module StageColumns
       end
     end
 
+    # キャンセル表示かどうかを判定
     def canceled?(performance)
       performance.respond_to?(:canceled?) && performance.canceled?
     end
 
+    # ステージ背景色をキャッシュ
     def stage_color
       @stage_color ||= stage.color_hex
     end
 
+    # 背景色に応じた文字色をキャッシュ
     def stage_text_color
       @stage_text_color ||= helpers.stage_text_color(stage_color)
     end
 
-    def render_block(_performance, _block)
-      raise NotImplementedError, "Subclasses must implement #render_block"
+    # ステージヘッダーの背景色と文字色をまとめたstyle
+    def stage_header_style
+      "background-color: #{stage_color}; color: #{stage_text_color};"
+    end
+
+    # タイムラインの高さを固定するためのstyle
+    def timeline_body_style
+      "height: #{timeline_layout.column_height_px}px;"
+    end
+
+    # マーカー線用の位置情報を取得
+    def marker_lines
+      timeline_layout.marker_lines(time_markers)
+    end
+
+    # 描画対象のブロックとパフォーマンスをペアで返す
+    def performance_blocks
+      performances.filter_map do |performance|
+        block = timeline_layout.performance_block(performance)
+        next unless block
+        [ performance, block ]
+      end
+    end
+
+    # ブロック描画は呼び出し側に委譲
+    def render_block(performance, block)
+      block_renderer_callback.call(performance, block)
     end
   end
 end
