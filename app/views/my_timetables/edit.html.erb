@@ -1,6 +1,6 @@
 <div class="min-h-screen px-4 pb-24 pt-6">
   <div class="mx-auto flex max-w-6xl flex-col gap-6">
-    <%= render Shared::TimetableHeaderComponent.new(
+    <%= render Timetables::HeaderComponent.new(
                  title: "マイタイムテーブル編集",
                  festival_name: @festival.name,
                  selected_day: @selected_day,
@@ -15,7 +15,7 @@
                   method: :patch,
                   class: "flex flex-col gap-6" do %>
       <% stage_renderer = ->(stage) do
-           render StageColumns::PickerComponent.new(
+           render StageColumns::MyTimetablePickerColumnComponent.new(
              stage: stage,
              performances: @performances_by_stage[stage],
              time_markers: @time_markers,
@@ -24,7 +24,7 @@
            )
          end %>
 
-      <%= render Shared::TimetableBoardComponent.new(
+      <%= render Timetables::BoardComponent.new(
                stages: @stages,
                time_markers: @time_markers,
                timeline_layout: @timeline_layout,

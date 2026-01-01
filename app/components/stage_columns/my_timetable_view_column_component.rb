@@ -1,7 +1,10 @@
 module StageColumns
-  class ShowComponent < BaseComponent
+  class MyTimetableViewColumnComponent < TimetableColumnBaseComponent
     def initialize(stage:, performances:, time_markers:, timeline_layout:, festival:, selected_day:, selected_ids:, owner_identifier: nil, back_to: nil)
-      super(stage: stage, performances: performances, time_markers: time_markers, timeline_layout: timeline_layout)
+      @stage = stage
+      @performances = Array(performances)
+      @time_markers = Array(time_markers)
+      @timeline_layout = timeline_layout
       @festival = festival
       @selected_day = selected_day
       @selected_ids = Array(selected_ids)
@@ -9,9 +12,24 @@ module StageColumns
       @back_to = back_to
     end
 
+    def call
+      render base_component
+    end
+
     private
 
-    attr_reader :festival, :selected_day, :selected_ids, :owner_identifier, :back_to
+    attr_reader :stage, :performances, :time_markers, :timeline_layout,
+                :festival, :selected_day, :selected_ids, :owner_identifier, :back_to
+
+    def base_component
+      TimetableColumnBaseComponent.new(
+        stage: stage,
+        performances: performances,
+        time_markers: time_markers,
+        timeline_layout: timeline_layout,
+        block_renderer_callback: method(:render_block)
+      )
+    end
 
     def render_block(performance, block)
       selected = selected_ids.include?(performance.id)

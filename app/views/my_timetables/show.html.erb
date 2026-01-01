@@ -1,6 +1,6 @@
 <div class="min-h-screen px-4 pb-24 pt-6">
   <div class="mx-auto flex max-w-6xl flex-col gap-6">
-    <%= render Shared::TimetableHeaderComponent.new(
+    <%= render Timetables::HeaderComponent.new(
                  title: "#{@timetable_owner.nickname}のマイタイムテーブル",
                  festival_name: @festival.name,
                  selected_day: @selected_day,
@@ -41,7 +41,7 @@
 
       <% timetable_owner_identifier = params[:user_id].presence || @timetable_owner&.uuid %>
       <% stage_renderer = ->(stage) do
-           render StageColumns::ShowComponent.new(
+           render StageColumns::MyTimetableViewColumnComponent.new(
              stage: stage,
              performances: @performances_by_stage[stage],
              time_markers: @time_markers,
@@ -54,7 +54,7 @@
            )
          end %>
 
-      <%= render Shared::TimetableBoardComponent.new(
+      <%= render Timetables::BoardComponent.new(
                stages: @stages,
                time_markers: @time_markers,
                timeline_layout: @timeline_layout,

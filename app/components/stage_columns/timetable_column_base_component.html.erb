@@ -1,0 +1,17 @@
+<div class="flex h-full min-w-[90px] flex-1 flex-col rounded-xl bg-white shadow-sm sm:min-w-[150px]">
+  <div class="flex h-10 items-center justify-center rounded-t-xl px-2 text-center text-[11px] font-semibold uppercase tracking-wide sm:h-12 sm:px-3 sm:text-xs" style="<%= stage_header_style %>">
+    <%= stage.name %>
+  </div>
+
+  <div class="relative overflow-hidden rounded-b-xl border border-slate-200 bg-slate-50" style="<%= timeline_body_style %>">
+    <% marker_lines.each do |line| %>
+      <div class="absolute inset-x-0 border-t border-slate-200/70" style="top: <%= line.top_percent %>%;"></div>
+    <% end %>
+
+    <div class="relative h-full w-full">
+      <% performance_blocks.each do |performance, block| %>
+        <%= render_block(performance, block) %>
+      <% end %>
+    </div>
+  </div>
+</div>
