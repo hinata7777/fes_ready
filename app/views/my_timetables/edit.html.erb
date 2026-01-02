@@ -15,7 +15,7 @@
                   method: :patch,
                   class: "flex flex-col gap-6" do %>
       <% stage_renderer = ->(stage) do
-           render StageColumns::MyTimetablePickerColumnComponent.new(
+           render Timetables::Columns::MyTimetablePickerComponent.new(
              stage: stage,
              performances: @performances_by_stage[stage],
              time_markers: @time_markers,

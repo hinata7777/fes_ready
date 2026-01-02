@@ -37,7 +37,7 @@
     <% end %>
 
     <% stage_renderer = ->(stage) do
-         render StageColumns::PublicTimetableColumnComponent.new(
+         render Timetables::Columns::PublicComponent.new(
            stage: stage,
            performances: @performances_by_stage[stage],
            time_markers: @time_markers,
