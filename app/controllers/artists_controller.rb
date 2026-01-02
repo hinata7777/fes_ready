@@ -14,6 +14,7 @@ class ArtistsController < ApplicationController
     result = @q.result(distinct: true)
 
     @pagy, @artists = pagy(result, params: request.query_parameters)
+    @back_to = request.fullpath
   end
 
   def show; end
