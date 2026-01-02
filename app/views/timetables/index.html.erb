@@ -57,7 +57,7 @@
 
     <section class="grid gap-3 md:grid-cols-2 md:gap-4">
       <% if @festivals.any? %>
-          <% back_to = params[:back_to].presence %>
+          <% back_to = params[:back_to].presence || @back_to %>
           <% @festivals.each do |festival| %>
             <div class="w-full">
               <%= render "shared/nav_stack_button",

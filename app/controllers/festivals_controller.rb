@@ -19,6 +19,7 @@ class FestivalsController < ApplicationController
 
     pagy_params = request.query_parameters.merge(status: @status)
     @pagy, @festivals = pagy(result, limit: 20, params: pagy_params)
+    @back_to = request.fullpath
   end
 
   def show
