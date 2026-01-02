@@ -41,7 +41,7 @@
 
       <% timetable_owner_identifier = params[:user_id].presence || @timetable_owner&.uuid %>
       <% stage_renderer = ->(stage) do
-           render StageColumns::MyTimetableViewColumnComponent.new(
+           render Timetables::Columns::MyTimetableViewComponent.new(
              stage: stage,
              performances: @performances_by_stage[stage],
              time_markers: @time_markers,
