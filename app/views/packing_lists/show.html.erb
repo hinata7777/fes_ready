@@ -34,37 +34,7 @@
       <% if @packing_list_items.any? %>
         <ul class="space-y-3">
           <% @packing_list_items.each do |pli| %>
-            <li class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 shadow-sm">
-              <% if owned_list %>
-                <%= form_with url: toggle_packing_list_packing_list_item_path(@packing_list, pli),
-                              method: :patch,
-                              class: "flex items-start gap-3" do %>
-                  <%= check_box_tag "checked",
-                                    "1",
-                                    pli.checked,
-                                    class: "mt-1 h-5 w-5 rounded border-slate-400 text-indigo-500 focus:ring-indigo-500",
-                                    data: { controller: "auto-submit", action: "change->auto-submit#submit" } %>
-                  <div class="min-w-0 space-y-1">
-                    <p class="break-words text-sm font-semibold <%= pli.checked ? 'text-slate-500' : 'text-slate-900' %>">
-                      <%= pli.item.name %>
-                    </p>
-                    <% if pli.note.present? %>
-                      <p class="break-words text-xs text-slate-600"><%= pli.note %></p>
-                    <% end %>
-                  </div>
-                <% end %>
-              <% else %>
-                <div class="flex items-start gap-3">
-                  <div class="mt-1 h-5 w-5 rounded border border-slate-300 bg-white"></div>
-                  <div class="min-w-0 space-y-1">
-                    <p class="break-words text-sm font-semibold text-slate-900"><%= pli.item.name %></p>
-                    <% if pli.note.present? %>
-                      <p class="break-words text-xs text-slate-600"><%= pli.note %></p>
-                    <% end %>
-                  </div>
-                </div>
-              <% end %>
-            </li>
+            <%= render "packing_lists/item", packing_list: @packing_list, pli: pli, owned_list: owned_list %>
           <% end %>
         </ul>
       <% else %>

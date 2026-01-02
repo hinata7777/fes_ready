@@ -1,33 +1,25 @@
 class PackingListItemsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_packing_list
-  before_action :set_packing_list_item, only: [ :update, :destroy, :toggle ]
-
-  def create
-    @packing_list_item = @packing_list.packing_list_items.build(packing_list_item_params)
-    if @packing_list_item.save
-      redirect_to @packing_list, notice: "持ち物を追加しました"
-    else
-      redirect_to @packing_list, alert: "追加に失敗しました"
-    end
-  end
+  before_action :set_packing_list_item
 
   def update
+    # チェックの付け外し専用: Turbo Streamで行だけ更新する。
     if @packing_list_item.update(packing_list_item_params)
-      redirect_to @packing_list, notice: "持ち物を更新しました"
+      respond_to do |format|
+        # Turbo対応: 行だけ差し替え
+        format.turbo_stream
+        # Turbo非対応時のフォールバック
+        format.html { redirect_to @packing_list, notice: "持ち物を更新しました" }
+      end
     else
-      redirect_to @packing_list, alert: "更新に失敗しました"
+      respond_to do |format|
+        # Turbo対応: エラー時も行だけ差し替え
+        format.turbo_stream { render turbo_stream: turbo_stream.replace("packing_list_item_#{@packing_list_item.id}", partial: "packing_lists/item", locals: { packing_list: @packing_list, pli: @packing_list_item, owned_list: true }) }
+        # Turbo非対応時のフォールバック
+        format.html { redirect_to @packing_list, alert: "更新に失敗しました" }
+      end
     end
-  end
-
-  def destroy
-    @packing_list_item.destroy!
-    redirect_to @packing_list, notice: "持ち物を削除しました"
-  end
-
-  def toggle
-    @packing_list_item.update!(checked: !@packing_list_item.checked)
-    redirect_to @packing_list
   end
 
   private
@@ -41,6 +33,6 @@ class PackingListItemsController < ApplicationController
   end
 
   def packing_list_item_params
-    params.require(:packing_list_item).permit(:item_id, :note, :position)
+    params.require(:packing_list_item).permit(:item_id, :note, :position, :checked)
   end
 end

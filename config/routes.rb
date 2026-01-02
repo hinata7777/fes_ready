@@ -43,11 +43,7 @@ Rails.application.routes.draw do
   end
 
   resources :packing_lists do
-    resources :packing_list_items, only: [ :create, :update, :destroy ] do
-      member do
-        patch :toggle
-      end
-    end
+    resources :packing_list_items, only: [ :update ]
     member do
       post :duplicate_from_template
     end

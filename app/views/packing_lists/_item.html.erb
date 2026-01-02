@@ -1,0 +1,32 @@
+<turbo-frame id="packing_list_item_<%= pli.id %>">
+  <li class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 shadow-sm">
+    <% if owned_list %>
+      <%# packing_list配下のpacking_list_item更新URLに送信する %>
+      <%= form_with model: [ packing_list, pli ],
+                    method: :patch,
+                    class: "flex items-start gap-3" do |f| %>
+        <%= f.check_box :checked,
+                        class: "mt-1 h-5 w-5 rounded border-slate-400 text-indigo-500 focus:ring-indigo-500",
+                        data: { controller: "auto-submit", action: "change->auto-submit#submit" } %>
+        <div class="min-w-0 space-y-1">
+          <p class="break-words text-sm font-semibold <%= pli.checked ? 'text-slate-500' : 'text-slate-900' %>">
+            <%= pli.item.name %>
+          </p>
+          <% if pli.note.present? %>
+            <p class="break-words text-xs text-slate-600"><%= pli.note %></p>
+          <% end %>
+        </div>
+      <% end %>
+    <% else %>
+      <div class="flex items-start gap-3">
+        <div class="mt-1 h-5 w-5 rounded border border-slate-300 bg-white"></div>
+        <div class="min-w-0 space-y-1">
+          <p class="break-words text-sm font-semibold text-slate-900"><%= pli.item.name %></p>
+          <% if pli.note.present? %>
+            <p class="break-words text-xs text-slate-600"><%= pli.note %></p>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </li>
+</turbo-frame>
