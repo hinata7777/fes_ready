@@ -44,9 +44,6 @@ Rails.application.routes.draw do
 
   resources :packing_lists do
     resources :packing_list_items, only: [ :update ]
-    member do
-      post :duplicate_from_template
-    end
   end
 
   namespace :admin do
