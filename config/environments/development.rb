@@ -85,5 +85,6 @@ Rails.application.configure do
     Bullet.bullet_logger = true
     Bullet.console = true
     Bullet.rails_logger = true
+    Bullet.add_safelist type: :unused_eager_loading, class_name: "PackingListItem", association: :item
   end
 end
