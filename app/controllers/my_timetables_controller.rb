@@ -3,7 +3,9 @@ class MyTimetablesController < ApplicationController
   before_action :authenticate_user!, except: :show
   before_action :set_festival!, except: :index
   before_action :set_selected_day!, except: :index
-  before_action :prepare_timetable_context!, only: [ :edit, :show ]
+  before_action :load_timetable_data, only: [ :edit, :show ]
+  before_action :group_performances_by_stage, only: [ :edit, :show ]
+  before_action :build_timeline_view_context, only: [ :edit, :show ]
   before_action :set_header_back_path, only: [ :index, :edit ]
   before_action :set_timetable_owner!, only: :show
 
@@ -42,7 +44,7 @@ class MyTimetablesController < ApplicationController
                       .includes(:artist, :stage, :festival_day)
                       .where(stage_performances: { festival_day_id: @selected_day.id })
                       .order(:starts_at, :ends_at, :id)
-    @conflicts = detect_conflicts(@performances)
+    @conflicts = MyTimetables::ConflictDetector.call(@performances)
 
     @selected_performance_ids = @performances.map(&:id)
   end
@@ -66,21 +68,6 @@ class MyTimetablesController < ApplicationController
       end
   end
 
-  def detect_conflicts(list)
-    conflicts = Set.new
-    last_end = nil
-    last_id  = nil
-    list.each do |sp|
-      if last_end && sp.starts_at && sp.ends_at && sp.starts_at < last_end
-        conflicts << last_id
-        conflicts << sp.id
-      end
-      last_end = sp.ends_at || last_end
-      last_id  = sp.id
-    end
-    conflicts
-  end
-
   def set_timetable_owner!
     @timetable_owner =
       if params[:user_id].present?
@@ -97,30 +84,30 @@ class MyTimetablesController < ApplicationController
     user || raise(ActiveRecord::RecordNotFound)
   end
 
-  def prepare_timetable_context!
-    @timezone = ActiveSupport::TimeZone[@festival.timezone] || Time.zone
-    @stages   = @festival.stages.order(:sort_order, :id)
-
+  def load_timetable_data
+    @stages = @festival.stages.order(:sort_order, :id)
     @performances =
       @festival
         .stage_performances_on(@selected_day)
         .scheduled
         .includes(:stage, :artist)
+  end
 
-    @performances_by_stage =
-      @performances
-        .group_by(&:stage)
+  def group_performances_by_stage
+    @performances_by_stage = @performances.group_by(&:stage)
+  end
 
-    timeline_context = TimelineContextBuilder.build(
+  def build_timeline_view_context
+    view_context = Timetables::ViewContextBuilder.build(
       festival: @festival,
-      selected_day: @selected_day,
-      timezone: @timezone
+      selected_day: @selected_day
     )
 
-    @timeline_start = timeline_context.timeline_start
-    @timeline_end   = timeline_context.timeline_end
-    @time_markers   = timeline_context.time_markers
-    @timeline_layout = timeline_context.timeline_layout
+    @timezone = view_context.timezone
+    @timeline_start = view_context.timeline_start
+    @timeline_end   = view_context.timeline_end
+    @time_markers   = view_context.time_markers
+    @timeline_layout = view_context.timeline_layout
   end
 
   def default_back_path
