@@ -53,12 +53,7 @@ Rails.application.routes.draw do
     resources :users, only: :index
     resources :artists
     resources :festival_tags
-    resources :songs do
-      collection do
-        get :bulk_new
-        post :bulk_create
-      end
-    end
+    resources :songs
     resources :setlists
     resources :stage_performances
     resources :festivals do
