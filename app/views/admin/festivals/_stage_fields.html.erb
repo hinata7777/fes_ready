@@ -6,12 +6,12 @@
   <div class="flex items-center gap-2">
     <%# color_key をセレクトで選ぶ %>
     <%= f.select :color_key,
-                 Stage::COLOR_PALETTE.map { |k, hex| ["#{k} (#{hex})", k] },
+                 StageColor::PALETTE.map { |k, hex| ["#{k} (#{hex})", k] },
                  {},
                  class: "border rounded px-2 py-1" %>
 
     <%# 選択中のプレビュー（既存は f.object.color_hex を使う） %>
-    <% hex = f.object.respond_to?(:color_hex) ? f.object.color_hex : Stage::COLOR_PALETTE["slate"] %>
+    <% hex = f.object.respond_to?(:color_hex) ? f.object.color_hex : StageColor.hex_for(StageColor::DEFAULT_KEY) %>
     <span class="inline-block h-6 w-6 rounded border" style="background-color: <%= hex %>;"></span>
   </div>
 

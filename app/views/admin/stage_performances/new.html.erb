@@ -1,17 +1,110 @@
-<div class="mx-auto max-w-4xl px-4 py-10 min-h-[calc(100vh-var(--header-offset,4.5rem)-var(--footer-offset,6rem))]">
+<div class="mx-auto max-w-5xl px-4 py-10 min-h-[calc(100vh-var(--header-offset,4.5rem)-var(--footer-offset,6rem))]">
   <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
     <div>
-      <h1 class="text-2xl font-bold text-slate-900">出演枠を追加</h1>
-      <p class="mt-1 text-sm text-slate-600">
-        出演者だけ先に登録したい場合は status を <code>draft</code> のままにしてください。
-      </p>
+      <h1 class="text-2xl font-bold text-slate-900">出演枠を一括追加</h1>
+      <p class="mt-1 text-sm text-slate-600">日程とステージを固定して、複数行まとめて登録できます。</p>
     </div>
-    <%= link_to "一覧に戻る",
-          admin_stage_performances_path,
-          class: "inline-flex items-center justify-center rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" %>
+    <div class="flex flex-wrap gap-2">
+      <%= link_to "一覧に戻る",
+            admin_stage_performances_path,
+            class: "inline-flex items-center justify-center rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50" %>
+    </div>
   </div>
 
-  <div class="mt-8">
-    <%= render "form", stage_performance: @stage_performance %>
+  <div class="mt-8 rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+    <%# Stimulus で日付を揃えつつフェスごとのステージ候補に絞り込むためのマスタを data 属性で渡す %>
+    <%= form_with url: admin_stage_performances_path, method: :post, local: true, class: "space-y-6",
+          data: {
+            controller: "bulk-stage-performance-form",
+            "bulk-stage-performance-form-festival-day-dates-value": json_escape(@festival_day_date_map.to_json),
+            "bulk-stage-performance-form-festival-day-festival-map-value": json_escape(@festival_day_festival_map.to_json),
+            "bulk-stage-performance-form-stages-value": json_escape(@stage_options.to_json),
+            "bulk-stage-performance-form-default-time-value": "00:00",
+            "bulk-stage-performance-form-minute-step-value": 5
+          } do |f| %>
+      <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+        <div>
+          <label class="text-sm font-semibold text-slate-700">フェス日程（全行に適用）</label>
+          <%= select_tag "bulk[festival_day_id]",
+                options_for_select(@festival_days.map { |d| ["#{d.festival.name} / #{d.date.strftime('%Y/%m/%d')}", d.id] }, params.dig(:bulk, :festival_day_id)),
+                prompt: "選択してください",
+                class: "mt-2 w-full rounded border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-200",
+                data: { "bulk-stage-performance-form-target": "festivalDaySelect", action: "change->bulk-stage-performance-form#onFestivalDayChange" } %>
+        </div>
+        <div>
+          <label class="text-sm font-semibold text-slate-700">ステージ（全行に適用）</label>
+          <%= select_tag "bulk[stage_id]",
+                options_from_collection_for_select(@stage_collection, :id, :name, params.dig(:bulk, :stage_id)),
+                include_blank: "(未定)",
+                class: "mt-2 w-full rounded border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-200",
+                data: { "bulk-stage-performance-form-target": "stageSelect" } %>
+        </div>
+      </div>
+
+      <div class="overflow-hidden rounded-lg border border-slate-200">
+        <table class="min-w-full divide-y divide-slate-200 text-sm text-slate-800">
+          <thead class="bg-slate-50 text-left text-xs font-semibold uppercase tracking-wide text-slate-600">
+            <tr>
+              <th class="px-3 py-2">アーティスト</th>
+              <th class="px-3 py-2">開始</th>
+              <th class="px-3 py-2">終了</th>
+              <th class="px-3 py-2">状態</th>
+              <th class="px-3 py-2">キャンセル</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100">
+            <% @bulk_entries.each_with_index do |entry, idx| %>
+              <tr class="bg-white">
+                <td class="px-3 py-2">
+                  <%= select_tag "bulk[entries][#{idx}][artist_id]",
+                        options_from_collection_for_select(@artists, :id, :name, entry.artist_id),
+                        include_blank: "選択してください",
+                        class: "w-full rounded border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-200" %>
+                </td>
+                <td class="px-3 py-2">
+                  <%= text_field_tag "bulk[entries][#{idx}][starts_at]",
+                        entry.starts_at&.strftime("%Y-%m-%dT%H:%M"),
+                        class: "w-full rounded border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-200",
+                        type: "datetime-local",
+                        step: 300,
+                        data: {
+                          "bulk-stage-performance-form-target": "timeField",
+                          default_time: "00:00",
+                          action: "input->bulk-stage-performance-form#normalizeTime change->bulk-stage-performance-form#normalizeTime"
+                        } %>
+                </td>
+                <td class="px-3 py-2">
+                  <%= text_field_tag "bulk[entries][#{idx}][ends_at]",
+                        entry.ends_at&.strftime("%Y-%m-%dT%H:%M"),
+                        class: "w-full rounded border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-200",
+                        type: "datetime-local",
+                        step: 300,
+                        data: {
+                          "bulk-stage-performance-form-target": "timeField",
+                          default_time: "00:00",
+                          action: "input->bulk-stage-performance-form#normalizeTime change->bulk-stage-performance-form#normalizeTime"
+                        } %>
+                </td>
+                <td class="px-3 py-2">
+                  <%= select_tag "bulk[entries][#{idx}][status]",
+                        options_for_select(StagePerformance.statuses.keys.map { |k| [k, k] }, entry.status.presence || "draft"),
+                        class: "w-full rounded border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-200" %>
+                </td>
+                <td class="px-3 py-2 text-center">
+                  <%= check_box_tag "bulk[entries][#{idx}][canceled]", "1", entry.canceled?,
+                        class: "h-4 w-4 rounded border-slate-300 text-rose-600 focus:ring-rose-500" %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="flex items-center justify-between">
+        <p class="text-xs text-slate-500">空行は無視され、アーティストを選んだ行だけ登録されます。</p>
+        <%= f.submit "まとめて登録",
+              class: "inline-flex items-center rounded bg-[#F95858] px-5 py-2 text-sm font-semibold text-white shadow transition hover:bg-[#e04f4f]" %>
+      </div>
+    <% end %>
   </div>
 </div>

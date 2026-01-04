@@ -7,6 +7,9 @@ class StagePerformance < ApplicationRecord
   has_many :user_timetable_entries, dependent: :destroy
   has_one :setlist, dependent: :destroy
 
+  # DB制約（scheduledのみ有効）
+  # - 同一ステージでの時間帯重複を禁止（no_overlap_on_same_stage_when_scheduled）
+  # - 同一スロットの二重登録を禁止（uniq_sp_slot_when_scheduled）
   # scheduledのときだけ必須＆妥当性チェック
   with_options if: :scheduled? do
     validates :stage,     presence: true
