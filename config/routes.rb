@@ -60,13 +60,7 @@ Rails.application.routes.draw do
       end
     end
     resources :setlists
-    resources :stage_performances do
-      # 一括追加用
-      collection do
-        get :bulk_new
-        post :bulk_create
-      end
-    end
+    resources :stage_performances
     resources :festivals do
       member do
         get  :setup

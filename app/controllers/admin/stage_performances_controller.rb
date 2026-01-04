@@ -1,6 +1,6 @@
 class Admin::StagePerformancesController < Admin::BaseController
   before_action :set_stage_performance, only: %i[show edit update destroy]
-  before_action :prepare_form_options, only: %i[new create edit update bulk_new bulk_create]
+  before_action :prepare_form_options, only: %i[new create edit update]
 
   def index
     @festival_days = FestivalDay.includes(:festival).order(:date)
@@ -16,20 +16,19 @@ class Admin::StagePerformancesController < Admin::BaseController
   def show; end
 
   def new
-    @stage_performance = StagePerformance.new(status: :draft)
-    @stage_performance.festival_day_id = params[:festival_day_id] if params[:festival_day_id].present?
+    @bulk_entries = Array.new(10) { StagePerformance.new(status: :draft) }
   end
 
   def create
-    @stage_performance = StagePerformance.new(sp_params)
-    if @stage_performance.save
-      redirect_to admin_stage_performance_path(@stage_performance), notice: "出演枠を作成しました。"
+    result = Admin::StagePerformances::BulkCreator.call(bulk_params)
+
+    if result.success?
+      redirect_to admin_stage_performances_path, notice: "#{result.created_count}件の出演枠を追加しました。"
     else
+      @bulk_entries = result.bulk_entries
+      flash.now[:alert] = result.error_message
       render :new, status: :unprocessable_entity
     end
-  rescue ActiveRecord::StatementInvalid => e
-    flash.now[:alert] = friendly_pg_error(e)
-    render :new, status: :unprocessable_entity
   end
 
   def edit; end
@@ -48,51 +47,6 @@ class Admin::StagePerformancesController < Admin::BaseController
   def destroy
     @stage_performance.destroy!
     redirect_to admin_stage_performances_path, notice: "削除しました。"
-  end
-
-  def bulk_new
-    @bulk_entries = Array.new(10) { StagePerformance.new(status: :draft) }
-  end
-
-  def bulk_create
-    permitted = bulk_params
-    entry_attrs = normalize_bulk_entries(permitted[:entries])
-    # アーティスト未選択の行は無視し、有効な行だけをまとめて保存する
-    usable_entries = entry_attrs.select { |attrs| attrs[:artist_id].present? }
-
-    if usable_entries.empty?
-      flash.now[:alert] = "1行以上入力してください。"
-      @bulk_entries = build_bulk_entries(entry_attrs)
-      render :bulk_new, status: :unprocessable_entity and return
-    end
-
-    StagePerformance.transaction do
-      usable_entries.each do |attrs|
-        canceled_value = ActiveModel::Type::Boolean.new.cast(attrs[:canceled])
-        canceled_value = false if canceled_value.nil?
-
-        StagePerformance.create!(
-          festival_day_id: permitted[:festival_day_id],
-          stage_id: permitted[:stage_id],
-          artist_id: attrs[:artist_id],
-          starts_at: attrs[:starts_at],
-          ends_at: attrs[:ends_at],
-          status: attrs[:status].presence || :draft,
-          canceled: canceled_value
-        )
-      end
-    end
-
-    redirect_to admin_stage_performances_path, notice: "#{usable_entries.size}件の出演枠を追加しました。"
-  rescue ActiveRecord::RecordInvalid, ActiveRecord::StatementInvalid => e
-    flash.now[:alert] =
-      if e.is_a?(ActiveRecord::StatementInvalid)
-        friendly_pg_error(e)
-      else
-        e.record.errors.full_messages.first || "保存に失敗しました。"
-      end
-    @bulk_entries = build_bulk_entries(entry_attrs)
-    render :bulk_new, status: :unprocessable_entity
   end
 
   private
@@ -131,28 +85,5 @@ class Admin::StagePerformancesController < Admin::BaseController
     @festival_day_date_map = @festival_days.map { |day| [ day.id, day.date.iso8601 ] }.to_h
     @stage_options = @stages_by_festival.transform_values { |stages| stages.map { |stage| { id: stage.id, name: stage.name } } }
     @stage_collection = @stages_by_festival.values.flatten
-  end
-
-  def build_bulk_entries(entries)
-    filled = entries.presence || []
-    entries_as_models = filled.map { |attrs| StagePerformance.new(attrs) }
-    padding = [ 10 - entries_as_models.size, 0 ].max
-    entries_as_models + Array.new(padding) { StagePerformance.new(status: :draft) }
-  end
-
-  # params[:entries] が Array/ActionController::Parameters どちらでもシンボルキーの配列に揃える
-  def normalize_bulk_entries(entries_param)
-    return [] if entries_param.blank?
-
-    raw_entries = case entries_param
-    when Array
-                    entries_param
-    when ActionController::Parameters
-                    entries_param.to_h.values
-    else
-                    []
-    end
-
-    raw_entries.map { |attrs| attrs.to_h.symbolize_keys }
   end
 end
