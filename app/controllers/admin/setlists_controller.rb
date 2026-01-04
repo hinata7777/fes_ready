@@ -13,7 +13,7 @@ class Admin::SetlistsController < Admin::BaseController
 
   def new
     @setlist = Setlist.new
-    build_setlist_songs(@setlist)
+    Admin::Setlists::FormBuilder.build(@setlist)
   end
 
   def create
@@ -21,20 +21,20 @@ class Admin::SetlistsController < Admin::BaseController
     if @setlist.save
       redirect_to admin_setlists_path, notice: "セットリストを作成しました"
     else
-      build_missing_setlist_songs
+      Admin::Setlists::FormBuilder.build(@setlist)
       render :new, status: :unprocessable_entity
     end
   end
 
   def edit
-    build_missing_setlist_songs
+    Admin::Setlists::FormBuilder.build(@setlist)
   end
 
   def update
     if @setlist.update(setlist_params)
       redirect_to admin_setlists_path, notice: "セットリストを更新しました"
     else
-      build_missing_setlist_songs
+      Admin::Setlists::FormBuilder.build(@setlist)
       render :edit, status: :unprocessable_entity
     end
   end
@@ -75,19 +75,6 @@ class Admin::SetlistsController < Admin::BaseController
     # 曲のプルダウンは全曲だと大きくなるので、選択したアーティストの曲だけをJSで絞る運用を想定
     # ここでは全曲を渡す
     @songs_by_artist = Song.includes(:artist).order(:name).group_by(&:artist_id)
-  end
-
-  def build_setlist_songs(setlist)
-    # nilが紛れ込んでいる場合を排除
-    setlist.setlist_songs.target.compact!
-
-    (1..20).each do |pos|
-      setlist.setlist_songs.build(position: pos) unless setlist.setlist_songs.any? { |s| s.position == pos }
-    end
-  end
-
-  def build_missing_setlist_songs
-    build_setlist_songs(@setlist)
   end
 
   def set_artists
