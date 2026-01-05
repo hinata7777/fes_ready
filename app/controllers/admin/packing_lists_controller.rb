@@ -61,19 +61,8 @@ class Admin::PackingListsController < Admin::BaseController
     raw = params.require(:packing_list)
 
     safe = raw.permit(:title, :festival_day_id).to_h
-    safe[:packing_list_items_attributes] = sanitize_packing_list_items(raw[:packing_list_items_attributes])
+    safe[:packing_list_items_attributes] =
+      Admin::PackingLists::ParamsSanitizer.call(raw[:packing_list_items_attributes])
     safe
-  end
-
-  # 動的キー付きのネストを手動でサニタイズ
-  def sanitize_packing_list_items(raw_items)
-    return [] if raw_items.blank?
-
-    raw_items.to_unsafe_h.map do |_, attrs|
-      attrs = attrs.to_unsafe_h if attrs.respond_to?(:to_unsafe_h)
-      next unless attrs.is_a?(Hash)
-
-      attrs.slice("id", "item_id", "note", "position", "_destroy")
-    end.compact
   end
 end
