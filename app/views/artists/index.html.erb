@@ -16,13 +16,12 @@
         <% preserved_query = request.query_parameters.except(:page, :festival_day_id) %>
         <% tab_items = @festival_days.map { |festival_day| [ festival_day.id, festival_day.date.strftime("%-m/%-d") ] }.to_h %>
         <div class="flex justify-center">
-          <%= render Shared::SegmentedTabsComponent.new(
+          <%= render "shared/segmented_tabs",
                 tabs: tab_items,
                 active_tab_key: @selected_festival_day&.id,
                 url_builder: ->(festival_day_id) {
                   festival_artists_path(@festival, preserved_query.merge(festival_day_id: festival_day_id))
-                }
-              ) %>
+                } %>
         </div>
       <% end %>
 
