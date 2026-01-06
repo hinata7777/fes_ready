@@ -12,8 +12,7 @@ module Prep
     def build
       performing_artists = Artist
                              .joins(stage_performances: :festival_day)
-                             .where(stage_performances: { status: StagePerformance.statuses[:scheduled] },
-                                    festival_days: { id: @selected_day.id, festival_id: @festival.id })
+                             .where(festival_days: { id: @selected_day.id, festival_id: @festival.id })
                              .merge(Artist.published)
                              .distinct
                              .order(:name)
