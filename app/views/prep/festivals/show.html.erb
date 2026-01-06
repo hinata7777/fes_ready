@@ -9,14 +9,13 @@
     <% day_lookup = @festival_days.index_by(&:id) %>
     <% tab_items = day_lookup.transform_values { |day| day.date.strftime("%-m/%-d") } %>
     <div class="flex justify-center">
-      <%= render Shared::SegmentedTabsComponent.new(
+      <%= render "shared/segmented_tabs",
             tabs: tab_items,
             active_tab_key: @selected_day.id,
             url_builder: ->(festival_day_id) do
               day = day_lookup[festival_day_id]
               prep_festival_path(@festival, date: day.date.to_s, back_to: params[:back_to])
-            end
-          ) %>
+            end %>
     </div>
 
     <section class="space-y-4">
