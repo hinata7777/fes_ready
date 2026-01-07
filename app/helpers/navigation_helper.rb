@@ -18,6 +18,9 @@ module NavigationHelper
     "timetables#index" => -> { root_path },
     "timetables#show" => -> { timetables_path },
 
+    "setlists#index" => -> { festival_path(@festival) },
+    "setlists#show" => -> { festival_setlists_path(@festival, date: @festival_day.date.to_s) },
+
     "my_timetables#index" => -> { timetables_path },
     "my_timetables#show" => -> { my_timetables_path },
     "my_timetables#edit" => -> { my_timetables_path },

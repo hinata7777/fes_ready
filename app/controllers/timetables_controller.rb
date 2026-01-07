@@ -58,20 +58,8 @@ class TimetablesController < ApplicationController
 
   def load_selected_day
     # 選択可能な開催日（タブ）を並び替えた一覧として保持
-    @festival_days = @festival.festival_days.sort_by(&:date)
-    raise ActiveRecord::RecordNotFound if @festival_days.blank?
-
-    @selected_day =
-      if params[:date].present?
-        begin
-          parsed = Date.parse(params[:date])
-        rescue ArgumentError
-          raise ActiveRecord::RecordNotFound
-        end
-        @festival.festival_days.find_by!(date: parsed)
-      else
-        @festival_days.first
-      end
+    @festival_days = @festival.timetable_days
+    @selected_day = @festival.select_day(params[:date], days: @festival_days)
   end
 
   def performances_by_stage

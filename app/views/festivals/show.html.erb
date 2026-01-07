@@ -89,6 +89,13 @@
                     data: { controller: "tap-feedback" } do %>
           フェス予習リストへ
         <% end %>
+        <% if @show_setlists_link %>
+          <%= link_to festival_setlists_path(@festival),
+                      class: "block w-full rounded-2xl bg-indigo-500 py-3 text-center text-sm font-bold text-white shadow-md interactive-lift hover:bg-indigo-400",
+                      data: { controller: "tap-feedback" } do %>
+            セットリストへ
+          <% end %>
+        <% end %>
       </div>
     </article>
   </div>

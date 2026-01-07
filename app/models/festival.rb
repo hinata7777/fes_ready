@@ -46,6 +46,20 @@ class Festival < ApplicationRecord
     festival_days.order(:date)
   end
 
+  def select_day(date_param, days: festival_days)
+    raise ActiveRecord::RecordNotFound if days.blank?
+    return days.first if date_param.blank?
+
+    parsed = Date.parse(date_param)
+    if days.respond_to?(:find_by!)
+      days.find_by!(date: parsed)
+    else
+      days.find { |day| day.date == parsed } || raise(ActiveRecord::RecordNotFound)
+    end
+  rescue ArgumentError
+    raise ActiveRecord::RecordNotFound
+  end
+
   def stage_performances_on(festival_day)
     Festivals::StagePerformancesForDayQuery.call(
       festival: self,
@@ -58,6 +72,18 @@ class Festival < ApplicationRecord
       festival: self,
       festival_day: festival_day
     )
+  end
+
+  # 開催済みフェスかを判定（本日より終了日が過去か）
+  def past?(today = Date.current)
+    end_date < today
+  end
+
+  # セットリスト一覧への導線を出せるか判定
+  def setlists_available?
+    Setlist.joins(stage_performance: :festival_day)
+           .where(festival_days: { festival_id: id })
+           .exists?
   end
 
   private
