@@ -2,6 +2,7 @@
   <div class="mx-auto max-w-5xl space-y-6">
     <header class="space-y-4">
       <h1 class="text-2xl font-bold text-slate-900">フェス予習一覧</h1>
+      <p class="text-sm text-slate-600">フェスごとの予習ページをまとめています。<br>参加予定のフェスから曲をチェックしましょう。</p>
       <% preserved_query = request.query_parameters.except(:page, :status) %>
       <div class="flex justify-center">
         <%= render "shared/segmented_tabs",
@@ -54,8 +55,10 @@
           </div>
         <% end %>
       <% else %>
-        <p class="rounded-xl bg-white px-4 py-12 text-center text-sm text-slate-500 shadow md:col-span-2">
-          表示できるフェスがありません
+        <p class="rounded-xl bg-white px-4 py-12 text-center text-sm text-slate-500 shadow md:col-span-2 space-y-1">
+          <span class="block">表示できるフェスがありません。</span>
+          <span class="block">予習対象のフェスが見つかりませんでした。</span>
+          <span class="block">開催時期やタグを変えて再検索してください。</span>
         </p>
       <% end %>
     </section>

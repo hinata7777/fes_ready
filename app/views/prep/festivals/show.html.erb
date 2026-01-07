@@ -22,7 +22,7 @@
       <h2 class="text-lg font-semibold text-slate-900">
         <%= @selected_day.date.strftime("%-m/%-d") %> 出演アーティストの予習曲
       </h2>
-      <p class="text-sm text-slate-600">各アーティストの演奏率が高い上位2曲を表示しています。</p>
+      <p class="text-sm text-slate-600">各アーティストの演奏率が高い上位2曲を表示しています。<br>出演日のアーティストを広く予習したい場合のオススメ曲です。</p>
 
       <% if @song_entries.any? %>
         <div class="grid gap-3 md:grid-cols-2">
@@ -44,8 +44,10 @@
         </div>
         <%= render "shared/pagination", pagy: @pagy %>
       <% else %>
-        <div class="rounded-2xl bg-white px-4 py-12 text-center text-sm text-slate-600 shadow">
-          表示できるアーティストがいません
+        <div class="rounded-2xl bg-white px-4 py-12 text-center text-sm text-slate-600 shadow space-y-1">
+          <span class="block">表示できるアーティストがいません。</span>
+          <span class="block">セットリストが十分に集まっていない、出演アーティストが未定の可能性があります。</span>
+          <span class="block">日程を切り替えるか、後日もう一度確認してください。</span>
         </div>
       <% end %>
     </section>
