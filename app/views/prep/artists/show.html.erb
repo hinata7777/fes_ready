@@ -58,10 +58,11 @@
       <% if @setlists.any? %>
         <div class="grid gap-3">
           <% @setlists.each do |setlist| %>
+            <% festival = setlist.stage_performance.festival_day.festival %>
             <%= render "shared/nav_stack_button",
                        label: setlist_label(setlist),
                        subtext: setlist_subtext(setlist),
-                       url: setlist_path(setlist, back_to: request.fullpath) %>
+                       url: festival_setlist_path(festival, setlist, back_to: request.fullpath) %>
           <% end %>
         </div>
       <% else %>

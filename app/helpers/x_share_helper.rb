@@ -21,6 +21,6 @@ module XShareHelper
     festival = stage_performance.festival_day.festival
     hashtag_artist = artist.name.to_s.gsub(/\s+/, "")
     text = "#{artist.name} の #{festival.name} でのセットリストを公開中！\n#FESREADY ##{hashtag_artist}"
-    x_intent_url(text: text, url: setlist_url(setlist))
+    x_intent_url(text: text, url: festival_setlist_url(festival, setlist))
   end
 end

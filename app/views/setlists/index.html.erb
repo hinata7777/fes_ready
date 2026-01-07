@@ -1,0 +1,69 @@
+<div class="min-h-screen px-4 py-6">
+  <div class="mx-auto max-w-5xl space-y-6">
+    <header class="space-y-3">
+      <p class="text-sm font-semibold text-rose-500">セットリスト</p>
+      <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div class="space-y-1">
+          <h1 class="text-2xl font-bold text-slate-900"><%= @festival.name %> のセットリスト</h1>
+          <p class="text-sm text-slate-600"><%= festival_date_and_location(@festival) %></p>
+        </div>
+        <% share_text = "#{@festival.name} のセットリストを公開中！\n#FESREADY" %>
+        <% share_url = festival_setlists_url(@festival, date: @selected_day.date.to_s) %>
+        <%= link_to x_intent_url(text: share_text, url: share_url),
+                    class: "inline-flex items-center justify-center gap-2 rounded-2xl bg-black px-5 py-2.5 text-sm font-bold text-white shadow-md interactive-lift hover:bg-neutral-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black",
+                    target: "_blank",
+                    rel: "noopener" do %>
+          <%= image_tag "x-logo.png", alt: "X", class: "h-4 w-4" %>
+          <span>Xでシェア</span>
+        <% end %>
+      </div>
+    </header>
+
+    <% day_lookup = @festival_days.index_by(&:id) %>
+    <% tab_items = day_lookup.transform_values { |day| day.date.strftime("%-m/%-d") } %>
+    <div class="flex justify-center">
+      <%= render "shared/segmented_tabs",
+            tabs: tab_items,
+            active_tab_key: @selected_day.id,
+            url_builder: ->(festival_day_id) do
+              day = day_lookup[festival_day_id]
+              festival_setlists_path(@festival, date: day.date.to_s)
+            end %>
+    </div>
+
+    <section class="space-y-6">
+      <% @stages.each do |stage| %>
+        <% performances = @performances_by_stage[stage] || [] %>
+        <% next if performances.blank? %>
+        <div class="space-y-3">
+          <h2 class="text-lg font-semibold" style="color: <%= stage.color_hex %>;">
+            <%= stage.name.presence || "(未定)" %>
+          </h2>
+          <div class="space-y-3">
+            <% performances.each do |performance| %>
+              <% label = performance.artist&.name || "(未定)" %>
+              <% subtext = performance_time_range(performance, timezone: @timezone) %>
+              <% if performance.setlist.present? %>
+                <%= render "shared/nav_stack_button",
+                           label: label,
+                           subtext: subtext,
+                           url: festival_setlist_path(@festival, performance.setlist, back_to: request.fullpath) %>
+              <% else %>
+                <%= render "shared/nav_stack_button",
+                           label: label,
+                           subtext: subtext,
+                           disabled: true %>
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+
+      <% if @performances.blank? %>
+        <div class="rounded-2xl bg-white px-4 py-12 text-center text-sm text-slate-600 shadow">
+          表示できる出演枠がありません。
+        </div>
+      <% end %>
+    </section>
+  </div>
+</div>

@@ -38,6 +38,7 @@ Rails.application.routes.draw do
 
   resources :festivals, only: [ :index, :show ] do
     resources :artists, only: [ :index ], module: :festivals
+    resources :setlists, only: [ :index, :show ], controller: :setlists
     resource :my_timetable, only: [ :show, :edit, :update, :destroy ], controller: :my_timetables
     resource :favorite, only: [ :create, :destroy ], module: :festivals
   end

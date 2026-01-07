@@ -58,14 +58,7 @@ class MyTimetablesController < ApplicationController
 
   def set_selected_day!
     @festival_days = @festival.timetable_days
-    raise ActiveRecord::RecordNotFound if @festival_days.blank?
-
-    @selected_day =
-      if params[:date].present?
-        @festival.festival_days.find_by!(date: Date.parse(params[:date]))
-      else
-        @festival_days.first
-      end
+    @selected_day = @festival.select_day(params[:date], days: @festival_days)
   end
 
   def set_timetable_owner!

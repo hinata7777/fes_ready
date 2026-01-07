@@ -1,4 +1,19 @@
 module SetlistsHelper
+  def performance_time_range(stage_performance, timezone:)
+    return "未定" if stage_performance.blank?
+
+    starts_at = stage_performance.starts_at&.in_time_zone(timezone)
+    ends_at   = stage_performance.ends_at&.in_time_zone(timezone)
+
+    if starts_at.present? && ends_at.present?
+      "#{starts_at.strftime('%H:%M')}〜#{ends_at.strftime('%H:%M')}"
+    elsif starts_at.present?
+      "#{starts_at.strftime('%H:%M')}〜"
+    else
+      "未定"
+    end
+  end
+
   def stage_time_label(stage_performance)
     return "未定" if stage_performance.blank?
 

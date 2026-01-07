@@ -20,9 +20,7 @@ module Prep
     def show
       @festival = find_festival
       @festival_days = @festival.timetable_days
-      raise ActiveRecord::RecordNotFound if @festival_days.blank?
-
-      resolve_selected_day
+      @selected_day = @festival.select_day(params[:date], days: @festival_days)
       entries = Prep::FestivalSongEntriesBuilder.build(festival: @festival, selected_day: @selected_day)
       @pagy, @song_entries = pagy_array(entries, limit: 10, page: params[:page])
       set_header_back_path
@@ -33,17 +31,6 @@ module Prep
     def find_festival
       festival_relation = Festival.includes(:festival_days)
       Festival.find_by_slug!(params[:id], scope: festival_relation)
-    end
-
-    def resolve_selected_day
-      @selected_day =
-        if params[:date].present?
-          parsed = Date.parse(params[:date]) rescue nil
-          raise ActiveRecord::RecordNotFound unless parsed
-          @festival.festival_days.find_by!(date: parsed)
-        else
-          @festival_days.first
-        end
     end
 
     def resolved_back_path(token)
