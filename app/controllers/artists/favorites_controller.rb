@@ -6,6 +6,7 @@ module Artists
     def create
       favorite = current_user.user_artist_favorites.find_or_create_by!(artist: @artist)
 
+      # JSONはStimulus用、HTMLはJSが無効な場合のフォールバック
       respond_to do |format|
         format.html { redirect_back fallback_location: artist_path(@artist), notice: "お気に入りに追加しました" }
         format.json { render json: favorite_payload(favorited: true, favorite_id: favorite.id), status: :created }
@@ -21,6 +22,7 @@ module Artists
       favorite = current_user.user_artist_favorites.find_by(artist: @artist)
       favorite&.destroy
 
+      # JSONはStimulus用、HTMLはJSが無効な場合のフォールバック
       respond_to do |format|
         format.html { redirect_back fallback_location: artist_path(@artist), notice: "お気に入りを解除しました" }
         format.json { render json: favorite_payload(favorited: false), status: :ok }
