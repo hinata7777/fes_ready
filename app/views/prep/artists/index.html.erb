@@ -5,6 +5,12 @@
       <p class="text-sm text-slate-600">
         予習したいアーティストを選んで、効率よく聴き込みましょう。<br>予習したいアーティスト名で検索できます。
       </p>
+      <% unless user_signed_in? %>
+        <%= render "shared/login_callout",
+                   title: "ログインして予習するフェスを保存しましょう",
+                   description: "お気に入り登録で、気になるアーティストをすぐに見返せます。",
+                   cta_label: "ログイン" %>
+      <% end %>
     </header>
 
     <%= render Shared::SearchFormComponent.new(
