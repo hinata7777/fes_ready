@@ -3,7 +3,7 @@
     <header class="space-y-4">
       <h1 class="text-2xl font-bold text-slate-900">アーティスト予習一覧</h1>
       <p class="text-sm text-slate-600">
-        予習したいアーティストを選んで、効率よく聴き込みましょう。
+        予習したいアーティストを選んで、効率よく聴き込みましょう。<br>予習したいアーティスト名で検索できます。
       </p>
     </header>
 
@@ -21,8 +21,10 @@
           <% end %>
         </div>
       <% else %>
-        <p class="rounded-3xl border border-dashed border-slate-300 bg-white px-6 py-16 text-center text-sm text-slate-500">
-          表示できるアーティストがありません
+        <p class="rounded-3xl border border-dashed border-slate-300 bg-white px-6 py-16 text-center text-sm text-slate-500 space-y-1">
+          <span class="block">表示できるアーティストがありません。</span>
+          <span class="block">検索条件に合うアーティストが見つかりませんでした。</span>
+          <span class="block">キーワードを短くするか別の表記で試してください。</span>
         </p>
       <% end %>
     </section>

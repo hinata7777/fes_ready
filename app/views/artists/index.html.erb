@@ -2,9 +2,12 @@
   <div class="mx-auto max-w-6xl space-y-6">
     <header class="space-y-4">
       <h1 class="text-2xl font-bold text-slate-900">
-        <%= @festival ? "#{@festival.name} の出演アーティスト" : "アーティスト一覧" %>
+        <%= @festival ? "#{@festival.name} の出演アーティスト" : "登録アーティスト一覧" %>
       </h1>
-      <p class="text-sm text-slate-600">アプリに登録されているアーティスト一覧です。</p>
+      <p class="text-sm text-slate-600">
+        FES READYに登録されているアーティスト一覧です。
+        <% if @festival.present? && @festival_days.any? %><br>出演日を切り替えると、その日のアーティストだけに絞り込めます。<% end %>
+      </p>
       <% unless user_signed_in? %>
         <%= render "shared/login_callout",
                    title: "ログインしてお気に入りアーティストを登録しましょう",
@@ -53,8 +56,10 @@
           <% end %>
         </div>
       <% else %>
-        <p class="rounded-3xl border border-dashed border-slate-300 bg-white px-6 py-16 text-center text-sm text-slate-500">
-          表示できるアーティストがありません
+        <p class="rounded-3xl border border-dashed border-slate-300 bg-white px-6 py-16 text-center text-sm text-slate-500 space-y-1">
+          <span class="block">表示できるアーティストがありません。</span>
+          <span class="block">条件に合う出演アーティストが見つかりませんでした。</span>
+          <span class="block">日程を切り替えるか、検索条件を調整してください。</span>
         </p>
       <% end %>
     </section>

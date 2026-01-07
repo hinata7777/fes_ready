@@ -10,8 +10,9 @@
       <% share_href = artist_prep_share_url(@artist) %>
       <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <p class="text-sm text-slate-600">
-          過去のセットリストから集計した演奏率をもとに、予習すべき曲をチェックしましょう。
+          過去のセットリストから集計した演奏率をもとに、予習すべき曲をチェックしましょう。<br>上位5曲から予習を始めるのがおすすめです。
         </p>
+        
         <%= link_to share_href,
                     class: "inline-flex items-center justify-center gap-2 rounded-2xl bg-black px-5 py-2.5 text-sm font-bold text-white shadow-md interactive-lift hover:bg-neutral-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black",
                     target: "_blank",
@@ -64,8 +65,9 @@
           <% end %>
         </div>
       <% else %>
-        <div class="rounded-2xl border border-slate-200 bg-white px-4 py-6 text-center text-sm text-slate-600 shadow">
-          まだセットリストがありません。
+        <div class="rounded-2xl border border-slate-200 bg-white px-4 py-6 text-center text-sm text-slate-600 shadow space-y-1">
+          <span class="block">まだセットリストがありません。</span>
+          <span class="block">今後追加される可能性があるため、時間をおいて再度ご確認ください。</span>
         </div>
       <% end %>
     </section>

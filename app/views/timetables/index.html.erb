@@ -2,6 +2,9 @@
   <div class="mx-auto max-w-5xl space-y-6">
     <header class="space-y-4">
       <h1 class="text-2xl font-bold text-slate-900">タイムテーブルを見たいフェスを選択</h1>
+      <p class="text-sm text-slate-600">
+        公開中のタイムテーブルのみ表示しています。<br>タイムテーブルから、当日の流れを確認できます。
+      </p>
       <% unless user_signed_in? %>
         <%= render "shared/login_callout",
                    title: "ログインしてマイタイムテーブルを作成しましょう",
@@ -9,7 +12,6 @@
                    cta_label: "ログイン" %>
       <% end %>
       <div class="flex flex-col gap-3 text-sm text-slate-600 sm:flex-row sm:items-center sm:justify-between">
-        <p>公開中のタイムテーブルのみ表示しています。</p>
         <% if user_signed_in? %>
           <%= link_to "マイタイムテーブル一覧へ",
                       my_timetables_path,
@@ -66,8 +68,9 @@
             </div>
           <% end %>
       <% else %>
-        <p class="rounded-xl bg-white px-4 py-12 text-center text-sm text-slate-500 shadow md:col-span-2">
-          公開中のタイムテーブルはありません
+        <p class="rounded-xl bg-white px-4 py-12 text-center text-sm text-slate-500 shadow md:col-span-2 space-y-1">
+          <span class="block">公開中のタイムテーブルはありません。</span>
+          <span class="block">公開準備中のフェスがあるため、日程・エリアを変えて再検索してください。</span>
         </p>
       <% end %>
     </section>
