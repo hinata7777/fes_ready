@@ -12,19 +12,19 @@
   </div>
 
   <div class="mt-4 rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
-    <%= form_with url: admin_stage_performances_path, method: :get, local: true, class: "grid gap-3 md:grid-cols-[1fr_1fr_auto_auto] md:items-end" do |f| %>
-      <div class="flex flex-col gap-1">
+    <%= form_with url: admin_stage_performances_path, method: :get, local: true, class: "grid gap-3 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] md:items-end" do |f| %>
+      <div class="flex min-w-0 flex-col gap-1">
         <label class="text-xs font-semibold text-slate-600">フェス日程</label>
         <%= f.select :festival_day_id,
           options_for_select([["すべて", nil]] + @festival_days.map { |d| ["#{d.festival.name} / #{d.date.strftime('%Y/%m/%d')}", d.id] }, params[:festival_day_id]),
-          {}, class: "rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-800 shadow-sm focus:border-[#F95858] focus:ring-[#F95858]" %>
+          {}, class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-800 shadow-sm focus:border-[#F95858] focus:ring-[#F95858]" %>
       </div>
 
-      <div class="flex flex-col gap-1">
+      <div class="flex min-w-0 flex-col gap-1">
         <label class="text-xs font-semibold text-slate-600">アーティスト</label>
         <%= f.select :artist_id,
           options_for_select([["すべて", nil]] + @artists.map { |a| [a.name, a.id] }, params[:artist_id]),
-          {}, class: "rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-800 shadow-sm focus:border-[#F95858] focus:ring-[#F95858]" %>
+          {}, class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-800 shadow-sm focus:border-[#F95858] focus:ring-[#F95858]" %>
       </div>
 
       <div class="flex gap-2 md:justify-end">
