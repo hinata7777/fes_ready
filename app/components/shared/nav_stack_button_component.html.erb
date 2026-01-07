@@ -1,0 +1,13 @@
+<%= content_tag wrapper_tag, **wrapper_options do %>
+  <span class="flex w-full items-start justify-between gap-3">
+    <span class="min-w-0 space-y-1 leading-tight">
+      <span class="block text-base font-semibold leading-snug text-slate-900 line-clamp-2"><%= label %></span>
+      <% if subtext.present? %>
+        <span class="block text-xs font-medium text-slate-500"><%= subtext %></span>
+      <% end %>
+    </span>
+    <% if trailing.present? %>
+      <span class="shrink-0"><%= trailing %></span>
+    <% end %>
+  </span>
+<% end %>

@@ -61,10 +61,11 @@
           <% back_to = params[:back_to].presence || @back_to %>
           <% @festivals.each do |festival| %>
             <div class="w-full">
-              <%= render "shared/nav_stack_button",
+              <%= render Shared::NavStackButtonComponent.new(
                          label: festival.name,
                          subtext: festival_date_and_location(festival),
-                         url: (back_to ? timetable_path(festival, back_to: back_to) : timetable_path(festival)) %>
+                         url: (back_to ? timetable_path(festival, back_to: back_to) : timetable_path(festival))
+                       ) %>
             </div>
           <% end %>
       <% else %>

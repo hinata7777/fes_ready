@@ -44,15 +44,17 @@
               <% label = performance.artist&.name || "(未定)" %>
               <% subtext = performance_time_range(performance, timezone: @timezone) %>
               <% if performance.setlist.present? %>
-                <%= render "shared/nav_stack_button",
+                <%= render Shared::NavStackButtonComponent.new(
                            label: label,
                            subtext: subtext,
-                           url: festival_setlist_path(@festival, performance.setlist, back_to: request.fullpath) %>
+                           url: festival_setlist_path(@festival, performance.setlist, back_to: request.fullpath)
+                         ) %>
               <% else %>
-                <%= render "shared/nav_stack_button",
+                <%= render Shared::NavStackButtonComponent.new(
                            label: label,
                            subtext: subtext,
-                           disabled: true %>
+                           disabled: true
+                         ) %>
               <% end %>
             <% end %>
           </div>

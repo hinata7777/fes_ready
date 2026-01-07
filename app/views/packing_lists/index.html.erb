@@ -24,9 +24,10 @@
           <div class="grid gap-3 md:grid-cols-2 md:gap-4">
             <% @packing_lists.each do |list| %>
               <div class="w-full">
-                <%= render "shared/nav_stack_button",
+                <%= render Shared::NavStackButtonComponent.new(
                            label: list.title,
-                           url: packing_list_path(list) %>
+                           url: packing_list_path(list)
+                         ) %>
               </div>
             <% end %>
           </div>
