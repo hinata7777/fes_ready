@@ -11,9 +11,10 @@
           <div class="grid gap-3 md:grid-cols-2 md:gap-4">
             <% days.each do |festival_day| %>
               <div class="w-full">
-                <%= render "shared/nav_stack_button",
+                <%= render Shared::NavStackButtonComponent.new(
                            label: "#{festival.name} - #{format_date_with_weekday(festival_day.date)}",
-                           url: festival_my_timetable_path(festival, date: festival_day.date.to_s) %>
+                           url: festival_my_timetable_path(festival, date: festival_day.date.to_s)
+                         ) %>
               </div>
             <% end %>
           </div>

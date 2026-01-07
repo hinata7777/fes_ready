@@ -8,10 +8,14 @@
     </header>
 
     <section class="space-y-3">
-      <%= render "shared/nav_stack_button",
+      <%= render Shared::NavStackButtonComponent.new(
                  label: "フェスから予習する",
-                 url: prep_festivals_path %>
-      <%= render "shared/nav_stack_button", label: "アーティストから予習する", url: prep_artists_path %>
+                 url: prep_festivals_path
+               ) %>
+      <%= render Shared::NavStackButtonComponent.new(
+                 label: "アーティストから予習する",
+                 url: prep_artists_path
+               ) %>
     </section>
   </div>
 </div>

@@ -56,14 +56,15 @@
       <% if @festivals.any? %>
         <% @festivals.each do |festival| %>
           <div class="w-full">
-            <%= render "shared/nav_stack_button",
+            <%= render Shared::NavStackButtonComponent.new(
                        label: festival.name,
                        subtext: festival_date_and_location(festival),
                        url: festival_path(festival, back_to: @back_to),
                        trailing: favorite_button_for(
                          favorited: festival_favorited?(festival),
                          toggle_url: festival_favorite_path(festival)
-                       ) %>
+                       )
+                     ) %>
           </div>
         <% end %>
       <% else %>

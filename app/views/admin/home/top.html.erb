@@ -3,14 +3,14 @@
   <p class="mt-2 text-center text-slate-600">お疲れ様です、<%= current_user.nickname %> さん。</p>
 
   <nav class="mt-6 space-y-3">
-    <%= render "shared/nav_stack_button", label: "ユーザー管理", url: admin_users_path %>
-    <%= render "shared/nav_stack_button", label: "フェス管理", url: admin_festivals_path %>
-    <%= render "shared/nav_stack_button", label: "タグ管理", url: admin_festival_tags_path %>
-    <%= render "shared/nav_stack_button", label: "アーティスト管理", url: admin_artists_path %>
-    <%= render "shared/nav_stack_button", label: "曲管理", url: admin_songs_path %>
-    <%= render "shared/nav_stack_button", label: "出演枠管理", url: admin_stage_performances_path %>
-    <%= render "shared/nav_stack_button", label: "持ち物管理", url: admin_items_path %>
-    <%= render "shared/nav_stack_button", label: "持ち物リスト管理", url: admin_packing_lists_path %>
-    <%= render "shared/nav_stack_button", label: "セットリスト管理", url: admin_setlists_path %>
+    <%= render Shared::NavStackButtonComponent.new(label: "ユーザー管理", url: admin_users_path) %>
+    <%= render Shared::NavStackButtonComponent.new(label: "フェス管理", url: admin_festivals_path) %>
+    <%= render Shared::NavStackButtonComponent.new(label: "タグ管理", url: admin_festival_tags_path) %>
+    <%= render Shared::NavStackButtonComponent.new(label: "アーティスト管理", url: admin_artists_path) %>
+    <%= render Shared::NavStackButtonComponent.new(label: "曲管理", url: admin_songs_path) %>
+    <%= render Shared::NavStackButtonComponent.new(label: "出演枠管理", url: admin_stage_performances_path) %>
+    <%= render Shared::NavStackButtonComponent.new(label: "持ち物管理", url: admin_items_path) %>
+    <%= render Shared::NavStackButtonComponent.new(label: "持ち物リスト管理", url: admin_packing_lists_path) %>
+    <%= render Shared::NavStackButtonComponent.new(label: "セットリスト管理", url: admin_setlists_path) %>
   </nav>
 </div>
