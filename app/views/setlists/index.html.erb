@@ -39,7 +39,7 @@
           <h2 class="text-lg font-semibold" style="color: <%= stage.color_hex %>;">
             <%= stage.name.presence || "(未定)" %>
           </h2>
-          <div class="space-y-3">
+          <div class="space-y-3 md:grid md:grid-cols-2 md:gap-3 md:space-y-0">
             <% performances.each do |performance| %>
               <% label = performance.artist&.name || "(未定)" %>
               <% subtext = performance_time_range(performance, timezone: @timezone) %>
