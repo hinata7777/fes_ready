@@ -9,7 +9,9 @@ class Admin::FestivalsController < Admin::BaseController
     )
   end
 
-  def show; end
+  def show
+    @festival_tags = @festival.sorted_tags
+  end
 
   def new
     @festival = Festival.new(timezone: "Asia/Tokyo")
@@ -56,7 +58,7 @@ class Admin::FestivalsController < Admin::BaseController
   private
 
   def set_festival
-    @festival = Festival.find_by_slug!(params[:id])
+    @festival = Festival.includes(:festival_tags).find_by_slug!(params[:id])
   end
 
   def load_festival_tags
