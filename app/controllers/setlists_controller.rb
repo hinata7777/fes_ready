@@ -17,7 +17,22 @@ class SetlistsController < ApplicationController
                       .includes(:artist, :stage, :setlist)
                       .order(:starts_at, :ends_at, :id)
     @stages = @festival.stages.order(:sort_order, :id)
-    @performances_by_stage = @performances.group_by(&:stage)
+
+    # タブ情報とステージ別の表示用データをまとめて構築する
+    context = SetlistsIndexViewContextBuilder.build(
+      festival: @festival,
+      festival_days: @festival_days,
+      selected_day: @selected_day,
+      performances: @performances,
+      stages: @stages,
+      back_to: request.fullpath,
+      time_range_proc: ->(performance) { helpers.performance_time_range(performance, timezone: @timezone) }
+    )
+    @day_lookup = context[:day_lookup]
+    @tab_items = context[:tab_items]
+    @tab_url_builder = context[:tab_url_builder]
+    @staged_performances = context[:staged_performances]
+    @has_performances = context[:has_performances]
   end
 
   def show

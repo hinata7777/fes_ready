@@ -1,0 +1,15 @@
+<div class="space-y-3">
+  <h2 class="text-lg font-semibold" style="color: <%= stage.color_hex %>;">
+    <%= stage.name.presence || "(未定)" %>
+  </h2>
+  <div class="space-y-3 md:grid md:grid-cols-2 md:gap-3 md:space-y-0">
+    <% entries.each do |entry| %>
+      <%= render Shared::NavStackButtonComponent.new(
+                 label: entry[:label],
+                 subtext: entry[:subtext],
+                 url: entry[:url],
+                 disabled: entry[:disabled]
+               ) %>
+    <% end %>
+  </div>
+</div>
