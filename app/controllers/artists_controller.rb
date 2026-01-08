@@ -15,6 +15,7 @@ class ArtistsController < ApplicationController
 
     @pagy, @artists = pagy(result, params: request.query_parameters)
     @back_to = request.fullpath
+    prepare_index_view_context
   end
 
   def show; end
@@ -23,5 +24,17 @@ class ArtistsController < ApplicationController
 
   def set_artist
     @artist = Artist.find_published!(params[:id])
+  end
+
+  def prepare_index_view_context
+    # TODO: 画面ロジックが増えたらViewContext/Presenterに移す
+    @show_day_tabs = @festival.present? && @festival_days.any?
+    @preserved_query = request.query_parameters.except(:page, :festival_day_id)
+    @tab_items = @festival_days.map { |festival_day| [ festival_day.id, festival_day.date.strftime("%-m/%-d") ] }.to_h
+    @tab_url_builder = ->(festival_day_id) { festival_artists_path(@festival, @preserved_query.merge(festival_day_id: festival_day_id)) }
+    @search_url = artists_path
+    @search_hidden_fields = {}
+    @selected_day_label = nil
+    @show_selected_day_label = false
   end
 end
