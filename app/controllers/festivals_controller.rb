@@ -24,6 +24,7 @@ class FestivalsController < ApplicationController
 
   def show
     @show_setlists_link = @festival.past? && @festival.setlists_available?
+    @festival_tags = @festival.sorted_tags
   end
 
   private

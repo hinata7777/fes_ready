@@ -46,6 +46,10 @@ class Festival < ApplicationRecord
     festival_days.order(:date)
   end
 
+  def sorted_tags
+    festival_tags.order(:name)
+  end
+
   def select_day(date_param, days: festival_days)
     raise ActiveRecord::RecordNotFound if days.blank?
     return days.first if date_param.blank?

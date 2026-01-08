@@ -30,26 +30,13 @@
               <div class="mt-1 text-xs font-mono text-slate-500"><%= festival.slug %></div>
             </td>
             <td class="px-4 py-3">
-              <% period_label =
-                if festival.start_date && festival.end_date
-                  start_str = festival.start_date.strftime("%Y/%m/%d")
-                  end_str   = festival.end_date.strftime("%Y/%m/%d")
-                  festival.start_date == festival.end_date ? start_str : "#{start_str} 〜 #{end_str}"
-                elsif festival.start_date
-                  festival.start_date.strftime("%Y/%m/%d")
-                elsif festival.end_date
-                  festival.end_date.strftime("%Y/%m/%d")
-                else
-                  "-"
-                end %>
-              <span><%= period_label %></span>
+              <span><%= festival_period_label(festival, fallback: "-") %></span>
             </td>
             <td class="px-4 py-3">
-              <% location_parts = [festival.prefecture, festival.city].compact_blank %>
-              <% venue_label = festival.venue_name.presence || "-" %>
-              <div><%= venue_label %></div>
-              <% if location_parts.any? %>
-                <div class="mt-1 text-xs text-slate-500"><%= location_parts.join(" / ") %></div>
+              <% location_details = festival_location_details(festival) %>
+              <div><%= location_details[:venue] %></div>
+              <% if location_details[:area].present? %>
+                <div class="mt-1 text-xs text-slate-500"><%= location_details[:area] %></div>
               <% end %>
             </td>
             <td class="px-4 py-3">

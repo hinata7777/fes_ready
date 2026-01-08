@@ -1,7 +1,6 @@
-<% time_zone = ActiveSupport::TimeZone[@festival.timezone] || Time.zone %>
+<% time_zone = festival_time_zone(@festival) %>
 <% festival_days = @festival.festival_days.order(:date) %>
 <% stages = @festival.stages.order(:sort_order, :id) %>
-
 <div class="mx-auto max-w-5xl px-4 py-10 min-h-[calc(100vh-var(--header-offset,4.5rem)-var(--footer-offset,6rem))]">
   <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
     <div>
@@ -51,26 +50,16 @@
           <div class="grid grid-cols-1 gap-2 px-4 py-3 sm:grid-cols-3">
             <dt class="font-semibold text-slate-500">開催期間</dt>
             <dd class="sm:col-span-2">
-              <% start_label = @festival.start_date&.strftime("%Y/%m/%d") %>
-              <% end_label   = @festival.end_date&.strftime("%Y/%m/%d") %>
-              <%= if start_label && end_label
-                    @festival.start_date == @festival.end_date ? start_label : "#{start_label} 〜 #{end_label}"
-                  elsif start_label
-                    start_label
-                  elsif end_label
-                    end_label
-                  else
-                    "-"
-                  end %>
+              <%= festival_period_label(@festival, fallback: "-") %>
             </dd>
           </div>
           <div class="grid grid-cols-1 gap-2 px-4 py-3 sm:grid-cols-3">
             <dt class="font-semibold text-slate-500">会場</dt>
             <dd class="sm:col-span-2">
-              <div><%= @festival.venue_name.presence || "-" %></div>
-              <% location = [@festival.prefecture, @festival.city].compact_blank %>
-              <% if location.any? %>
-                <div class="mt-1 text-xs text-slate-500"><%= location.join(" / ") %></div>
+              <% location_details = festival_location_details(@festival) %>
+              <div><%= location_details[:venue] %></div>
+              <% if location_details[:area].present? %>
+                <div class="mt-1 text-xs text-slate-500"><%= location_details[:area] %></div>
               <% end %>
             </dd>
           </div>
@@ -97,29 +86,14 @@
           <div class="grid grid-cols-1 gap-2 px-4 py-3 sm:grid-cols-3">
             <dt class="font-semibold text-slate-500">タイムテーブル公開状態</dt>
             <dd class="sm:col-span-2">
-              <% if @festival.timetable_published? %>
-                <span class="inline-flex items-center gap-2 rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700">
-                  <span class="inline-block h-2 w-2 rounded-full bg-emerald-500"></span>
-                  公開中
-                </span>
-              <% else %>
-                <span class="inline-flex items-center gap-2 rounded-full bg-slate-200 px-3 py-1 text-xs font-semibold text-slate-600">
-                  <span class="inline-block h-2 w-2 rounded-full bg-slate-400"></span>
-                  非公開
-                </span>
-              <% end %>
+              <%= festival_timetable_status_badge(@festival) %>
             </dd>
           </div>
           <div class="grid grid-cols-1 gap-2 px-4 py-3 sm:grid-cols-3">
             <dt class="font-semibold text-slate-500">タグ</dt>
             <dd class="sm:col-span-2 flex flex-wrap gap-2">
-              <% if @festival.festival_tags.any? %>
-                <% @festival.festival_tags.order(:name).each do |tag| %>
-                  <span class="inline-flex items-center rounded-full bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700">
-                    <%= tag.name %>
-                  </span>
-                <% end %>
-              <% else %>
+              <%= render "shared/festival_tags", tags: @festival_tags %>
+              <% if @festival_tags.blank? %>
                 <span class="text-slate-500">未設定</span>
               <% end %>
             </dd>
@@ -144,7 +118,7 @@
             <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
               <div class="flex flex-wrap items-center justify-between gap-2">
                 <div class="text-base font-semibold text-slate-800">
-                  <%= day.date.strftime("%Y/%m/%d (%a)") %>
+                  <%= format_date_with_weekday(day.date) %>
                 </div>
                 <% if day.note.present? %>
                   <div class="text-xs text-slate-500"><%= day.note %></div>
@@ -179,12 +153,11 @@
       <% if stages.any? %>
         <div class="mt-4 grid gap-4 md:grid-cols-2">
           <% stages.each do |stage| %>
-            <% hex = stage.color_hex %>
-            <% text_color = stage_text_color(hex) %>
             <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
               <div class="flex items-center justify-between gap-2">
                 <h3 class="text-base font-semibold text-slate-800"><%= stage.name %></h3>
-                <span class="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold" style="background-color: <%= hex %>; color: <%= text_color %>;">
+                <span class="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold"
+                      style="<%= festival_stage_badge_style(stage) %>">
                   <span><%= stage.color_key.presence || "slate" %></span>
                 </span>
               </div>
