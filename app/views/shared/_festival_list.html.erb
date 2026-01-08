@@ -1,0 +1,23 @@
+<section class="grid gap-3 md:grid-cols-2 md:gap-4">
+  <% if festivals.any? %>
+    <% festivals.each do |festival| %>
+      <div class="w-full">
+        <%= render Shared::NavStackButtonComponent.new(
+                   label: festival.name,
+                   subtext: festival_date_and_location(festival),
+                   url: link_url_proc.call(festival),
+                   trailing: favorite_button_for(
+                     favorited: festival_favorited?(festival),
+                     toggle_url: festival_favorite_path(festival)
+                   )
+                 ) %>
+      </div>
+    <% end %>
+  <% else %>
+    <p class="rounded-xl bg-white px-4 py-12 text-center text-sm text-slate-500 shadow md:col-span-2 space-y-1">
+      <% empty_messages.each do |message| %>
+        <span class="block"><%= message %></span>
+      <% end %>
+    </p>
+  <% end %>
+</section>
