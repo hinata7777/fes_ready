@@ -13,6 +13,7 @@ class Festivals::ArtistsController < ApplicationController
     result = @q.result(distinct: true)
 
     @pagy, @artists = pagy(result, params: request.query_parameters)
+    prepare_index_view_context
 
     render "artists/index"
   end
@@ -36,5 +37,17 @@ class Festivals::ArtistsController < ApplicationController
   def set_back_to_param
     # 現在の一覧URLを保存し、詳細遷移時の戻り先として渡す
     @back_to = request.fullpath
+  end
+
+  def prepare_index_view_context
+    # TODO: 画面ロジックが増えたらViewContext/Presenterに移す
+    @show_day_tabs = @festival.present? && @festival_days.any?
+    @preserved_query = request.query_parameters.except(:page, :festival_day_id)
+    @tab_items = @festival_days.map { |festival_day| [ festival_day.id, festival_day.date.strftime("%-m/%-d") ] }.to_h
+    @tab_url_builder = ->(festival_day_id) { festival_artists_path(@festival, @preserved_query.merge(festival_day_id: festival_day_id)) }
+    @search_url = festival_artists_path(@festival, festival_day_id: @selected_festival_day&.id)
+    @search_hidden_fields = @selected_festival_day ? { festival_day_id: @selected_festival_day.id } : {}
+    @selected_day_label = @selected_festival_day&.date&.strftime("%-m/%-d")
+    @show_selected_day_label = @selected_festival_day.present?
   end
 end
