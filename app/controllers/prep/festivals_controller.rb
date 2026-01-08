@@ -15,6 +15,8 @@ module Prep
 
       pagy_params = request.query_parameters.merge(status: @status)
       @pagy, @festivals = pagy(result, limit: 20, params: pagy_params)
+
+      prepare_index_view_context
     end
 
     def show
@@ -31,6 +33,22 @@ module Prep
     def find_festival
       festival_relation = Festival.includes(:festival_days)
       Festival.find_by_slug!(params[:id], scope: festival_relation)
+    end
+
+    def prepare_index_view_context
+      # TODO: 画面ロジックが増えたらViewContext/Presenterに移す
+      @preserved_query = request.query_parameters.except(:page, :status)
+      @tab_url_builder = ->(key) { prep_festivals_path(@preserved_query.merge(status: key)) }
+      @search_query = params.dig(:q, :name_i_cont)
+      @hidden_filter_fields = {
+        start_date_from: @filter_params[:start_date_from],
+        end_date_to: @filter_params[:end_date_to],
+        area: @filter_params[:area],
+        "tag_ids[]": @selected_tag_ids
+      }
+      @reset_params = { status: @status }
+      @reset_params[:q] = { name_i_cont: @search_query } if @search_query.present?
+      @reset_url = prep_festivals_path(@reset_params)
     end
 
     def resolved_back_path(token)

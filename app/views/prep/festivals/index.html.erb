@@ -9,45 +9,30 @@
                    description: "お気に入り登録で、気になるフェスをすぐに見返せます。",
                    cta_label: "ログイン" %>
       <% end %>
-      <% preserved_query = request.query_parameters.except(:page, :status) %>
       <div class="flex justify-center">
         <%= render "shared/segmented_tabs",
               tabs: status_labels,
               active_tab_key: @status,
-              url_builder: ->(key) do
-                path_options = preserved_query.merge(status: key)
-                prep_festivals_path(path_options)
-              end %>
+              url_builder: @tab_url_builder %>
       </div>
     </header>
 
-    <% search_query = params.dig(:q, :name_i_cont) %>
-    <% hidden_filter_fields = {
-         start_date_from: @filter_params[:start_date_from],
-         end_date_to: @filter_params[:end_date_to],
-         area: @filter_params[:area],
-         "tag_ids[]": @selected_tag_ids
-       } %>
     <%= render Shared::SearchFormComponent.new(
                query: @q,
                url: prep_festivals_path,
                placeholder: "フェス名を入力",
                status: @status,
-               hidden_fields: hidden_filter_fields
+               hidden_fields: @hidden_filter_fields
              ) %>
-
-    <% reset_params = { status: @status } %>
-    <% reset_params[:q] = { name_i_cont: search_query } if search_query.present? %>
-    <% reset_url = prep_festivals_path(reset_params) %>
 
     <%= render "shared/festival_filters",
                form_url: prep_festivals_path,
                status: @status,
-               search_query: search_query,
+               search_query: @search_query,
                filter_params: @filter_params,
                festival_tags: @festival_tags,
                selected_tag_ids: @selected_tag_ids,
-               reset_url: reset_url %>
+               reset_url: @reset_url %>
 
     <%= render "shared/festival_list",
                festivals: @festivals,
