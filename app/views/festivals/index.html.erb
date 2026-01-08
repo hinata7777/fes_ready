@@ -52,29 +52,14 @@
                selected_tag_ids: @selected_tag_ids,
                reset_url: reset_url %>
 
-    <section class="grid gap-3 md:grid-cols-2 md:gap-4">
-      <% if @festivals.any? %>
-        <% @festivals.each do |festival| %>
-          <div class="w-full">
-            <%= render Shared::NavStackButtonComponent.new(
-                       label: festival.name,
-                       subtext: festival_date_and_location(festival),
-                       url: festival_path(festival, back_to: @back_to),
-                       trailing: favorite_button_for(
-                         favorited: festival_favorited?(festival),
-                         toggle_url: festival_favorite_path(festival)
-                       )
-                     ) %>
-          </div>
-        <% end %>
-      <% else %>
-        <p class="rounded-xl bg-white px-4 py-12 text-center text-sm text-slate-500 shadow md:col-span-2 space-y-1">
-          <span class="block">表示できるフェスがありません。</span>
-          <span class="block">条件に合う開催予定が見つかりませんでした。</span>
-          <span class="block">日程・エリア・タグを変えて再検索してください。</span>
-        </p>
-      <% end %>
-    </section>
+    <%= render "shared/festival_list",
+               festivals: @festivals,
+               empty_messages: [
+                 "表示できるフェスがありません。",
+                 "条件に合う開催予定が見つかりませんでした。",
+                 "日程・エリア・タグを変えて再検索してください。"
+               ],
+               link_url_proc: ->(festival) { festival_path(festival, back_to: @back_to) } %>
   </div>
   <%= render "shared/pagination", pagy: @pagy %>
 </div>

@@ -21,7 +21,6 @@
       </div>
     </header>
 
-    <% search_url = prep_festivals_path %>
     <% search_query = params.dig(:q, :name_i_cont) %>
     <% hidden_filter_fields = {
          start_date_from: @filter_params[:start_date_from],
@@ -31,7 +30,7 @@
        } %>
     <%= render Shared::SearchFormComponent.new(
                query: @q,
-               url: search_url,
+               url: prep_festivals_path,
                placeholder: "フェス名を入力",
                status: @status,
                hidden_fields: hidden_filter_fields
@@ -42,7 +41,7 @@
     <% reset_url = prep_festivals_path(reset_params) %>
 
     <%= render "shared/festival_filters",
-               form_url: search_url,
+               form_url: prep_festivals_path,
                status: @status,
                search_query: search_query,
                filter_params: @filter_params,
@@ -50,29 +49,14 @@
                selected_tag_ids: @selected_tag_ids,
                reset_url: reset_url %>
 
-    <section class="grid gap-3 md:grid-cols-2 md:gap-4">
-      <% if @festivals.any? %>
-        <% @festivals.each do |festival| %>
-          <div class="w-full">
-            <%= render Shared::NavStackButtonComponent.new(
-                       label: festival.name,
-                       subtext: festival_date_and_location(festival),
-                       url: prep_festival_path(festival),
-                       trailing: favorite_button_for(
-                         favorited: festival_favorited?(festival),
-                         toggle_url: festival_favorite_path(festival)
-                       )
-                     ) %>
-          </div>
-        <% end %>
-      <% else %>
-        <p class="rounded-xl bg-white px-4 py-12 text-center text-sm text-slate-500 shadow md:col-span-2 space-y-1">
-          <span class="block">表示できるフェスがありません。</span>
-          <span class="block">予習対象のフェスが見つかりませんでした。</span>
-          <span class="block">開催時期やタグを変えて再検索してください。</span>
-        </p>
-      <% end %>
-    </section>
+    <%= render "shared/festival_list",
+               festivals: @festivals,
+               empty_messages: [
+                 "表示できるフェスがありません。",
+                 "予習対象のフェスが見つかりませんでした。",
+                 "開催時期やタグを変えて再検索してください。"
+               ],
+               link_url_proc: ->(festival) { prep_festival_path(festival) } %>
     <%= render "shared/pagination", pagy: @pagy %>
   </div>
 </div>
