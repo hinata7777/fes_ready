@@ -19,49 +19,21 @@
       </div>
     </header>
 
-    <% day_lookup = @festival_days.index_by(&:id) %>
-    <% tab_items = day_lookup.transform_values { |day| day.date.strftime("%-m/%-d") } %>
     <div class="flex justify-center">
       <%= render "shared/segmented_tabs",
-            tabs: tab_items,
+            tabs: @tab_items,
             active_tab_key: @selected_day.id,
-            url_builder: ->(festival_day_id) do
-              day = day_lookup[festival_day_id]
-              festival_setlists_path(@festival, date: day.date.to_s)
-            end %>
+            url_builder: @tab_url_builder %>
     </div>
 
     <section class="space-y-6">
-      <% @stages.each do |stage| %>
-        <% performances = @performances_by_stage[stage] || [] %>
-        <% next if performances.blank? %>
-        <div class="space-y-3">
-          <h2 class="text-lg font-semibold" style="color: <%= stage.color_hex %>;">
-            <%= stage.name.presence || "(未定)" %>
-          </h2>
-          <div class="space-y-3 md:grid md:grid-cols-2 md:gap-3 md:space-y-0">
-            <% performances.each do |performance| %>
-              <% label = performance.artist&.name || "(未定)" %>
-              <% subtext = performance_time_range(performance, timezone: @timezone) %>
-              <% if performance.setlist.present? %>
-                <%= render Shared::NavStackButtonComponent.new(
-                           label: label,
-                           subtext: subtext,
-                           url: festival_setlist_path(@festival, performance.setlist, back_to: request.fullpath)
-                         ) %>
-              <% else %>
-                <%= render Shared::NavStackButtonComponent.new(
-                           label: label,
-                           subtext: subtext,
-                           disabled: true
-                         ) %>
-              <% end %>
-            <% end %>
-          </div>
-        </div>
+      <% @staged_performances.each do |group| %>
+        <%= render "stage_performances",
+                   stage: group[:stage],
+                   entries: group[:entries] %>
       <% end %>
 
-      <% if @performances.blank? %>
+      <% unless @has_performances %>
         <div class="rounded-2xl bg-white px-4 py-12 text-center text-sm text-slate-600 shadow">
           表示できる出演枠がありません。
         </div>
