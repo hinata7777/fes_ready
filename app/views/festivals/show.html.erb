@@ -29,16 +29,17 @@
         <div class="flex flex-col gap-1">
           <dt class="text-xs font-semibold uppercase tracking-wide text-slate-500">開催期間</dt>
           <dd class="font-semibold text-slate-800">
-            <% period_label = festival_period_label(@festival, with_weekday: true) %>
-            <%= period_label.present? ? period_label : content_tag(:span, "未定", class: "text-slate-400") %>
+            <%= festival_period_label(@festival,
+                                      with_weekday: true,
+                                      fallback: content_tag(:span, "未定", class: "text-slate-400")) %>
           </dd>
         </div>
 
         <div class="flex flex-col gap-1">
           <dt class="text-xs font-semibold uppercase tracking-wide text-slate-500">会場</dt>
           <dd class="flex flex-wrap items-center gap-2 text-slate-800">
-            <% location_label = festival_location_label(@festival) %>
-            <%= location_label.present? ? location_label : content_tag(:span, "未定", class: "text-slate-400") %>
+            <%= festival_location_label(@festival,
+                                        fallback: content_tag(:span, "未定", class: "text-slate-400")) %>
           </dd>
         </div>
       </dl>
