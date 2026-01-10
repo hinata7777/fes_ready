@@ -23,7 +23,7 @@ class FestivalsController < ApplicationController
   end
 
   def show
-    @show_setlists_link = @festival.past? && @festival.setlists_available?
+    @show_setlists_link = @festival.setlists_visible?
     @festival_tags = @festival.sorted_tags
   end
 
