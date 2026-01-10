@@ -18,6 +18,7 @@ module ArtistsHelper
     festival.name
   end
 
+  # セットリスト一覧で表示する日付サブテキスト用
   def setlist_subtext(setlist)
     setlist.stage_performance.festival_day.date.to_fs(:db)
   end
@@ -38,6 +39,15 @@ module ArtistsHelper
     )
   end
 
+  # prep/festivals の詳細で埋め込み or 代替メッセージを表示する
+  def spotify_embed_block(song, empty_message: "Spotify未登録の曲です", height: 152, css_class: nil)
+    embed = spotify_embed_for(song, height: height, css_class: css_class)
+    return embed if embed.present?
+
+    content_tag(:p, empty_message, class: "text-xs text-slate-500")
+  end
+
+  # prep/artist 詳細のランキング表示に渡すlocalsをまとめる
   def ranking_entry_locals(entry, index, artist)
     song  = entry[:song]
     embed = spotify_embed_for(song)
