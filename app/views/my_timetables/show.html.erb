@@ -40,27 +40,21 @@
       <% end %>
 
       <% timetable_owner_identifier = params[:user_id].presence || @timetable_owner&.uuid %>
-      <% stage_renderer = ->(stage) do
-           render Timetables::Columns::MyTimetableViewComponent.new(
-             stage: stage,
-             performances: @performances_by_stage[stage],
-             time_markers: @time_markers,
-             timeline_layout: @timeline_layout,
-             festival: @festival,
-             selected_day: @selected_day,
-             selected_ids: @selected_performance_ids,
-             owner_identifier: timetable_owner_identifier,
-             back_to: request.fullpath
-           )
-         end %>
-
       <%= render Timetables::BoardComponent.new(
                stages: @stages,
                time_markers: @time_markers,
                timeline_layout: @timeline_layout,
                timezone: @timezone,
                empty_message: "ステージ情報がありません。",
-               stage_renderer: stage_renderer
+               stage_component: Timetables::Columns::MyTimetableViewComponent,
+               performances_by_stage: @performances_by_stage,
+               stage_component_options: {
+                 festival: @festival,
+                 selected_day: @selected_day,
+                 selected_ids: @selected_performance_ids,
+                 owner_identifier: timetable_owner_identifier,
+                 back_to: request.fullpath
+               }
              ) %>
 
       <% if @timetable_owner == current_user %>
