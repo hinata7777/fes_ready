@@ -4,7 +4,7 @@ class SetlistsController < ApplicationController
   before_action :set_header_back_path, only: :show
 
   def index
-    raise ActiveRecord::RecordNotFound unless @festival.past?
+    raise ActiveRecord::RecordNotFound unless @festival.setlists_visible?
 
     @festival_days = @festival.timetable_days
     @selected_day = @festival.select_day(params[:date], days: @festival_days)

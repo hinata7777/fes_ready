@@ -78,16 +78,15 @@ class Festival < ApplicationRecord
     )
   end
 
-  # 開催済みフェスかを判定（本日より終了日が過去か）
-  def past?(today = Date.current)
-    end_date < today
-  end
-
   # セットリスト一覧への導線を出せるか判定
   def setlists_available?
     Setlist.joins(stage_performance: :festival_day)
            .where(festival_days: { festival_id: id })
            .exists?
+  end
+
+  def setlists_visible?(today = Date.current)
+    start_date.present? && start_date >= today && setlists_available?
   end
 
   private
