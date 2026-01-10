@@ -69,4 +69,10 @@ module FestivalsHelper
     text_color = stage_text_color(hex)
     "background-color: #{hex}; color: #{text_color};"
   end
+
+  def festival_day_tabs(festival_days)
+    day_lookup = Array(festival_days).index_by(&:id)
+    tab_items = day_lookup.transform_values { |day| day.date.strftime("%-m/%-d") }
+    { lookup: day_lookup, tabs: tab_items }
+  end
 end
