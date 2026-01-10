@@ -6,14 +6,13 @@
       <p class="text-sm text-slate-600"><%= festival_date_and_location(@festival) %></p>
     </header>
 
-    <% day_lookup = @festival_days.index_by(&:id) %>
-    <% tab_items = day_lookup.transform_values { |day| day.date.strftime("%-m/%-d") } %>
+    <% day_tabs = festival_day_tabs(@festival_days) %>
     <div class="flex justify-center">
       <%= render "shared/segmented_tabs",
-            tabs: tab_items,
+            tabs: day_tabs[:tabs],
             active_tab_key: @selected_day.id,
             url_builder: ->(festival_day_id) do
-              day = day_lookup[festival_day_id]
+              day = day_tabs[:lookup][festival_day_id]
               prep_festival_path(@festival, date: day.date.to_s, back_to: params[:back_to])
             end %>
     </div>

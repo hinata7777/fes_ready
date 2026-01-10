@@ -6,8 +6,7 @@
                  selected_day: @selected_day,
                  timezone: @timezone
                ) do %>
-      <% day_lookup = @festival_days.index_by(&:id) %>
-      <% tab_items = day_lookup.transform_values { |day| day.date.strftime("%-m/%-d") } %>
+      <% day_tabs = festival_day_tabs(@festival_days) %>
       <% unless user_signed_in? %>
         <div class="mt-2">
           <%= render "shared/login_callout",
@@ -18,10 +17,10 @@
       <% end %>
       <div class="mt-6 flex justify-center">
         <%= render "shared/segmented_tabs",
-              tabs: tab_items,
+              tabs: day_tabs[:tabs],
               active_tab_key: @selected_day.id,
               url_builder: ->(festival_day_id) do
-                day = day_lookup[festival_day_id]
+                day = day_tabs[:lookup][festival_day_id]
                 timetable_path(@festival, @timetable_query_params.merge("date" => day.date.to_s))
               end %>
       </div>
