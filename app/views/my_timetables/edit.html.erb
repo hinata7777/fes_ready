@@ -14,23 +14,15 @@
     <%= form_with url: festival_my_timetable_path(@festival, date: @selected_day.date.to_s, user_id: current_user.uuid),
                   method: :patch,
                   class: "flex flex-col gap-6" do %>
-      <% stage_renderer = ->(stage) do
-           render Timetables::Columns::MyTimetablePickerComponent.new(
-             stage: stage,
-             performances: @performances_by_stage[stage],
-             time_markers: @time_markers,
-             timeline_layout: @timeline_layout,
-             picked_ids: @picked_ids
-           )
-         end %>
-
       <%= render Timetables::BoardComponent.new(
                stages: @stages,
                time_markers: @time_markers,
                timeline_layout: @timeline_layout,
                timezone: @timezone,
                empty_message: "登録されたステージがありません",
-               stage_renderer: stage_renderer
+               stage_component: Timetables::Columns::MyTimetablePickerComponent,
+               performances_by_stage: @performances_by_stage,
+               stage_component_options: { picked_ids: @picked_ids }
              ) %>
 
       <div class="flex justify-center">

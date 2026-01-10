@@ -35,25 +35,19 @@
       <% end %>
     <% end %>
 
-    <% stage_renderer = ->(stage) do
-         render Timetables::Columns::PublicComponent.new(
-           stage: stage,
-           performances: @performances_by_stage[stage],
-           time_markers: @time_markers,
-           timeline_layout: @timeline_layout,
-           festival: @festival,
-           selected_day: @selected_day,
-           back_to: request.fullpath
-         )
-       end %>
-
     <%= render Timetables::BoardComponent.new(
           stages: @stages,
           time_markers: @time_markers,
           timeline_layout: @timeline_layout,
           timezone: @timezone,
           empty_message: "登録されたステージがありません",
-          stage_renderer: stage_renderer
+          stage_component: Timetables::Columns::PublicComponent,
+          performances_by_stage: @performances_by_stage,
+          stage_component_options: {
+            festival: @festival,
+            selected_day: @selected_day,
+            back_to: request.fullpath
+          }
         ) %>
   </div>
 </div>
