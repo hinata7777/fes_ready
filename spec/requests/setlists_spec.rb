@@ -13,7 +13,7 @@ RSpec.describe "セットリスト一覧", type: :request do
   let(:festival_day) { create(:festival_day, festival: festival, date: festival.start_date) }
 
   describe "GET /festivals/:festival_id/setlists" do
-    it "開始日が今日以降のフェスの一覧を表示できる" do
+    it "開始日が今日以前のフェスの一覧を表示できる" do
       stage = create(:stage, festival: festival)
       performance = create(:stage_performance, :scheduled, festival_day: festival_day, stage: stage)
       create(:setlist, stage_performance: performance)
@@ -27,6 +27,23 @@ RSpec.describe "セットリスト一覧", type: :request do
 
     it "セットリストがない場合は404になる" do
       get festival_setlists_path(festival, date: festival_day.date.to_s)
+
+      expect(response).to have_http_status(:not_found)
+    end
+
+    it "開始日が未来のフェスは404になる" do
+      future_festival = create(
+        :festival,
+        start_date: 1.day.from_now.to_date,
+        end_date: 2.days.from_now.to_date,
+        timezone: "Asia/Tokyo"
+      )
+      future_day = create(:festival_day, festival: future_festival, date: future_festival.start_date)
+      stage = create(:stage, festival: future_festival)
+      performance = create(:stage_performance, :scheduled, festival_day: future_day, stage: stage)
+      create(:setlist, stage_performance: performance)
+
+      get festival_setlists_path(future_festival, date: future_day.date.to_s)
 
       expect(response).to have_http_status(:not_found)
     end
