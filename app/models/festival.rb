@@ -86,7 +86,7 @@ class Festival < ApplicationRecord
   end
 
   def setlists_visible?(today = Date.current)
-    start_date.present? && start_date >= today && setlists_available?
+    start_date.present? && start_date <= today && setlists_available?
   end
 
   private
