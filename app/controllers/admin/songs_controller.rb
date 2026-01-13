@@ -9,17 +9,18 @@ class Admin::SongsController < Admin::BaseController
   end
 
   def new
-    @bulk_entries = Admin::Songs::BulkCreator.empty_entries
+    @bulk_form = Admin::Songs::BulkForm.new({})
+    @bulk_entries = Admin::Songs::BulkForm.empty_entries
   end
 
   def create
-    result = Admin::Songs::BulkCreator.call(bulk_params)
+    form = Admin::Songs::BulkForm.new(bulk_params)
 
-    if result.success?
-      redirect_to admin_songs_path, notice: "#{result.created_count}件の曲を追加しました。"
+    if form.save
+      redirect_to admin_songs_path, notice: "#{form.created_count}件の曲を追加しました。"
     else
-      @bulk_entries = result.bulk_entries
-      flash.now[:alert] = result.error_message
+      @bulk_form = form
+      @bulk_entries = form.bulk_entries
       render :new, status: :unprocessable_entity
     end
   end
