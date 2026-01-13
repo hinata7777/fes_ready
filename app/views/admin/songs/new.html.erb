@@ -15,9 +15,15 @@
   </div>
 
   <%= form_with url: admin_songs_path, scope: :bulk, class: "space-y-4" do %>
-    <% if flash.now[:alert].present? %>
+    <%# create失敗時にnewを再表示するためのエラー表示 %>
+    <% if @bulk_form&.errors&.any? %>
       <div class="rounded border border-rose-200 bg-rose-50 px-4 py-3 text-rose-700">
-        <%= flash.now[:alert] %>
+        <div class="mb-2 font-semibold"><%= @bulk_form.errors.count %>件のエラーで保存できませんでした。</div>
+        <ul class="list-disc pl-5 text-sm">
+          <% @bulk_form.errors.full_messages.each do |msg| %>
+            <li><%= msg %></li>
+          <% end %>
+        </ul>
       </div>
     <% end %>
 
@@ -32,8 +38,8 @@
           </tr>
         </thead>
         <tbody class="divide-y divide-slate-100" data-nested-form-target="container">
-          <% @bulk_entries.each_with_index do |attrs, idx| %>
-            <%= render "row", artists: @artists, attrs: attrs, index: idx %>
+          <% @bulk_entries.each do |attrs| %>
+            <%= render "row", artists: @artists, attrs: attrs %>
           <% end %>
         </tbody>
       </table>
@@ -44,15 +50,10 @@
               class="inline-flex items-center rounded bg-[#F95858] px-5 py-2 text-sm font-semibold text-white shadow transition hover:bg-[#e04f4f]">
         まとめて追加する
       </button>
-      <button type="button"
-              class="text-sm font-semibold text-slate-600 hover:text-slate-800"
-              data-action="nested-form#add">
-        行を追加
-      </button>
     </div>
   <% end %>
 
   <template data-nested-form-target="template">
-    <%= render "row", artists: @artists, attrs: {}, index: "NEW_RECORD" %>
+    <%= render "row", artists: @artists, attrs: {} %>
   </template>
 </div>
