@@ -19,15 +19,14 @@ class PackingListsController < ApplicationController
   end
 
   def new
-    @packing_list = current_user.packing_lists.build
-    @packing_list.apply_template_from_id(params[:template_id])
+    @packing_list = PackingListForm.new(user: current_user, template_id: params[:template_id]).packing_list
     prepare_form_data
   end
 
   def create
-    @packing_list = current_user.packing_lists.build(packing_list_params)
-    @packing_list.assign_owner_to_new_items!(current_user)
-    if @packing_list.save
+    form = PackingListForm.new(user: current_user, params: params)
+    @packing_list = form.packing_list
+    if form.save
       redirect_to @packing_list, notice: "持ち物リストを作成しました"
     else
       flash.now[:alert] = title_error_message if @packing_list.errors[:title].present?
@@ -41,9 +40,8 @@ class PackingListsController < ApplicationController
   end
 
   def update
-    @packing_list.assign_attributes(packing_list_params)
-    @packing_list.assign_owner_to_new_items!(current_user)
-    if @packing_list.save
+    form = PackingListForm.new(user: current_user, packing_list: @packing_list, params: params)
+    if form.save
       redirect_to @packing_list, notice: "持ち物リストを更新しました"
     else
       flash.now[:alert] = title_error_message if @packing_list.errors[:title].present?
@@ -88,14 +86,6 @@ class PackingListsController < ApplicationController
     past_selected_day = @packing_list&.past_selected_festival_day
 
     @festival_days |= [ past_selected_day ].compact
-  end
-
-  def packing_list_params
-    raw = params.require(:packing_list)
-
-    safe = raw.permit(:title, :festival_day_id).to_h
-    safe[:packing_list_items_attributes] = PackingList.sanitize_items_params(raw[:packing_list_items_attributes])
-    safe
   end
 
   def default_back_path
