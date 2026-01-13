@@ -22,6 +22,17 @@
             "bulk-stage-performance-form-default-time-value": "00:00",
             "bulk-stage-performance-form-minute-step-value": 5
           } do |f| %>
+      <%# create失敗時にnewを再表示するためのエラー表示 %>
+      <% if @bulk_form.errors.any? %>
+        <div class="rounded border border-rose-200 bg-rose-50 px-4 py-3 text-rose-700">
+          <div class="mb-2 font-semibold"><%= pluralize(@bulk_form.errors.count, "error") %> prohibited this bulk import from being saved:</div>
+          <ul class="list-disc pl-5 text-sm">
+            <% @bulk_form.errors.full_messages.each do |msg| %>
+              <li><%= msg %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
       <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
         <div>
           <label class="text-sm font-semibold text-slate-700">フェス日程（全行に適用）</label>
