@@ -1,5 +1,5 @@
 class Admin::SetlistsController < Admin::BaseController
-  before_action :set_setlist, only: %i[edit update show destroy]
+  before_action :set_setlist, only: %i[edit update destroy]
   before_action :prepare_options, only: %i[new edit create update]
   before_action :set_artists, only: %i[index]
 
@@ -9,32 +9,34 @@ class Admin::SetlistsController < Admin::BaseController
     @pagy, @setlists = pagy(scope, limit: 20)
   end
 
-  def show; end
-
   def new
-    @setlist = Setlist.new
-    Admin::Setlists::FormBuilder.build(@setlist)
+    form = Admin::Setlists::Form.new(setlist: Setlist.new)
+    form.build_rows
+    @setlist = form.setlist
   end
 
   def create
-    @setlist = Setlist.new(setlist_params)
-    if @setlist.save
+    form = Admin::Setlists::Form.new(setlist: Setlist.new, params: params)
+    @setlist = form.setlist
+    if form.save
       redirect_to admin_setlists_path, notice: "セットリストを作成しました"
     else
-      Admin::Setlists::FormBuilder.build(@setlist)
+      form.build_rows
       render :new, status: :unprocessable_entity
     end
   end
 
   def edit
-    Admin::Setlists::FormBuilder.build(@setlist)
+    form = Admin::Setlists::Form.new(setlist: @setlist)
+    form.build_rows
   end
 
   def update
-    if @setlist.update(setlist_params)
+    form = Admin::Setlists::Form.new(setlist: @setlist, params: params)
+    if form.save
       redirect_to admin_setlists_path, notice: "セットリストを更新しました"
     else
-      Admin::Setlists::FormBuilder.build(@setlist)
+      form.build_rows
       render :edit, status: :unprocessable_entity
     end
   end
@@ -49,22 +51,6 @@ class Admin::SetlistsController < Admin::BaseController
   def set_setlist
     @setlist = Setlist.includes(stage_performance: :artist, setlist_songs: :song)
                       .find_by!(uuid: params[:id])
-  end
-
-  def setlist_params
-    permitted = params.require(:setlist).permit(
-      :stage_performance_id,
-      setlist_songs_attributes: %i[id song_id position note _destroy]
-    )
-
-    # 曲未選択の行は _destroy=1 にして無視する
-    if permitted[:setlist_songs_attributes].present?
-      permitted[:setlist_songs_attributes].each_value do |attrs|
-        attrs[:_destroy] = "1" if attrs[:song_id].blank?
-      end
-    end
-
-    permitted
   end
 
   def prepare_options
