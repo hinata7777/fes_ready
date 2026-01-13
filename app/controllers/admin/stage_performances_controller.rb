@@ -16,17 +16,18 @@ class Admin::StagePerformancesController < Admin::BaseController
   def show; end
 
   def new
-    @bulk_entries = Array.new(10) { StagePerformance.new(status: :draft) }
+    @bulk_form = Admin::StagePerformances::BulkForm.new({})
+    @bulk_entries = Admin::StagePerformances::BulkForm.empty_entries
   end
 
   def create
-    result = Admin::StagePerformances::BulkCreator.call(bulk_params)
+    form = Admin::StagePerformances::BulkForm.new(bulk_params)
 
-    if result.success?
-      redirect_to admin_stage_performances_path, notice: "#{result.created_count}件の出演枠を追加しました。"
+    if form.save
+      redirect_to admin_stage_performances_path, notice: "#{form.created_count}件の出演枠を追加しました。"
     else
-      @bulk_entries = result.bulk_entries
-      flash.now[:alert] = result.error_message
+      @bulk_form = form
+      @bulk_entries = form.bulk_entries
       render :new, status: :unprocessable_entity
     end
   end

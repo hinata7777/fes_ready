@@ -1,31 +1,26 @@
 module Admin
   module StagePerformances
-    class BulkCreator
-      Result = Struct.new(:created_count, :bulk_entries, :error_message, keyword_init: true) do
-        def success?
-          error_message.nil?
-        end
-      end
+    class BulkForm
+      ENTRY_LIMIT = 10
 
-      def self.call(permitted)
-        new(permitted).call
-      end
+      # valid?/errorsなどActiveModelの振る舞いを使うため
+      include ActiveModel::Model
+
+      attr_reader :bulk_entries, :created_count
+      # save内でvalid?を呼ぶときに実行する入力チェック
+      validate :require_context
+      validate :require_entries
 
       def initialize(permitted)
         @permitted = permitted
+        @bulk_entries = nil
+        @created_count = 0
       end
 
-      def call
-        entry_attrs = normalize_entries(@permitted[:entries])
-        usable_entries = entry_attrs.select { |attrs| attrs[:artist_id].present? }
+      def save
+        @bulk_entries = build_bulk_entries(entry_attrs)
 
-        if usable_entries.empty?
-          return Result.new(
-            created_count: 0,
-            bulk_entries: build_bulk_entries(entry_attrs),
-            error_message: "1行以上入力してください。"
-          )
-        end
+        return false unless valid?
 
         StagePerformance.transaction do
           usable_entries.each do |attrs|
@@ -41,13 +36,15 @@ module Admin
           end
         end
 
-        Result.new(created_count: usable_entries.size, bulk_entries: nil, error_message: nil)
+        @created_count = usable_entries.size
+        true
       rescue ActiveRecord::RecordInvalid, ActiveRecord::StatementInvalid => e
-        Result.new(
-          created_count: 0,
-          bulk_entries: build_bulk_entries(entry_attrs),
-          error_message: error_message_for(e)
-        )
+        errors.add(:base, error_message_for(e))
+        false
+      end
+
+      def self.empty_entries
+        Array.new(ENTRY_LIMIT) { StagePerformance.new(status: :draft) }
       end
 
       private
@@ -68,11 +65,19 @@ module Admin
         raw_entries.map { |attrs| attrs.to_h.symbolize_keys }
       end
 
+      def entry_attrs
+        @entry_attrs ||= normalize_entries(@permitted[:entries])
+      end
+
+      def usable_entries
+        @usable_entries ||= entry_attrs.select { |attrs| attrs[:artist_id].present? }
+      end
+
       # エラー時の再表示用に、入力済み行+空行で10件分のモデルを作る
       def build_bulk_entries(entries)
         filled = entries.presence || []
         entries_as_models = filled.map { |attrs| StagePerformance.new(attrs) }
-        padding = [ 10 - entries_as_models.size, 0 ].max
+        padding = [ ENTRY_LIMIT - entries_as_models.size, 0 ].max
         entries_as_models + Array.new(padding) { StagePerformance.new(status: :draft) }
       end
 
@@ -95,6 +100,15 @@ module Admin
         return "同一ステージで時間帯が重複しています（確定枠）。時間を見直してください。" if msg.include?("no_overlap_on_same_stage_when_scheduled")
         return "同一スロットの二重登録です（確定枠）。開始時刻・ステージ・アーティストの組み合わせを見直してください。" if msg.include?("uniq_sp_slot_when_scheduled")
         "保存に失敗しました（DB制約）。入力内容を確認してください。"
+      end
+
+      def require_context
+        errors.add(:base, "開催日を選択してください。") if @permitted[:festival_day_id].blank?
+        errors.add(:base, "ステージを選択してください。") if @permitted[:stage_id].blank?
+      end
+
+      def require_entries
+        errors.add(:base, "1行以上入力してください。") if usable_entries.empty?
       end
     end
   end

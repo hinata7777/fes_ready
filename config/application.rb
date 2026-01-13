@@ -23,6 +23,10 @@ module Myapp
     config.autoload_paths << components_path
     config.eager_load_paths << components_path
 
+    forms_path = Rails.root.join("app/forms")
+    config.autoload_paths << forms_path
+    config.eager_load_paths << forms_path
+
     config.i18n.available_locales = [ :ja, :en ]
     config.i18n.default_locale = :ja
     config.time_zone = "Asia/Tokyo"
