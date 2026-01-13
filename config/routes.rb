@@ -55,7 +55,7 @@ Rails.application.routes.draw do
     resources :artists
     resources :festival_tags
     resources :songs
-    resources :setlists
+    resources :setlists, only: [ :index, :new, :create, :edit, :update, :destroy ]
     resources :stage_performances
     resources :festivals do
       member do
