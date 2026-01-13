@@ -57,21 +57,6 @@ class PackingList < ApplicationRecord
     end
   end
 
-  # 持ち物リストフォームのネスト属性を正規化
-  def self.sanitize_items_params(raw_items)
-    return [] if raw_items.blank?
-
-    raw_items.to_unsafe_h.map do |_, attrs|
-      attrs = attrs.to_unsafe_h if attrs.respond_to?(:to_unsafe_h)
-      next unless attrs.is_a?(Hash)
-
-      item_attrs = attrs["item_attributes"] || {}
-      sanitized_item = item_attrs.slice("id", "name", "description", "category") if item_attrs.is_a?(Hash)
-      base = attrs.slice("id", "item_id", "note", "position", "_destroy")
-      sanitized_item.present? ? base.merge("item_attributes" => sanitized_item) : base
-    end.compact
-  end
-
   private
 
   def festival_day_must_be_upcoming_if_changed
