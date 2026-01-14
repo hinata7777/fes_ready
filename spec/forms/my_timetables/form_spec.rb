@@ -22,8 +22,8 @@ RSpec.describe MyTimetables::Form do
 
       form.save
 
-      same_day_ids = user.user_timetable_entries.joins(:stage_performance).where(stage_performances: { festival_day_id: festival_day.id }).pluck(:stage_performance_id)
-      other_day_ids = user.user_timetable_entries.joins(:stage_performance).where(stage_performances: { festival_day_id: other_day.id }).pluck(:stage_performance_id)
+      same_day_ids = MyTimetables::EntriesForDayQuery.call(user: user, festival_day: festival_day).pluck(:stage_performance_id)
+      other_day_ids = MyTimetables::EntriesForDayQuery.call(user: user, festival_day: other_day).pluck(:stage_performance_id)
 
       expect(same_day_ids).to match_array([ target_performance.id ])
       expect(other_day_ids).to match_array([ existing_other_day_entry.stage_performance_id ])
@@ -40,7 +40,7 @@ RSpec.describe MyTimetables::Form do
 
       form.save
 
-      same_day_ids = user.user_timetable_entries.joins(:stage_performance).where(stage_performances: { festival_day_id: festival_day.id }).pluck(:stage_performance_id)
+      same_day_ids = MyTimetables::EntriesForDayQuery.call(user: user, festival_day: festival_day).pluck(:stage_performance_id)
       expect(same_day_ids).to match_array([ target_performance.id ])
     end
 
@@ -55,7 +55,7 @@ RSpec.describe MyTimetables::Form do
 
       expect { form.save }.to raise_error(StandardError)
 
-      same_day_ids = user.user_timetable_entries.joins(:stage_performance).where(stage_performances: { festival_day_id: festival_day.id }).pluck(:stage_performance_id)
+      same_day_ids = MyTimetables::EntriesForDayQuery.call(user: user, festival_day: festival_day).pluck(:stage_performance_id)
       expect(same_day_ids).to include(existing_same_day_entry.stage_performance_id)
     end
   end

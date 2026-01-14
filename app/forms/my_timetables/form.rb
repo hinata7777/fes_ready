@@ -25,10 +25,7 @@ module MyTimetables
 
     def delete_existing_entries
       # 対象日の既存の選択を一度削除してから入れ替える
-      user.user_timetable_entries
-          .joins(:stage_performance)
-          .where(stage_performances: { festival_day_id: festival_day.id })
-          .delete_all
+      MyTimetables::EntriesForDayQuery.call(user: user, festival_day: festival_day).delete_all
     end
 
     def filtered_ids
