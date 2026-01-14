@@ -14,8 +14,12 @@ class Festival < ApplicationRecord
   accepts_nested_attributes_for :festival_days, allow_destroy: true
   accepts_nested_attributes_for :stages,        allow_destroy: true
 
+  VALID_URL = URI::DEFAULT_PARSER.make_regexp(%w[http https])
+
   validates :name, :slug, :start_date, :end_date, :timezone, presence: true
   validates :slug, uniqueness: true
+  validates :official_url, allow_blank: true,
+            format: { with: VALID_URL, message: "は http/https の正しいURL形式で入力してください" }
   validate  :end_not_before_start
 
   scope :ordered,  -> { order(start_date: :asc, name: :asc) }
@@ -28,22 +32,19 @@ class Festival < ApplicationRecord
 
   def self.ransackable_attributes(_ = nil); %w[name]; end
   def self.ransackable_associations(_ = nil); []; end
-
-  VALID_URL = URI::DEFAULT_PARSER.make_regexp(%w[http https])
-
-  validates :official_url, allow_blank: true,
-            format: { with: VALID_URL, message: "は http/https の正しいURL形式で入力してください" }
+  def self.find_by_slug!(slug, scope: all)
+    scope.find_by!(slug: slug)
+  end
 
   def to_param
     slug.presence || super
   end
 
-  def self.find_by_slug!(slug, scope: all)
-    scope.find_by!(slug: slug)
-  end
-
   def timetable_days
-    festival_days.order(:date)
+    days = festival_days
+    return days.order(:date) unless days.loaded?
+
+    days.sort_by(&:date)
   end
 
   def sorted_tags
@@ -55,6 +56,7 @@ class Festival < ApplicationRecord
     return days.first if date_param.blank?
 
     parsed = Date.parse(date_param)
+    # days はRelation/配列のどちらでも来るため、検索方法を分ける
     if days.respond_to?(:find_by!)
       days.find_by!(date: parsed)
     else
@@ -65,17 +67,23 @@ class Festival < ApplicationRecord
   end
 
   def stage_performances_on(festival_day)
-    Festivals::StagePerformancesForDayQuery.call(
-      festival: self,
-      festival_day: festival_day
-    )
+    return StagePerformance.none if festival_day.blank?
+    raise ArgumentError, "festival_day must belong to festival" if festival_day.festival_id != id
+
+    festival_day.stage_performances
+                .includes(:stage, :artist)
+                # 表示用に開始時刻順
+                .order(:starts_at)
   end
 
   def artists_for_day(festival_day)
-    Festivals::ArtistsForDayQuery.call(
-      festival: self,
-      festival_day: festival_day
-    )
+    return Artist.none if festival_day.blank?
+    raise ArgumentError, "festival_day must belong to festival" if festival_day.festival_id != id
+
+    Artist.joins(stage_performances: :festival_day)
+          .where(stage_performances: { festival_day_id: festival_day.id })
+          .distinct
+          .order(:name)
   end
 
   # セットリスト一覧への導線を出せるか判定

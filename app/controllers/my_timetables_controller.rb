@@ -3,9 +3,7 @@ class MyTimetablesController < ApplicationController
   before_action :authenticate_user!, except: :show
   before_action :set_festival!, except: :index
   before_action :set_selected_day!, except: :index
-  before_action :load_timetable_data, only: [ :edit, :show ]
-  before_action :group_performances_by_stage, only: [ :edit, :show ]
-  before_action :build_timeline_view_context, only: [ :edit, :show ]
+  before_action :prepare_view, only: [ :edit, :show ]
   before_action :set_header_back_path, only: [ :index, :edit ]
   before_action :set_timetable_owner!, only: :show
 
@@ -77,20 +75,18 @@ class MyTimetablesController < ApplicationController
     user || raise(ActiveRecord::RecordNotFound)
   end
 
-  def load_timetable_data
+  def prepare_view
+    # ステージと出演枠を取得
     @stages = @festival.stages.order(:sort_order, :id)
     @performances =
       @festival
         .stage_performances_on(@selected_day)
         .scheduled
         .includes(:stage, :artist)
-  end
-
-  def group_performances_by_stage
+    # ステージ単位にまとめる
     @performances_by_stage = @performances.group_by(&:stage)
-  end
 
-  def build_timeline_view_context
+    # タイムライン表示に必要な情報を組み立てる
     view_context = Timetables::ViewContextBuilder.build(
       festival: @festival,
       selected_day: @selected_day
