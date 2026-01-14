@@ -27,11 +27,7 @@ class MyTimetablesController < ApplicationController
   end
 
   def destroy
-    current_user
-      .user_timetable_entries
-      .joins(:stage_performance)
-      .where(stage_performances: { festival_day_id: @selected_day.id })
-      .delete_all
+    MyTimetables::EntriesForDayQuery.call(user: current_user, festival_day: @selected_day).delete_all
 
     redirect_to my_timetables_path, notice: "マイタイムテーブルを削除しました。"
   end
