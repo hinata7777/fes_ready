@@ -19,11 +19,11 @@ class MyTimetablesController < ApplicationController
   end
 
   def update
-    MyTimetables::Updater.call(
+    MyTimetables::Form.new(
       user: current_user,
       festival_day: @selected_day,
       stage_performance_ids: params[:stage_performance_ids]
-    )
+    ).save
     redirect_to festival_my_timetable_path(@festival, date: @selected_day.date.to_s, user_id: current_user.uuid),
                 notice: "マイタイムテーブルを保存しました。"
   end
@@ -41,7 +41,7 @@ class MyTimetablesController < ApplicationController
   def show
     @performances = @timetable_owner
                       .my_stage_performances
-                      .includes(:artist, :stage, :festival_day)
+                      .includes(:artist, :stage)
                       .where(stage_performances: { festival_day_id: @selected_day.id })
                       .order(:starts_at, :ends_at, :id)
     @conflicts = MyTimetables::ConflictDetector.call(@performances)
