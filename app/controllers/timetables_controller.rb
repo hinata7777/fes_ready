@@ -34,9 +34,11 @@ class TimetablesController < ApplicationController
     load_selected_day
 
     # タイムラインの表示情報をまとめて生成する
-    view_context = Timetables::ViewContextBuilder.build(
+    @timezone = ActiveSupport::TimeZone[@festival.timezone] || Time.zone
+    timeline_context = TimelineContextBuilder.build(
       festival: @festival,
-      selected_day: @selected_day
+      selected_day: @selected_day,
+      timezone: @timezone
     )
 
     # ステージ列の並びと、列ごとの出演枠を用意する
@@ -44,11 +46,10 @@ class TimetablesController < ApplicationController
     @performances_by_stage = performances_by_stage
 
     # view_context からタイムライン表示に必要な値を展開する
-    @timezone = view_context.timezone
-    @timeline_start = view_context.timeline_start
-    @timeline_end   = view_context.timeline_end
-    @time_markers   = view_context.time_markers
-    @timeline_layout = view_context.timeline_layout
+    @timeline_start = timeline_context.timeline_start
+    @timeline_end   = timeline_context.timeline_end
+    @time_markers   = timeline_context.time_markers
+    @timeline_layout = timeline_context.timeline_layout
   end
 
   private
