@@ -83,16 +83,17 @@ class MyTimetablesController < ApplicationController
     @performances_by_stage = @performances.group_by(&:stage)
 
     # タイムライン表示に必要な情報を組み立てる
-    view_context = Timetables::ViewContextBuilder.build(
+    @timezone = ActiveSupport::TimeZone[@festival.timezone] || Time.zone
+    timeline_context = TimelineContextBuilder.build(
       festival: @festival,
-      selected_day: @selected_day
+      selected_day: @selected_day,
+      timezone: @timezone
     )
 
-    @timezone = view_context.timezone
-    @timeline_start = view_context.timeline_start
-    @timeline_end   = view_context.timeline_end
-    @time_markers   = view_context.time_markers
-    @timeline_layout = view_context.timeline_layout
+    @timeline_start = timeline_context.timeline_start
+    @timeline_end   = timeline_context.timeline_end
+    @time_markers   = timeline_context.time_markers
+    @timeline_layout = timeline_context.timeline_layout
   end
 
   def default_back_path
