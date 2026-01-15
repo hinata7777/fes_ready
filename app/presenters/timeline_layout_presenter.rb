@@ -80,12 +80,6 @@ class TimelineLayoutPresenter
     )
   end
 
-  def percent_for_time(time)
-    # 任意の時刻がタイムライン内の何％かを返す
-    offset_ratio_value = timeline_offset_ratio(time)
-    offset_ratio_value ? to_percent(offset_ratio_value) : nil
-  end
-
   private
 
   def timeline_offset_ratio(point_in_time)
