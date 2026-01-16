@@ -12,7 +12,7 @@ module Users
       user = User.find_by(provider: @auth.provider, uid: @auth.uid)
       user ||= User.find_by(email: @auth.info.email)
 
-      nickname = user&.nickname.presence || User.sanitized_nickname(@auth)
+      nickname = user&.nickname.presence || sanitized_nickname(@auth)
 
       user ||= User.new(
         email: @auth.info.email,
@@ -23,6 +23,13 @@ module Users
       user.assign_attributes(provider: @auth.provider, uid: @auth.uid, nickname: nickname)
       user.save!
       user
+    end
+
+    private
+
+    def sanitized_nickname(auth)
+      nickname = auth.info.name.presence || auth.info.first_name.presence || auth.info.email.split("@").first
+      nickname.to_s[0, 10]
     end
   end
 end
