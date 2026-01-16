@@ -27,11 +27,6 @@ class User < ApplicationRecord
     Users::FromOmniauth.call(auth)
   end
 
-  def self.sanitized_nickname(auth)
-    nickname = auth.info.name.presence || auth.info.first_name.presence || auth.info.email.split("@").first
-    nickname.to_s[0, 10]
-  end
-
   def self.create_unique_string
     SecureRandom.uuid
   end
