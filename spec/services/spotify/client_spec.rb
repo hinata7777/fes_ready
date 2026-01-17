@@ -43,5 +43,28 @@ RSpec.describe Spotify::Client do
         client.search_artists(query: "rock")
       }.to raise_error(/Spotify search failed/)
     end
+
+    it "HTTPタイムアウト設定を渡してリクエストする" do
+      token_response = instance_double(Net::HTTPSuccess, body: { access_token: "tok" }.to_json, code: "200")
+      allow(token_response).to receive(:is_a?).with(Net::HTTPSuccess).and_return(true)
+
+      search_body = { artists: { items: [] } }.to_json
+      search_response = instance_double(Net::HTTPSuccess, body: search_body, code: "200")
+      allow(search_response).to receive(:is_a?).with(Net::HTTPSuccess).and_return(true)
+
+      allow(Net::HTTP).to receive(:start).and_return(http)
+      allow(http).to receive(:request).and_return(token_response, search_response)
+
+      client.search_artists(query: "rock")
+
+      expect(Net::HTTP).to have_received(:start).with(
+        anything,
+        anything,
+        hash_including(
+          open_timeout: described_class::OPEN_TIMEOUT,
+          read_timeout: described_class::READ_TIMEOUT
+        )
+      ).twice
+    end
   end
 end

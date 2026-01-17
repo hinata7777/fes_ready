@@ -6,19 +6,20 @@ module Weather
   module OpenMeteo
     class Client
       FORECAST_URL = "https://api.open-meteo.com/v1/forecast"
+      OPEN_TIMEOUT = 5
+      READ_TIMEOUT = 10
 
       def hourly_forecast(latitude:, longitude:, date:, timezone: "Asia/Tokyo")
-        # Open-Meteo は start_date/end_date で日付範囲を指定できる。
-        # 今回は「フェス当日」だけ欲しいので同一日付をセットする。
+        # Open-Meteo は start_date/end_date で日付範囲を指定できる
+        # 今回は「フェス当日」だけ欲しいので同一日付をセットする
         uri = URI(FORECAST_URL)
         uri.query = URI.encode_www_form(
           latitude: latitude,
           longitude: longitude,
-          # hourly は「1時間ごとの配列」で返るので、必要な項目だけ指定する。
+          # hourly は「1時間ごとの配列」で返るので、必要な項目だけ指定する
           hourly: "temperature_2m,weather_code",
           start_date: date.iso8601,
           end_date: date.iso8601,
-          # timezone を指定すると time がそのタイムゾーン基準で返る（今回は日本時間固定）。
           timezone: timezone
         )
 
@@ -31,7 +32,15 @@ module Weather
 
       private
 
-      def http(uri) = Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == "https")
+      def http(uri)
+        Net::HTTP.start(
+          uri.host,
+          uri.port,
+          use_ssl: uri.scheme == "https",
+          open_timeout: OPEN_TIMEOUT,
+          read_timeout: READ_TIMEOUT
+        )
+      end
     end
   end
 end

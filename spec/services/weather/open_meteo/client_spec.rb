@@ -59,6 +59,25 @@ RSpec.describe Weather::OpenMeteo::Client do
     expect(params["timezone"]).to eq([ "Asia/Tokyo" ])
   end
 
+  it "HTTPタイムアウト設定を渡してリクエストする" do
+    ok_response = instance_double(Net::HTTPSuccess, body: "{}", code: "200")
+    allow(ok_response).to receive(:is_a?).with(Net::HTTPSuccess).and_return(true)
+
+    allow(Net::HTTP).to receive(:start).and_return(http)
+    allow(http).to receive(:request).and_return(ok_response)
+
+    client.hourly_forecast(latitude: 35.0, longitude: 139.0, date: date)
+
+    expect(Net::HTTP).to have_received(:start).with(
+      anything,
+      anything,
+      hash_including(
+        open_timeout: described_class::OPEN_TIMEOUT,
+        read_timeout: described_class::READ_TIMEOUT
+      )
+    )
+  end
+
   it "timezoneを上書きできる" do
     ok_response = instance_double(Net::HTTPSuccess, body: "{}", code: "200")
     allow(ok_response).to receive(:is_a?).with(Net::HTTPSuccess).and_return(true)
