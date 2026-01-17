@@ -7,6 +7,8 @@ module Spotify
   class Client
     TOKEN_URL  = "https://accounts.spotify.com/api/token"
     SEARCH_URL = "https://api.spotify.com/v1/search"
+    OPEN_TIMEOUT = 5
+    READ_TIMEOUT = 10
 
     def initialize
       @client_id     = ENV["SPOTIFY_CLIENT_ID"]     || Rails.application.credentials.dig(:spotify, :client_id)
@@ -63,7 +65,15 @@ module Spotify
 
     private
 
-    def http(uri) = Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == "https")
+    def http(uri)
+      Net::HTTP.start(
+        uri.host,
+        uri.port,
+        use_ssl: uri.scheme == "https",
+        open_timeout: OPEN_TIMEOUT,
+        read_timeout: READ_TIMEOUT
+      )
+    end
 
     def access_token
       Rails.cache.fetch("spotify_access_token", expires_in: 50.minutes) { fetch_access_token }
