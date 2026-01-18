@@ -1,0 +1,39 @@
+<main class="min-h-screen px-4 py-6">
+  <div class="mx-auto w-full max-w-3xl space-y-6">
+    <header class="space-y-3">
+      <h1 class="text-2xl font-bold text-slate-900">はじめてガイド</h1>
+      <p class="text-sm text-slate-600">
+        フェス未経験でも迷わないように、最初にやることをまとめました。
+      </p>
+    </header>
+
+    <section class="space-y-4 rounded-2xl border border-slate-200 bg-white/80 p-5 shadow-[0_20px_45px_rgba(15,23,42,0.08)]">
+      <h2 class="text-base font-semibold text-slate-900">まずはこの4つ</h2>
+      <ol class="space-y-3 text-sm leading-relaxed text-slate-700">
+        <li class="rounded-xl border border-slate-100 bg-slate-50/70 p-3">
+          1. 参加予定のフェスを探す
+        </li>
+        <li class="rounded-xl border border-slate-100 bg-slate-50/70 p-3">
+          2. 参加するフェスのマイタイムテーブルを作成
+        </li>
+        <li class="rounded-xl border border-slate-100 bg-slate-50/70 p-3">
+          3. 参加するフェスの予習リストにある楽曲を予習
+        </li>
+        <li class="rounded-xl border border-slate-100 bg-slate-50/70 p-3">
+          4. 持ち物リストを作って当日の準備に備える
+        </li>
+      </ol>
+    </section>
+
+    <section class="grid gap-3 sm:grid-cols-2">
+      <%= link_to "フェス一覧を見る", festivals_path,
+                  class: "inline-flex items-center justify-center rounded-full border border-slate-200 bg-white/90 px-4 py-3 text-sm font-semibold text-slate-900 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md" %>
+      <%= link_to "タイムテーブル一覧を見る", timetables_path,
+                  class: "inline-flex items-center justify-center rounded-full border border-slate-200 bg-white/90 px-4 py-3 text-sm font-semibold text-slate-900 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md" %>
+      <%= link_to "フェス予習リストを見る", prep_festivals_path,
+                  class: "inline-flex items-center justify-center rounded-full border border-slate-200 bg-white/90 px-4 py-3 text-sm font-semibold text-slate-900 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md" %>
+      <%= link_to "持ち物リストを作る", packing_lists_path,
+                  class: "inline-flex items-center justify-center rounded-full border border-slate-200 bg-white/90 px-4 py-3 text-sm font-semibold text-slate-900 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md" %>
+    </section>
+  </div>
+</main>

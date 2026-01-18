@@ -10,4 +10,7 @@ class HomeController < ApplicationController
 
   def operator
   end
+
+  def guide
+  end
 end
