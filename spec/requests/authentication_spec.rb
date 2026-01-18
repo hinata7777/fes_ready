@@ -112,6 +112,24 @@ RSpec.describe "認証のリクエスト", type: :request do
   end
 
   describe "POST /users" do
+    it "正常な入力なら作成される" do
+      expect {
+        post user_registration_path, params: {
+          user: {
+            email: "newuser@example.com",
+            password: "password123",
+            password_confirmation: "password123",
+            nickname: "newuser"
+          }
+        }
+      }.to change(User, :count).by(1)
+
+      user = User.find_by(email: "newuser@example.com")
+      expect(user).not_to be_nil
+      expect(user.uid).to be_nil
+      expect(response).to have_http_status(:see_other)
+    end
+
     it "バリデーションエラーなら作成されない" do
       expect {
         post user_registration_path, params: { user: { email: "", password: "short", nickname: "" } }
