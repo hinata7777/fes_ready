@@ -59,6 +59,18 @@
               data: { controller: "tap-feedback" } %>
         <p class="text-xs text-slate-400">登録メールアドレス宛にパスワード再設定用URLを送信します。</p>
       </div>
+
+      <div class="space-y-2 border-t border-slate-200 pt-6">
+        <p class="text-sm font-semibold text-slate-900">退会</p>
+        <p class="text-xs text-slate-500">アカウントと関連データは削除され、元に戻せません。</p>
+        <div class="text-center">
+          <%= button_to "退会する",
+                registration_path(resource_name),
+                method: :delete,
+                class: "inline-flex w-full items-center justify-center rounded-2xl bg-rose-500 px-4 py-3 text-sm font-semibold text-white shadow-md interactive-lift hover:bg-rose-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-500",
+                data: { controller: "tap-feedback", turbo_confirm: "退会するとアカウントとデータが削除されます。続行しますか？" } %>
+        </div>
+      </div>
     </section>
   </div>
 </div>
