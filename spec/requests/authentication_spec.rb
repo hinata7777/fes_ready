@@ -24,6 +24,24 @@ RSpec.describe "認証のリクエスト", type: :request do
     end
   end
 
+  describe "DELETE /users" do
+    let!(:user) { create(:user) }
+
+    before { sign_in user, scope: :user }
+
+    it "アカウント退会後にログアウトしトップへ戻る" do
+      expect {
+        delete user_registration_path
+      }.to change(User, :count).by(-1)
+
+      expect(response).to redirect_to(root_path)
+      expect(flash[:notice]).to eq("退会しました。ご利用ありがとうございました。")
+
+      get mypage_dashboard_path
+      expect(response).to redirect_to(new_user_session_path)
+    end
+  end
+
   describe "GET /users/auth/google_oauth2/callback" do
     around do |example|
       OmniAuth.config.test_mode = true

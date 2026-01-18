@@ -9,4 +9,10 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
     resource.update_without_password(params.except("current_password"))
   end
+
+  def destroy
+    super do
+      return redirect_to root_path, notice: "退会しました。ご利用ありがとうございました。"
+    end
+  end
 end
