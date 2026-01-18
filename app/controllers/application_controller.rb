@@ -6,7 +6,17 @@ class ApplicationController < ActionController::Base
 
   include Pagy::Backend
 
+  helper_method :show_help_fab?
+
   private
+
+  def show_help_fab?
+    return false if devise_controller?
+    return false if controller_path.start_with?("admin/")
+    return false if controller_name == "home" && action_name == "guide"
+
+    true
+  end
 
   def configure_permitted_parameters
     added = [ :nickname ]

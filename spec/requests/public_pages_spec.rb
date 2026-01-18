@@ -21,6 +21,16 @@ RSpec.describe "公開ページのリクエスト", type: :request do
       get operator_path
       expect(response).to have_http_status(:ok)
     end
+
+    it "ガイドページが200を返す" do
+      get guide_path
+      expect(response).to have_http_status(:ok)
+    end
+
+    it "ガイドページではガイドボタンを表示しない" do
+      get guide_path
+      expect(response.body).not_to include("ガイドを見る")
+    end
   end
 
   describe "フェス・アーティストの一覧/詳細" do
