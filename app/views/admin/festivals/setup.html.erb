@@ -1,7 +1,7 @@
 <h1 class="text-xl font-bold mb-4">日程・ステージの設定</h1>
 
 <%= form_with model: [:admin, @festival],
-              url: apply_admin_festival_path(@festival),
+              url: admin_festival_path(@festival),
               method: :patch,
               class: "space-y-6" do |f| %>
 
