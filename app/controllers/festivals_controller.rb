@@ -36,6 +36,6 @@ class FestivalsController < ApplicationController
   private
 
   def set_festival
-    @festival = Festival.includes(:festival_tags).find_by_slug!(params[:id])
+    @festival = Festival.find_by_slug!(params[:id])
   end
 end

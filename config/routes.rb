@@ -61,7 +61,6 @@ Rails.application.routes.draw do
     resources :festivals do
       member do
         get  :setup
-        patch :apply
       end
     end
     resources :items, only: [ :index, :new, :create, :edit, :update, :destroy ]

@@ -137,4 +137,40 @@ RSpec.describe "管理画面のリクエスト", type: :request do
       expect(response).to have_http_status(:unprocessable_entity)
     end
   end
+
+  describe "PATCH /admin/festivals/:id" do
+    let(:admin) { create(:user, role: :admin) }
+    let(:festival) { create(:festival) }
+
+    before do
+      sign_in admin, scope: :user
+    end
+
+    it "基本情報を更新できる" do
+      patch admin_festival_path(festival), params: { festival: { name: "更新後フェス" } }
+
+      expect(response).to redirect_to(admin_festival_path(festival))
+      expect(festival.reload.name).to eq("更新後フェス")
+    end
+
+    it "日程・ステージをネスト更新できる" do
+      params = {
+        festival: {
+          festival_days_attributes: {
+            "0" => { date: festival.start_date }
+          },
+          stages_attributes: {
+            "0" => { name: "Main Stage" }
+          }
+        }
+      }
+
+      expect {
+        patch admin_festival_path(festival), params: params
+      }.to change(FestivalDay, :count).by(1)
+        .and change(Stage, :count).by(1)
+
+      expect(response).to redirect_to(admin_festival_path(festival))
+    end
+  end
 end
