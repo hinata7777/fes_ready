@@ -2,7 +2,9 @@ class Admin::ArtistsController < Admin::BaseController
   before_action :set_artist, only: [ :edit, :update, :destroy ]
 
   def index
-    @pagy, @artists = pagy(Artist.order(:name), limit: 20)
+    @q = Artist.order(:name).ransack(params[:q])
+    result = @q.result(distinct: true)
+    @pagy, @artists = pagy(result, limit: 20, params: request.query_parameters)
   end
 
   def new

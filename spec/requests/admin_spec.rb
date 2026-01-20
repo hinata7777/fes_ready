@@ -91,6 +91,22 @@ RSpec.describe "管理画面のリクエスト", type: :request do
     end
   end
 
+  describe "GET /admin/artists" do
+    it "管理者は名前検索できる" do
+      admin = create(:user, role: :admin)
+      sign_in admin, scope: :user
+
+      create(:artist, name: "Alpha")
+      create(:artist, name: "Beta")
+
+      get admin_artists_path, params: { q: { name_cont: "Alpha" } }
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include("Alpha")
+      expect(response.body).not_to include("Beta")
+    end
+  end
+
   describe "POST /admin/festivals" do
     let(:valid_params) do
       {

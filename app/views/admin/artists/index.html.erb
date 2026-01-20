@@ -7,6 +7,14 @@
     <%= link_to "新規作成", new_admin_artist_path, class: "inline-flex items-center justify-center rounded-lg bg-[#F95858] px-4 py-2 text-sm font-semibold text-white shadow transition hover:bg-[#e04f4f]" %>
   </div>
 
+  <div class="mt-6">
+    <%= render Shared::SearchFormComponent.new(
+               query: @q,
+               url: admin_artists_path,
+               placeholder: "アーティスト名で検索"
+             ) %>
+  </div>
+
   <div class="mt-8 overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-sm">
     <table class="min-w-full divide-y divide-slate-200 text-sm">
       <thead class="bg-slate-50">
