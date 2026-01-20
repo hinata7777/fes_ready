@@ -80,7 +80,8 @@ class Festival < ApplicationRecord
     return Artist.none if festival_day.blank?
     raise ArgumentError, "festival_day must belong to festival" if festival_day.festival_id != id
 
-    Artist.joins(stage_performances: :festival_day)
+    Artist.published
+          .joins(stage_performances: :festival_day)
           .where(stage_performances: { festival_day_id: festival_day.id })
           .distinct
           .order(:name)
