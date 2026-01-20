@@ -44,4 +44,21 @@ RSpec.describe Festival, type: :model do
       expect(festival.to_param).to eq("awesome-fes")
     end
   end
+
+  describe "#artists_for_day" do
+    it "非公開アーティストを含めない" do
+      festival = create(:festival)
+      festival_day = create(:festival_day, festival: festival)
+      published_artist = create(:artist, published: true)
+      unpublished_artist = create(:artist, published: false)
+
+      create(:stage_performance, festival_day: festival_day, artist: published_artist)
+      create(:stage_performance, festival_day: festival_day, artist: unpublished_artist)
+
+      result = festival.artists_for_day(festival_day)
+
+      expect(result).to include(published_artist)
+      expect(result).not_to include(unpublished_artist)
+    end
+  end
 end
