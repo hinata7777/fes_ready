@@ -12,17 +12,27 @@ module Prep
     end
 
     def show
-      @setlists = Setlist
-                    .joins(stage_performance: :festival_day)
-                    .includes(stage_performance: [ :artist, :stage, { festival_day: :festival } ])
-                    .where(stage_performance: { artist_id: @artist.id })
-                    .order("festival_days.date DESC")
+      setlists_scope = Setlist
+                         .joins(stage_performance: :festival_day)
+                         .where(stage_performance: { artist_id: @artist.id })
 
-      ranking = Prep::SongRankingBuilder.build(artist: @artist, setlist_scope: @setlists)
+      ranking = Prep::SongRankingBuilder.build(artist: @artist, setlist_scope: setlists_scope)
       @setlists_count = ranking.setlists_count
       @ranking_entries = ranking.entries
+      @pagy, @setlists = pagy(
+        setlists_scope
+          .includes(stage_performance: { festival_day: :festival })
+          .order("festival_days.date DESC"),
+        limit: 5
+      )
+      @setlists_displayed_count = @pagy.to
 
       set_header_back_path
+
+      respond_to do |format|
+        format.html
+        format.turbo_stream
+      end
     end
 
     private

@@ -37,8 +37,7 @@ class SetlistsController < ApplicationController
 
   def show
     @setlist = Setlist
-                .includes(stage_performance: [ :artist, :stage, { festival_day: :festival } ],
-                          setlist_songs: :song)
+                .includes(stage_performance: [ :artist, :stage, { festival_day: :festival } ])
                 .find_by!(uuid: params[:id])
 
     @stage_performance = @setlist.stage_performance

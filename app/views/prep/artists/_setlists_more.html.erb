@@ -1,0 +1,9 @@
+<p class="text-xs text-slate-500">表示中 <%= displayed_count %> / <%= setlists_count %> 件</p>
+<% if pagy.next %>
+  <%= link_to "もっと見る",
+              prep_artist_path(artist, request.query_parameters.merge(page: pagy.next)),
+              data: { turbo_stream: true },
+              class: "inline-flex items-center justify-center rounded-full bg-slate-900 px-5 py-2 text-sm font-semibold text-white shadow transition hover:bg-slate-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-900" %>
+<% else %>
+  <span class="text-xs text-slate-500">すべて表示しました</span>
+<% end %>

@@ -1,0 +1,13 @@
+<%= turbo_stream.append "artist-setlists" do %>
+  <%= render partial: "prep/artists/setlist_item",
+             collection: @setlists,
+             as: :setlist,
+             locals: { back_to: request.fullpath } %>
+<% end %>
+
+<%= turbo_stream.replace "artist-setlists-more" do %>
+  <div id="artist-setlists-more" class="mt-4 flex flex-col items-center gap-2">
+    <%= render partial: "prep/artists/setlists_more",
+               locals: { pagy: @pagy, displayed_count: @setlists_displayed_count, setlists_count: @setlists_count, artist: @artist } %>
+  </div>
+<% end %>
