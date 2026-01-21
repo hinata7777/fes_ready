@@ -6,7 +6,7 @@ class Admin::StagePerformancesController < Admin::BaseController
     @festival_days = FestivalDay.includes(:festival).order(:date)
     @artists = Artist.order(:name)
 
-    scope = StagePerformance.includes(:festival_day, :stage, :artist)
+    scope = StagePerformance.includes(:stage, :artist, festival_day: :festival)
                             .order(:starts_at)
                             .for_day(params[:festival_day_id])
                             .for_artist(params[:artist_id])

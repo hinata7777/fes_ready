@@ -78,7 +78,6 @@ class MyTimetablesController < ApplicationController
       @festival
         .stage_performances_on(@selected_day)
         .scheduled
-        .includes(:stage, :artist)
     # ステージ単位にまとめる
     @performances_by_stage = @performances.group_by(&:stage)
 

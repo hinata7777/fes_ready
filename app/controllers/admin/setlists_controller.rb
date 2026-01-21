@@ -5,8 +5,8 @@ class Admin::SetlistsController < Admin::BaseController
 
   def index
     scope = Setlist.includes(
-      stage_performance: [ :artist, :stage, { festival_day: :festival } ],
-      setlist_songs: []
+      :setlist_songs,
+      stage_performance: [ :artist, :stage, { festival_day: :festival } ]
     ).order(created_at: :desc)
     scope = scope.joins(:stage_performance).where(stage_performances: { artist_id: params[:artist_id] }) if params[:artist_id].present?
     @pagy, @setlists = pagy(scope, limit: 20)
