@@ -4,7 +4,10 @@ class Admin::SetlistsController < Admin::BaseController
   before_action :set_artists, only: %i[index]
 
   def index
-    scope = Setlist.includes(stage_performance: :artist).order(created_at: :desc)
+    scope = Setlist.includes(
+      stage_performance: [ :artist, :stage, { festival_day: :festival } ],
+      setlist_songs: []
+    ).order(created_at: :desc)
     scope = scope.joins(:stage_performance).where(stage_performances: { artist_id: params[:artist_id] }) if params[:artist_id].present?
     @pagy, @setlists = pagy(scope, limit: 20)
   end
@@ -49,13 +52,13 @@ class Admin::SetlistsController < Admin::BaseController
   private
 
   def set_setlist
-    @setlist = Setlist.includes(stage_performance: :artist, setlist_songs: :song)
+    @setlist = Setlist.includes(stage_performance: [ :festival_day, :stage ], setlist_songs: :song)
                       .find_by!(uuid: params[:id])
   end
 
   def prepare_options
     @artists = Artist.order(:name)
-    @stage_performances_by_artist = StagePerformance.includes(:festival_day, :stage)
+    @stage_performances_by_artist = StagePerformance.includes(:stage, festival_day: :festival)
                                                     .order(:starts_at)
                                                     .group_by(&:artist_id)
     # 曲のプルダウンは全曲だと大きくなるので、選択したアーティストの曲だけをJSで絞る運用を想定
