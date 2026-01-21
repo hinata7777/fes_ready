@@ -14,7 +14,7 @@ class SetlistsController < ApplicationController
     @performances = @festival
                       .stage_performances_on(@selected_day)
                       .scheduled
-                      .includes(:artist, :stage, :setlist)
+                      .includes(:setlist)
                       .order(:starts_at, :ends_at, :id)
     @stages = @festival.stages.order(:sort_order, :id)
 
