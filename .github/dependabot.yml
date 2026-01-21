@@ -1,12 +1,43 @@
 version: 2
 updates:
-- package-ecosystem: bundler
-  directory: "/"
-  schedule:
-    interval: daily
-  open-pull-requests-limit: 10
-- package-ecosystem: github-actions
-  directory: "/"
-  schedule:
-    interval: daily
-  open-pull-requests-limit: 10
+  - package-ecosystem: bundler
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: monday
+      time: "09:00"
+      timezone: "Asia/Tokyo"
+    open-pull-requests-limit: 3
+
+    groups:
+      security_auth:
+        patterns:
+          - "omniauth*"
+          - "*csrf*"
+          - "devise*"
+      rails_related:
+        patterns:
+          - "rails"
+          - "railties"
+          - "activerecord"
+          - "activesupport"
+          - "actionpack"
+          - "actionmailer"
+          - "rails-i18n"
+      everything_else:
+        patterns:
+          - "*"
+
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: monday
+      time: "09:00"
+      timezone: "Asia/Tokyo"
+    open-pull-requests-limit: 1
+
+    groups:
+      actions:
+        patterns:
+          - "*"
