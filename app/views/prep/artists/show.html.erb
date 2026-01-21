@@ -56,15 +56,15 @@
       </div>
 
       <% if @setlists.any? %>
-        <div class="grid gap-3">
-          <% @setlists.each do |setlist| %>
-            <% festival = setlist.stage_performance.festival_day.festival %>
-            <%= render Shared::NavStackButtonComponent.new(
-                       label: setlist_label(setlist),
-                       subtext: setlist_subtext(setlist),
-                       url: festival_setlist_path(festival, setlist, back_to: request.fullpath)
-                     ) %>
-          <% end %>
+        <div id="artist-setlists" class="grid gap-3">
+          <%= render partial: "prep/artists/setlist_item",
+                     collection: @setlists,
+                     as: :setlist,
+                     locals: { back_to: request.fullpath } %>
+        </div>
+        <div id="artist-setlists-more" class="mt-4 flex flex-col items-center gap-2">
+          <%= render partial: "prep/artists/setlists_more",
+                     locals: { pagy: @pagy, displayed_count: @setlists_displayed_count, setlists_count: @setlists_count, artist: @artist } %>
         </div>
       <% else %>
         <div class="rounded-2xl border border-slate-200 bg-white px-4 py-6 text-center text-sm text-slate-600 shadow space-y-1">

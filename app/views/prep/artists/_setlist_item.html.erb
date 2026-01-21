@@ -1,0 +1,6 @@
+<% festival = setlist.stage_performance.festival_day.festival %>
+<%= render Shared::NavStackButtonComponent.new(
+           label: setlist_label(setlist),
+           subtext: setlist_subtext(setlist),
+           url: festival_setlist_path(festival, setlist, back_to: back_to)
+         ) %>
