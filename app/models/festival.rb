@@ -21,6 +21,8 @@ class Festival < ApplicationRecord
   validates :official_url, allow_blank: true,
             format: { with: VALID_URL, message: "は http/https の正しいURL形式で入力してください" }
   validate  :end_not_before_start
+  validate  :festival_days_within_range,
+            if: -> { will_save_change_to_start_date? || will_save_change_to_end_date? }
 
   scope :ordered,  -> { order(start_date: :asc, name: :asc) }
   scope :upcoming, ->(today = Date.current) { where("end_date >= ?", today) }
@@ -102,6 +104,17 @@ class Festival < ApplicationRecord
 
   def end_not_before_start
     return if start_date.blank? || end_date.blank?
-    errors.add(:end_date, "は開始日以降にしてください") if end_date < start_date
+    errors.add(:end_date, "終了日は開始日以降の日付を指定してください。") if end_date < start_date
+  end
+
+  def festival_days_within_range
+    return if start_date.blank? || end_date.blank?
+
+    if festival_days.where.not(date: start_date..end_date).exists?
+      errors.add(
+        :base,
+        "開催期間の変更により、開催期間外の日程が存在します。先に日程を修正してください。"
+      )
+    end
   end
 end

@@ -4,6 +4,7 @@ class FestivalDay < ApplicationRecord
 
   validates :date, presence: true
   validates :date, uniqueness: { scope: :festival_id }
+  validate :date_within_festival_range, if: -> { date.present? && festival.present? && festival.start_date.present? && festival.end_date.present? }
 
   scope :for_user, ->(user) {
     joins(:festival, stage_performances: :user_timetable_entries)
@@ -28,5 +29,14 @@ class FestivalDay < ApplicationRecord
 
   def finished?(today = Date.current)
     festival.end_date < today
+  end
+
+  private
+
+  def date_within_festival_range
+    range = festival.start_date..festival.end_date
+    return if range.cover?(date)
+
+    errors.add(:date, "開催日はフェスの開催期間内である必要があります（#{festival.start_date}〜#{festival.end_date}）")
   end
 end

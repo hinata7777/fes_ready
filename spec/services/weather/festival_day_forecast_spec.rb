@@ -1,8 +1,15 @@
 require "rails_helper"
 
 RSpec.describe Weather::FestivalDayForecast do
-  let(:festival) { create(:festival, latitude: 35.0, longitude: 139.0, venue_name: "会場名") }
-  let(:festival_day) { create(:festival_day, festival: festival, date: Date.new(2025, 1, 1)) }
+  let(:festival) {
+    create(:festival,
+           start_date: Date.new(2025, 1, 1),
+           end_date: Date.new(2025, 1, 2),
+           latitude: 35.0,
+           longitude: 139.0,
+           venue_name: "会場名")
+  }
+  let(:festival_day) { create(:festival_day, festival: festival, date: festival.start_date) }
   let(:cache) { ActiveSupport::Cache::MemoryStore.new }
 
   def dummy_json(date)
