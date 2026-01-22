@@ -30,5 +30,20 @@ RSpec.describe FestivalDay, type: :model do
 
       expect(dup).to be_invalid
     end
+
+    it "開催期間内なら有効" do
+      festival = build(:festival, start_date: Date.current, end_date: Date.current + 2)
+      day = build(:festival_day, festival: festival, date: Date.current + 1)
+
+      expect(day).to be_valid
+    end
+
+    it "開催期間外なら無効" do
+      festival = build(:festival, start_date: Date.current, end_date: Date.current + 2)
+      day = build(:festival_day, festival: festival, date: Date.current + 3)
+
+      expect(day).to be_invalid
+      expect(day.errors[:date]).to include("開催日はフェスの開催期間内である必要があります（#{festival.start_date}〜#{festival.end_date}）")
+    end
   end
 end

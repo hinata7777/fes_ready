@@ -2,7 +2,7 @@ require "rails_helper"
 
 RSpec.describe Prep::FestivalSongEntriesBuilder do
   describe "予習曲エントリの生成" do
-    let(:festival) { create(:festival) }
+    let(:festival) { create(:festival, start_date: Date.current, end_date: Date.current + 2) }
     let(:festival_day) { create(:festival_day, festival: festival) }
     let(:artist) { create(:artist, published: true) }
 

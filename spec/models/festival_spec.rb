@@ -26,7 +26,7 @@ RSpec.describe Festival, type: :model do
     it "開始日より前の終了日は不可" do
       festival = build(:festival, start_date: Date.current, end_date: Date.current - 1)
       expect(festival).to be_invalid
-      expect(festival.errors[:end_date]).to include("は開始日以降にしてください")
+      expect(festival.errors[:end_date]).to include("終了日は開始日以降の日付を指定してください。")
     end
 
     it "公式URLはhttp/httpsのみ許可" do
@@ -35,6 +35,16 @@ RSpec.describe Festival, type: :model do
 
       expect(ok).to be_valid
       expect(ng).to be_invalid
+    end
+
+    it "開催期間の変更で日程が範囲外になる場合は不可" do
+      festival = create(:festival, start_date: Date.current, end_date: Date.current + 2)
+      create(:festival_day, festival: festival, date: Date.current + 2)
+
+      result = festival.update(end_date: Date.current + 1)
+
+      expect(result).to be false
+      expect(festival.errors[:base]).to include("開催期間の変更により、開催期間外の日程が存在します。先に日程を修正してください。")
     end
   end
 
