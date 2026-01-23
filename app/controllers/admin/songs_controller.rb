@@ -3,9 +3,15 @@ class Admin::SongsController < Admin::BaseController
   before_action :set_artists, only: [ :index, :new, :edit, :create, :update ]
 
   def index
+    # セットリストフォームのオンデマンド取得用にJSONが必要なため、HTMLと同じ一覧アクションで分岐して返す
     scope = Song.includes(:artist).order(:name)
     scope = scope.where(artist_id: params[:artist_id]) if params[:artist_id].present?
-    @pagy, @songs = pagy(scope, limit: 20)
+    respond_to do |format|
+      format.html { @pagy, @songs = pagy(scope, limit: 20) }
+      format.json do
+        render_songs_json(scope)
+      end
+    end
   end
 
   def new
@@ -56,5 +62,16 @@ class Admin::SongsController < Admin::BaseController
 
   def bulk_params
     params.require(:bulk).permit(entries: %i[name spotify_id artist_id _destroy])
+  end
+
+  def render_songs_json(scope)
+    if params[:all].blank? && params[:artist_id].blank?
+      render json: { songs: [] }
+      return
+    end
+
+    rows = scope.joins(:artist).pluck("songs.id", "songs.name", "artists.name")
+    songs = rows.map { |id, name, artist_name| { id: id, name: name, artist_name: artist_name } }
+    render json: { songs: songs }
   end
 end

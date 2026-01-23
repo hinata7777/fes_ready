@@ -13,14 +13,12 @@
                     }
                   end
                 end.to_json),
+                "setlist-form-performances-url-value": admin_stage_performances_path(format: :json),
                 "setlist-form-songs-value": json_escape(@songs_by_artist.transform_values do |list|
                   list.map { |s| { id: s.id, name: s.name, artist_name: s.artist.name } }
                 end.to_json),
-                "setlist-form-all-songs-value": json_escape(
-                  @songs_by_artist.values.flatten.uniq { |s| s.id }
-                                 .sort_by { |s| s.name.downcase }
-                                 .map { |s| { id: s.id, name: s.name, artist_name: s.artist.name } }.to_json
-                )
+                "setlist-form-songs-url-value": admin_songs_path(format: :json),
+                "setlist-form-all-songs-url-value": admin_songs_path(format: :json, all: 1)
               } do |f| %>
   <% if @setlist.errors.any? %>
     <div class="rounded border border-rose-200 bg-rose-50 px-4 py-3 text-rose-700">

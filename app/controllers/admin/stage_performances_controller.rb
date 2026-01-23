@@ -3,14 +3,22 @@ class Admin::StagePerformancesController < Admin::BaseController
   before_action :prepare_form_options, only: %i[new create edit update]
 
   def index
-    @festival_days = FestivalDay.includes(:festival).order(:date)
-    @artists = Artist.order(:name)
+    # セットリストフォームのオンデマンド取得用にJSONが必要なため、HTMLと同じ一覧アクションで分岐して返す
+    respond_to do |format|
+      format.html do
+        @festival_days = FestivalDay.includes(:festival).order(:date)
+        @artists = Artist.order(:name)
 
-    scope = StagePerformance.includes(:stage, :artist, festival_day: :festival)
-                            .order(:starts_at)
-                            .for_day(params[:festival_day_id])
-                            .for_artist(params[:artist_id])
-    @pagy, @stage_performances = pagy(scope)
+        scope = StagePerformance.includes(:stage, :artist, festival_day: :festival)
+                                .order(:starts_at)
+                                .for_day(params[:festival_day_id])
+                                .for_artist(params[:artist_id])
+        @pagy, @stage_performances = pagy(scope)
+      end
+      format.json do
+        render_performances_json
+      end
+    end
   end
 
   def show; end
@@ -61,6 +69,28 @@ class Admin::StagePerformancesController < Admin::BaseController
       :festival_day_id, :stage_id, :artist_id,
       :starts_at, :ends_at, :status, :canceled
     )
+  end
+
+  def render_performances_json
+    artist_id = params[:artist_id]
+    if artist_id.blank?
+      render json: { performances: [] }
+      return
+    end
+
+    scope = StagePerformance.includes(:stage, festival_day: :festival)
+                            .where(artist_id: artist_id)
+                            .order(:starts_at)
+    performances = scope.map do |sp|
+      {
+        id: sp.id,
+        festival_name: sp.festival_day&.festival&.name,
+        festival_date: sp.festival_day&.date&.strftime("%Y/%m/%d"),
+        stage_name: sp.stage&.name,
+        starts_at: sp.starts_at&.strftime("%H:%M")
+      }
+    end
+    render json: { performances: performances }
   end
 
   def bulk_params
