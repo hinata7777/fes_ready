@@ -51,6 +51,42 @@ RSpec.describe "管理画面の曲管理", type: :request do
     end
   end
 
+  describe "GET /admin/songs (json)" do
+    let(:artist) { create(:artist, name: "Artist A") }
+    let(:other_artist) { create(:artist, name: "Artist B") }
+    let!(:song) { create(:song, artist: artist, name: "Song A") }
+    let!(:other_song) { create(:song, artist: other_artist, name: "Song B") }
+
+    it "artist_id指定で該当アーティストの曲だけ返す" do
+      get admin_songs_path(format: :json, artist_id: artist.id)
+
+      expect(response).to have_http_status(:ok)
+      payload = response.parsed_body
+      expect(payload["songs"]).to contain_exactly(
+        { "id" => song.id, "name" => "Song A", "artist_name" => "Artist A" }
+      )
+    end
+
+    it "all=1指定で全曲を返す" do
+      get admin_songs_path(format: :json, all: 1)
+
+      expect(response).to have_http_status(:ok)
+      payload = response.parsed_body
+      expect(payload["songs"]).to include(
+        { "id" => song.id, "name" => "Song A", "artist_name" => "Artist A" },
+        { "id" => other_song.id, "name" => "Song B", "artist_name" => "Artist B" }
+      )
+    end
+
+    it "パラメータが無ければ空配列を返す" do
+      get admin_songs_path(format: :json)
+
+      expect(response).to have_http_status(:ok)
+      payload = response.parsed_body
+      expect(payload["songs"]).to eq([])
+    end
+  end
+
   describe "PATCH /admin/songs/:id" do
     let(:artist) { create(:artist) }
     let(:song) { create(:song, artist: artist, name: "旧曲名") }

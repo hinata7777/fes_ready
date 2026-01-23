@@ -87,4 +87,40 @@ RSpec.describe "管理画面の出演枠一括登録", type: :request do
       expect(stage_performance.status).to eq("scheduled")
     end
   end
+
+  describe "GET /admin/stage_performances (json)" do
+    let(:festival) { create(:festival, start_date: Date.new(2025, 1, 1), end_date: Date.new(2025, 1, 2)) }
+    let(:festival_day) { create(:festival_day, festival: festival, date: festival.start_date) }
+    let(:stage) { create(:stage, festival: festival, name: "Main") }
+    let(:artist) { create(:artist) }
+    let!(:stage_performance) do
+      create(:stage_performance, :scheduled, festival_day: festival_day, stage: stage, artist: artist)
+    end
+
+    before { sign_in admin, scope: :user }
+
+    it "artist_id指定で出演枠を返す" do
+      get admin_stage_performances_path(format: :json, artist_id: artist.id)
+
+      expect(response).to have_http_status(:ok)
+      payload = response.parsed_body
+      expect(payload["performances"]).to contain_exactly(
+        {
+          "id" => stage_performance.id,
+          "festival_name" => festival_day.festival.name,
+          "festival_date" => "2025/01/01",
+          "stage_name" => "Main",
+          "starts_at" => stage_performance.starts_at.strftime("%H:%M")
+        }
+      )
+    end
+
+    it "artist_idが無ければ空配列を返す" do
+      get admin_stage_performances_path(format: :json)
+
+      expect(response).to have_http_status(:ok)
+      payload = response.parsed_body
+      expect(payload["performances"]).to eq([])
+    end
+  end
 end

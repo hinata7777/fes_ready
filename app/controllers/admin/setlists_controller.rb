@@ -58,15 +58,32 @@ class Admin::SetlistsController < Admin::BaseController
 
   def prepare_options
     @artists = Artist.order(:name)
-    @stage_performances_by_artist = StagePerformance.includes(:stage, festival_day: :festival)
-                                                    .order(:starts_at)
-                                                    .group_by(&:artist_id)
-    # 曲のプルダウンは全曲だと大きくなるので、選択したアーティストの曲だけをJSで絞る運用を想定
-    # ここでは全曲を渡す
-    @songs_by_artist = Song.includes(:artist).order(:name).group_by(&:artist_id)
+    artist_id = selected_artist_id
+    if artist_id.present?
+      @stage_performances_by_artist = StagePerformance.includes(:stage, festival_day: :festival)
+                                                      .where(artist_id: artist_id)
+                                                      .order(:starts_at)
+                                                      .group_by(&:artist_id)
+      @songs_by_artist = Song.includes(:artist)
+                             .where(artist_id: artist_id)
+                             .order(:name)
+                             .group_by(&:artist_id)
+    else
+      @stage_performances_by_artist = {}
+      @songs_by_artist = {}
+    end
   end
 
   def set_artists
     @artists = Artist.order(:name)
+  end
+
+  def selected_artist_id
+    return @setlist.stage_performance&.artist_id if @setlist&.stage_performance
+
+    stage_performance_id = params.dig(:setlist, :stage_performance_id)
+    return if stage_performance_id.blank?
+
+    StagePerformance.where(id: stage_performance_id).pluck(:artist_id).first
   end
 end
