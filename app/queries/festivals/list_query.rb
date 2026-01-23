@@ -21,10 +21,19 @@ module Festivals
 
     def call
       normalized = self.class.normalized_status(@status)
-      relation = normalized == "past" ? @scope.past(@reference_date) : @scope.upcoming(@reference_date)
+      status_scope = apply_status_scope(normalized)
       # 開催済みは新しい日付を上、開催前は古い日付を上に並べる。
-      order_direction = normalized == "past" ? :desc : :asc
-      relation.order(start_date: order_direction, name: :asc)
+      status_scope.order(start_date: order_direction(normalized), name: :asc)
+    end
+
+    private
+
+    def apply_status_scope(normalized)
+      normalized == "past" ? @scope.past(@reference_date) : @scope.upcoming(@reference_date)
+    end
+
+    def order_direction(normalized)
+      normalized == "past" ? :desc : :asc
     end
   end
 end
