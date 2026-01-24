@@ -5,6 +5,9 @@
       <% if subtext.present? %>
         <span class="block text-xs font-medium text-slate-500"><%= subtext %></span>
       <% end %>
+      <% if tags.present? %>
+        <%= render "shared/festival_tags", tags: tags %>
+      <% end %>
     </span>
     <% if trailing.present? %>
       <span class="shrink-0"><%= trailing %></span>

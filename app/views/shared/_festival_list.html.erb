@@ -5,6 +5,7 @@
         <%= render Shared::NavStackButtonComponent.new(
                    label: festival.name,
                    subtext: festival_date_and_location(festival),
+                   tags: festival.sorted_tags,
                    url: link_url_proc.call(festival),
                    trailing: favorite_button_for(
                      favorited: festival_favorited?(festival),

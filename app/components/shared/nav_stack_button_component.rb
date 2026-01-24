@@ -1,9 +1,10 @@
 module Shared
   class NavStackButtonComponent < ViewComponent::Base
-    def initialize(label:, url: nil, subtext: nil, trailing: nil, disabled: false, data: nil)
+    def initialize(label:, url: nil, subtext: nil, tags: nil, trailing: nil, disabled: false, data: nil)
       @label = label
       @url = url
       @subtext = subtext
+      @tags = tags
       @trailing = trailing
       @disabled = disabled
       @data = data
@@ -11,7 +12,7 @@ module Shared
 
     private
 
-    attr_reader :label, :url, :subtext, :trailing, :data
+    attr_reader :label, :url, :subtext, :tags, :trailing, :data
 
     def disabled?
       !!@disabled
