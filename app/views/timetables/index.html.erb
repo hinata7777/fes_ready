@@ -64,7 +64,12 @@
               <%= render Shared::NavStackButtonComponent.new(
                          label: festival.name,
                          subtext: festival_date_and_location(festival),
-                         url: (back_to ? timetable_path(festival, back_to: back_to) : timetable_path(festival))
+                         tags: festival.sorted_tags,
+                         url: (back_to ? timetable_path(festival, back_to: back_to) : timetable_path(festival)),
+                         trailing: favorite_button_for(
+                           favorited: festival_favorited?(festival),
+                           toggle_url: festival_favorite_path(festival)
+                         )
                        ) %>
             </div>
           <% end %>
