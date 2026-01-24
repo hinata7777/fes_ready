@@ -20,7 +20,7 @@ class FestivalsController < ApplicationController
 
     # キーワード検索
     @q     = filtered_scope.ransack(params[:q])
-    result = @q.result(distinct: true)
+    result = @q.result(distinct: true).includes(:festival_tags)
 
     # ページングと戻りURLの保持
     pagy_params = request.query_parameters.merge(status: @status)

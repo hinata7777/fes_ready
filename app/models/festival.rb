@@ -50,7 +50,10 @@ class Festival < ApplicationRecord
   end
 
   def sorted_tags
-    festival_tags.order(:name)
+    tags = festival_tags
+    return tags.order(:name) unless tags.loaded?
+
+    tags.sort_by { |tag| tag.name.to_s }
   end
 
   def select_day(date_param, days: festival_days)

@@ -16,7 +16,7 @@ module Prep
 
       # キーワード検索
       @q = filtered_scope.ransack(params[:q])
-      result = @q.result(distinct: true)
+      result = @q.result(distinct: true).includes(:festival_tags)
 
       # ページング
       pagy_params = request.query_parameters.merge(status: @status)
