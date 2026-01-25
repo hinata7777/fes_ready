@@ -1,7 +1,7 @@
 class PackingListsController < ApplicationController
   include HeaderBackPath
   before_action :authenticate_user!, except: :index
-  before_action :set_packing_list, only: [ :show, :edit, :update, :destroy ]
+  before_action :set_packing_list, only: :show
   before_action :set_owned_packing_list, only: [ :edit, :update, :destroy ]
   before_action :set_available_items, only: [ :new, :create, :edit, :update ]
   before_action :set_header_back_path, only: [ :edit, :update ]

@@ -30,7 +30,7 @@ class FestivalsController < ApplicationController
 
   def show
     @show_setlists_link = @festival.setlists_visible?
-    @festival_tags = @festival.sorted_tags
+    @selected_festival_tags = @festival.sorted_tags
   end
 
   private

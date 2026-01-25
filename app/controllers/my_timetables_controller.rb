@@ -33,14 +33,14 @@ class MyTimetablesController < ApplicationController
   end
 
   def show
-    @performances = @timetable_owner
-                      .my_stage_performances
-                      .includes(:artist, :stage)
-                      .where(stage_performances: { festival_day_id: @selected_day.id })
-                      .order(:starts_at, :ends_at, :id)
-    @conflicts = MyTimetables::ConflictDetector.call(@performances)
+    @selected_performances = @timetable_owner
+                               .my_stage_performances
+                               .includes(:artist, :stage)
+                               .where(stage_performances: { festival_day_id: @selected_day.id })
+                               .order(:starts_at, :ends_at, :id)
+    @conflicts = MyTimetables::ConflictDetector.call(@selected_performances)
 
-    @selected_performance_ids = @performances.map(&:id)
+    @selected_performance_ids = @selected_performances.map(&:id)
   end
 
   private
@@ -74,12 +74,12 @@ class MyTimetablesController < ApplicationController
   def prepare_view
     # ステージと出演枠を取得
     @stages = @festival.stages.order(:sort_order, :id)
-    @performances =
+    @festival_performances =
       @festival
         .stage_performances_on(@selected_day)
         .scheduled
     # ステージ単位にまとめる
-    @performances_by_stage = @performances.group_by(&:stage)
+    @performances_by_stage = @festival_performances.group_by(&:stage)
 
     # タイムライン表示に必要な情報を組み立てる
     @timezone = ActiveSupport::TimeZone[@festival.timezone] || Time.zone

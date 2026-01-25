@@ -10,7 +10,7 @@ class Admin::FestivalsController < Admin::BaseController
   end
 
   def show
-    @festival_tags = @festival.sorted_tags
+    @selected_festival_tags = @festival.sorted_tags
   end
 
   def new
