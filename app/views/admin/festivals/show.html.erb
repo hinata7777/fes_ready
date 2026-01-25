@@ -92,8 +92,8 @@
           <div class="grid grid-cols-1 gap-2 px-4 py-3 sm:grid-cols-3">
             <dt class="font-semibold text-slate-500">タグ</dt>
             <dd class="sm:col-span-2 flex flex-wrap gap-2">
-              <%= render "shared/festival_tags", tags: @festival_tags %>
-              <% if @festival_tags.blank? %>
+              <%= render "shared/festival_tags", tags: @selected_festival_tags %>
+              <% if @selected_festival_tags.blank? %>
                 <span class="text-slate-500">未設定</span>
               <% end %>
             </dd>
