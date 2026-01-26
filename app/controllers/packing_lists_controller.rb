@@ -80,12 +80,14 @@ class PackingListsController < ApplicationController
   def prepare_form_data
     @sorted_items = @packing_list.packing_list_items.sort_by { |pli| [ pli.position || 0, pli.id || 0 ] }
     @next_position_value = (@sorted_items.map { |pli| pli.position || 0 }.max || -1) + 1
-    upcoming_days = FestivalDay.for_packing_list_select.to_a
-    @festival_days = upcoming_days
-
+    base = FestivalDay.joins(:festival).includes(:festival).ordered_for_select
+    upcoming_days = base.where("festivals.end_date >= ?", Date.current)
     past_selected_day = @packing_list&.past_selected_festival_day
-
-    @festival_days |= [ past_selected_day ].compact
+    @festival_days = if past_selected_day
+      upcoming_days.or(base.where(id: past_selected_day.id)).distinct
+    else
+      upcoming_days
+    end
   end
 
   def default_back_path
