@@ -67,7 +67,7 @@ class MyTimetablesController < ApplicationController
   end
 
   def find_user_by_identifier!(identifier)
-    user = User.find_by(uuid: identifier) || User.find_by(id: identifier)
+    user = User.find_by(uuid: identifier)
     user || raise(ActiveRecord::RecordNotFound)
   end
 
