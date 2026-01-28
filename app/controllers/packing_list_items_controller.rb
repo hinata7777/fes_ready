@@ -33,6 +33,6 @@ class PackingListItemsController < ApplicationController
   end
 
   def packing_list_item_params
-    params.require(:packing_list_item).permit(:item_id, :note, :position, :checked)
+    params.require(:packing_list_item).permit(:checked)
   end
 end
