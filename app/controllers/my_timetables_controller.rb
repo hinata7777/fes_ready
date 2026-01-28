@@ -17,13 +17,20 @@ class MyTimetablesController < ApplicationController
   end
 
   def update
-    MyTimetables::Form.new(
+    form = MyTimetables::Form.new(
       user: current_user,
       festival_day: @selected_day,
-      stage_performance_ids: params[:stage_performance_ids]
-    ).save
-    redirect_to festival_my_timetable_path(@festival, date: @selected_day.date.to_s, user_id: current_user.uuid),
-                notice: "マイタイムテーブルを保存しました。"
+      stage_performance_ids: my_timetable_params[:stage_performance_ids]
+    )
+    if form.save
+      redirect_to festival_my_timetable_path(@festival, date: @selected_day.date.to_s, user_id: current_user.uuid),
+                  notice: "マイタイムテーブルを保存しました。"
+    else
+      flash.now[:alert] = form.errors.full_messages.first || "保存に失敗しました。"
+      @picked_ids = Array(my_timetable_params[:stage_performance_ids]).map(&:to_i)
+      prepare_view
+      render :edit, status: :unprocessable_entity
+    end
   end
 
   def destroy
@@ -93,6 +100,10 @@ class MyTimetablesController < ApplicationController
     @timeline_end   = timeline_context.timeline_end
     @time_markers   = timeline_context.time_markers
     @timeline_layout = timeline_context.timeline_layout
+  end
+
+  def my_timetable_params
+    params.permit(stage_performance_ids: [])
   end
 
   def default_back_path

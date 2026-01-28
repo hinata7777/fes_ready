@@ -72,6 +72,21 @@ RSpec.describe "マイタイムテーブルのリクエスト", type: :request d
 
       expect(response).to redirect_to(new_user_session_path)
     end
+
+    it "保存に失敗したら編集画面を再表示し、422を返す" do
+      sign_in user, scope: :user
+      allow_any_instance_of(MyTimetables::Form).to receive(:save).and_return(false)
+      allow_any_instance_of(MyTimetables::Form)
+        .to receive_message_chain(:errors, :full_messages)
+        .and_return([ "保存に失敗しました。" ])
+
+      expect {
+        patch festival_my_timetable_path(festival, date: festival_day.date.to_s),
+              params: { stage_performance_ids: [ stage_performance.id ] }
+      }.not_to change(UserTimetableEntry, :count)
+
+      expect(response).to have_http_status(:unprocessable_entity)
+    end
   end
 
   describe "DELETE /festivals/:festival_id/my_timetable" do

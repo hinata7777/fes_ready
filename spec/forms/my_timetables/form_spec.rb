@@ -53,7 +53,8 @@ RSpec.describe MyTimetables::Form do
         stage_performance_ids: [ target_performance.id ]
       )
 
-      expect { form.save }.to raise_error(StandardError)
+      expect(form.save).to be(false)
+      expect(form.errors.full_messages.join).to include("保存に失敗しました")
 
       same_day_ids = MyTimetables::EntriesForDayQuery.call(user: user, festival_day: festival_day).pluck(:stage_performance_id)
       expect(same_day_ids).to include(existing_same_day_entry.stage_performance_id)
