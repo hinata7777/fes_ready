@@ -17,6 +17,15 @@ module MyTimetables
       end
 
       true
+    rescue StandardError => e
+      message =
+        if e.respond_to?(:record) && e.record.respond_to?(:errors) && e.record.errors.any?
+          e.record.errors.full_messages.to_sentence
+        else
+          "保存に失敗しました。"
+        end
+      errors.add(:base, message)
+      false
     end
 
     private
