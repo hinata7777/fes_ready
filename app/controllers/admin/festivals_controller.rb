@@ -11,6 +11,8 @@ class Admin::FestivalsController < Admin::BaseController
 
   def show
     @selected_festival_tags = @festival.sorted_tags
+    @festival_days = @festival.festival_days.order(:date)
+    @stages = @festival.stages.order(:sort_order, :id)
   end
 
   def new

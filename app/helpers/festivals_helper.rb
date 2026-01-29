@@ -44,6 +44,41 @@ module FestivalsHelper
     { venue: venue, area: area }
   end
 
+  def festival_official_url(festival)
+    return if festival.blank?
+
+    url = festival.official_url.to_s.strip
+    url.presence
+  end
+
+  def festival_official_link(festival, class_name: "", fallback: "-")
+    url = festival_official_url(festival)
+    return fallback if url.blank?
+
+    link_to url, url, class: class_name, target: "_blank", rel: "noopener"
+  end
+
+  def festival_coordinates_label(festival)
+    return if festival.blank?
+    return unless festival.latitude.present? && festival.longitude.present?
+
+    "#{festival.latitude}, #{festival.longitude}"
+  end
+
+  def festival_coordinates_display(festival, class_name: "", fallback: "未設定")
+    label = festival_coordinates_label(festival)
+    return fallback if label.blank?
+
+    content_tag(:span, label, class: class_name)
+  end
+
+  def festival_day_time_label(day, time_zone, attribute, fallback: "-")
+    return fallback if day.blank?
+
+    value = day.public_send(attribute)
+    value ? value.in_time_zone(time_zone).strftime("%H:%M") : fallback
+  end
+
   def festival_time_zone(festival)
     ActiveSupport::TimeZone[festival&.timezone] || Time.zone
   end

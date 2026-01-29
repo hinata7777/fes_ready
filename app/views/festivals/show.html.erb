@@ -14,15 +14,11 @@
         <div class="flex flex-col gap-1">
           <dt class="text-xs font-semibold uppercase tracking-wide text-slate-500">公式サイト</dt>
           <dd>
-            <% if @festival.official_url.present? %>
-              <%= link_to @festival.official_url,
-                          @festival.official_url,
-                          class: "inline-flex items-center gap-2 text-rose-600 underline decoration-2 underline-offset-4 hover:text-rose-500",
-                          target: "_blank",
-                          rel: "noopener" %>
-            <% else %>
-              <span class="text-slate-400">未登録</span>
-            <% end %>
+            <%= festival_official_link(
+                  @festival,
+                  class_name: "inline-flex items-center gap-2 text-rose-600 underline decoration-2 underline-offset-4 hover:text-rose-500",
+                  fallback: content_tag(:span, "未登録", class: "text-slate-400")
+                ) %>
           </dd>
         </div>
 
