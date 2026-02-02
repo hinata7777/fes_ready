@@ -57,6 +57,16 @@ RSpec.describe "公開ページのリクエスト", type: :request do
       get artist_path(artist)
       expect(response).to have_http_status(:ok)
     end
+
+    it "フェス一覧でキーワード検索が反映される" do
+      matching = create(:festival, name: "Rock Summer Fest")
+      other = create(:festival, name: "Jazz Night")
+
+      get festivals_path, params: { q: { name_i_cont: "Rock" } }
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include(matching.name)
+      expect(response.body).not_to include(other.name)
+    end
   end
 
   describe "タイムテーブルの一覧/詳細" do
@@ -88,6 +98,16 @@ RSpec.describe "公開ページのリクエスト", type: :request do
     it "不正な日付パラメータなら404を返す" do
       get timetable_path(timetable_festival, date: "invalid-date")
       expect(response).to have_http_status(:not_found)
+    end
+
+    it "タイムテーブル一覧でキーワード検索が反映される" do
+      matching = create(:festival, name: "Sky Rock Day", timetable_published: true)
+      other = create(:festival, name: "Blue Jazz Day", timetable_published: true)
+
+      get timetables_path, params: { q: { name_i_cont: "Rock" } }
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include(matching.name)
+      expect(response.body).not_to include(other.name)
     end
   end
 
