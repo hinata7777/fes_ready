@@ -11,26 +11,19 @@
                    description: "気になるフェスを保存すると、あとで探す手間が省けます。",
                    cta_label: "ログイン" %>
       <% end %>
-      <% preserved_query = request.query_parameters.except(:page, :status) %>
       <div class="flex justify-center">
         <%= render "shared/segmented_tabs",
               tabs: status_labels,
               active_tab_key: @status,
               url_builder: ->(key) do
-                path_options = preserved_query.merge(status: key)
+                path_options = preserved_query_params.merge(status: key)
                 @artist ? artist_festivals_path(@artist, path_options) : festivals_path(path_options)
               end %>
       </div>
     </header>
 
     <% search_url = @artist ? artist_festivals_path(@artist) : festivals_path %>
-    <% search_query = params.dig(:q, :name_i_cont) %>
-    <% hidden_filter_fields = {
-         start_date_from: @filter_params[:start_date_from],
-         end_date_to: @filter_params[:end_date_to],
-         area: @filter_params[:area],
-         "tag_ids[]": @selected_tag_ids
-       } %>
+    <% hidden_filter_fields = hidden_filter_fields(filter_params: @filter_params, selected_tag_ids: @selected_tag_ids) %>
     <%= render Shared::SearchFormComponent.new(
                query: @q,
                url: search_url,
@@ -39,14 +32,13 @@
                hidden_fields: hidden_filter_fields
              ) %>
 
-    <% reset_params = { status: @status } %>
-    <% reset_params[:q] = { name_i_cont: search_query } if search_query.present? %>
+    <% reset_params = reset_params_with_query(status: @status, search_query: name_search_query) %>
     <% reset_url = @artist ? artist_festivals_path(@artist, reset_params) : festivals_path(reset_params) %>
 
     <%= render "shared/festival_filters",
                form_url: search_url,
                status: @status,
-               search_query: search_query,
+               search_query: name_search_query,
                filter_params: @filter_params,
                festival_tags: @festival_tags,
                selected_tag_ids: @selected_tag_ids,
