@@ -1,0 +1,37 @@
+<% setlist_song = entry[:setlist_song] %>
+<% song         = entry[:song] %>
+<% embed        = entry[:embed] %>
+
+<article class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow shadow-slate-200/70">
+  <div class="flex items-center justify-between gap-3 border-b border-slate-100 px-4 py-3">
+    <div class="flex items-center gap-3">
+      <span class="flex h-10 w-10 items-center justify-center rounded-full bg-indigo-50 text-sm font-bold text-indigo-700"><%= setlist_song.position %></span>
+      <div>
+        <p class="text-sm font-semibold text-slate-900"><%= song.name %></p>
+        <p class="text-xs text-slate-500"><%= artist.name %></p>
+      </div>
+    </div>
+    <% unless embed %>
+      <span class="rounded-full bg-slate-100 px-3 py-1 text-[11px] font-semibold text-slate-500">Spotify未登録</span>
+    <% end %>
+  </div>
+
+  <% if embed %>
+    <div class="bg-slate-50 px-2 py-1">
+      <div class="overflow-hidden rounded-xl border border-slate-200 shadow-sm">
+        <%= embed %>
+      </div>
+    </div>
+  <% else %>
+    <div class="px-4 py-2 text-sm text-slate-600">
+      Spotify IDが登録されていないため埋め込みを表示できません。
+    </div>
+  <% end %>
+
+  <% if setlist_song.note.present? %>
+    <div class="flex gap-2 border-t border-slate-100 bg-slate-50 px-4 py-3 text-sm text-slate-700">
+      <span class="mt-[2px] rounded-full bg-indigo-100 px-2 py-0.5 text-[11px] font-semibold text-indigo-700">MEMO</span>
+      <p class="leading-relaxed"><%= setlist_song.note %></p>
+    </div>
+  <% end %>
+</article>
