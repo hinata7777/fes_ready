@@ -29,6 +29,19 @@ module StagePerformancesHelper
     "#{duration.to_i} 分"
   end
 
+  def stage_performance_time_range_label(stage_performance, fallback: "-")
+    return fallback if stage_performance.blank?
+
+    starts_at = stage_performance.starts_at
+    ends_at = stage_performance.ends_at
+    return fallback if starts_at.blank? || ends_at.blank?
+
+    time_zone = stage_performance_time_zone(stage_performance)
+    start_label = starts_at.in_time_zone(time_zone).strftime("%H:%M")
+    end_label = ends_at.in_time_zone(time_zone).strftime("%H:%M")
+    "#{start_label}–#{end_label}"
+  end
+
   def stage_performance_status_badges(stage_performance)
     return "" if stage_performance.blank?
 
@@ -43,6 +56,16 @@ module StagePerformancesHelper
     end
 
     safe_join(badges, " ")
+  end
+
+  def stage_performance_festival_day_options(festival_days)
+    [ [ "すべて", nil ] ] + festival_days.map do |day|
+      [ "#{day.festival.name} / #{day.date.strftime('%Y/%m/%d')}", day.id ]
+    end
+  end
+
+  def stage_performance_artist_options(artists)
+    [ [ "すべて", nil ] ] + artists.map { |artist| [ artist.name, artist.id ] }
   end
 
   def stage_color_badge(stage)

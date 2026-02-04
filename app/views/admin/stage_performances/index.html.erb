@@ -16,14 +16,14 @@
       <div class="flex min-w-0 flex-col gap-1">
         <label class="text-xs font-semibold text-slate-600">フェス日程</label>
         <%= f.select :festival_day_id,
-          options_for_select([["すべて", nil]] + @festival_days.map { |d| ["#{d.festival.name} / #{d.date.strftime('%Y/%m/%d')}", d.id] }, params[:festival_day_id]),
+          options_for_select(stage_performance_festival_day_options(@festival_days), params[:festival_day_id]),
           {}, class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-800 shadow-sm focus:border-[#F95858] focus:ring-[#F95858]" %>
       </div>
 
       <div class="flex min-w-0 flex-col gap-1">
         <label class="text-xs font-semibold text-slate-600">アーティスト</label>
         <%= f.select :artist_id,
-          options_for_select([["すべて", nil]] + @artists.map { |a| [a.name, a.id] }, params[:artist_id]),
+          options_for_select(stage_performance_artist_options(@artists), params[:artist_id]),
           {}, class: "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-800 shadow-sm focus:border-[#F95858] focus:ring-[#F95858]" %>
       </div>
 
@@ -51,7 +51,6 @@
           <% @stage_performances.each do |sp| %>
             <% day = sp.festival_day %>
             <% fes = day&.festival %>
-            <% tz  = ActiveSupport::TimeZone[fes&.timezone] || Time.zone %>
             <tr class="align-top transition hover:bg-slate-50/60">
               <td class="px-4 py-3">
                 <div class="font-semibold text-slate-900"><%= fes&.name || "-" %></div>
@@ -60,21 +59,10 @@
               <td class="px-4 py-3"><%= sp.artist&.name || "-" %></td>
               <td class="px-4 py-3 text-slate-700"><%= sp.stage&.name || "(未定)" %></td>
               <td class="px-4 py-3 font-mono text-xs text-slate-600">
-                <% if sp.starts_at && sp.ends_at %>
-                  <%= sp.starts_at.in_time_zone(tz).strftime("%H:%M") %>–<%= sp.ends_at.in_time_zone(tz).strftime("%H:%M") %>
-                <% else %>
-                  -
-                <% end %>
+                <%= stage_performance_time_range_label(sp) %>
               </td>
               <td class="px-4 py-3">
-                <% if sp.scheduled? %>
-                  <span class="inline-flex items-center rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-semibold text-emerald-700">scheduled</span>
-                <% else %>
-                  <span class="inline-flex items-center rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-semibold text-slate-700">draft</span>
-                <% end %>
-                <% if sp.canceled? %>
-                  <span class="ml-2 inline-flex items-center rounded-full bg-rose-50 px-2.5 py-0.5 text-[11px] font-semibold text-rose-700">canceled</span>
-                <% end %>
+                <%= stage_performance_status_badges(sp) %>
               </td>
               <td class="px-4 py-3">
                 <div class="flex justify-end gap-2 text-sm font-semibold">
