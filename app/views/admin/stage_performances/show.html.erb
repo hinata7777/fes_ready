@@ -3,15 +3,7 @@
     <div>
       <div class="flex items-center gap-3">
         <h1 class="text-2xl font-bold text-slate-900">出演枠詳細</h1>
-        <% if @stage_performance.scheduled? %>
-          <span class="inline-flex items-center rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-emerald-700">
-            scheduled
-          </span>
-        <% else %>
-          <span class="inline-flex items-center rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-slate-700">
-            draft
-          </span>
-        <% end %>
+        <%= stage_performance_header_status_badge(@stage_performance) %>
       </div>
       <p class="mt-2 text-sm text-slate-600">
         フェス・日程・出演者の詳細を確認できます。
@@ -36,54 +28,28 @@
       <h2 class="text-lg font-semibold text-slate-800">基本情報</h2>
       <div class="mt-4 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
         <dl class="divide-y divide-slate-100 text-sm text-slate-700">
-          <% day = @stage_performance.festival_day %>
-          <% festival = day&.festival %>
           <div class="grid grid-cols-1 gap-2 px-4 py-3 sm:grid-cols-3">
             <dt class="font-semibold text-slate-500">フェス</dt>
             <dd class="sm:col-span-2">
-              <% if festival.present? %>
-                <%= link_to festival.name,
-                      admin_festival_path(festival),
-                      class: "text-indigo-600 hover:underline" %>
-                <div class="text-xs text-slate-500">ID: <span class="font-mono"><%= festival.id %></span></div>
-              <% else %>
-                -
-              <% end %>
+              <%= stage_performance_festival_cell(@stage_performance) %>
             </dd>
           </div>
           <div class="grid grid-cols-1 gap-2 px-4 py-3 sm:grid-cols-3">
             <dt class="font-semibold text-slate-500">日付</dt>
             <dd class="sm:col-span-2">
-              <% if day&.date.present? %>
-                <%= day.date.strftime("%Y/%m/%d (%a)") %>
-              <% else %>
-                -
-              <% end %>
+              <%= stage_performance_day_label(@stage_performance) %>
             </dd>
           </div>
           <div class="grid grid-cols-1 gap-2 px-4 py-3 sm:grid-cols-3">
             <dt class="font-semibold text-slate-500">アーティスト</dt>
             <dd class="sm:col-span-2">
-              <% artist = @stage_performance.artist %>
-              <% if artist.present? %>
-                <%= link_to artist.name,
-                      admin_artist_path(artist),
-                      class: "text-slate-900 hover:underline" %>
-              <% else %>
-                -
-              <% end %>
+              <%= stage_performance_artist_cell(@stage_performance) %>
             </dd>
           </div>
           <div class="grid grid-cols-1 gap-2 px-4 py-3 sm:grid-cols-3">
             <dt class="font-semibold text-slate-500">ステージ</dt>
             <dd class="sm:col-span-2">
-              <% stage = @stage_performance.stage %>
-              <% if stage.present? %>
-                <span class="text-slate-900"><%= stage.name %></span>
-                <%= stage_color_badge(stage) %>
-              <% else %>
-                (未定)
-              <% end %>
+              <%= stage_performance_stage_cell(@stage_performance) %>
             </dd>
           </div>
           <div class="grid grid-cols-1 gap-2 px-4 py-3 sm:grid-cols-3">
