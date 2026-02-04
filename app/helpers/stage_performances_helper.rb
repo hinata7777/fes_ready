@@ -58,6 +58,52 @@ module StagePerformancesHelper
     safe_join(badges, " ")
   end
 
+  def stage_performance_header_status_badge(stage_performance)
+    return "" if stage_performance.blank?
+
+    if stage_performance.scheduled?
+      content_tag(:span,
+                  "scheduled",
+                  class: "inline-flex items-center rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-emerald-700")
+    else
+      content_tag(:span,
+                  "draft",
+                  class: "inline-flex items-center rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-slate-700")
+    end
+  end
+
+  def stage_performance_festival_cell(stage_performance)
+    festival = stage_performance&.festival_day&.festival
+    return "-" if festival.blank?
+
+    safe_join([
+      link_to(festival.name, admin_festival_path(festival), class: "text-indigo-600 hover:underline"),
+      content_tag(:div, "ID: #{content_tag(:span, festival.id, class: "font-mono")}".html_safe, class: "text-xs text-slate-500")
+    ])
+  end
+
+  def stage_performance_day_label(stage_performance, fallback: "-")
+    day = stage_performance&.festival_day
+    day&.date.present? ? day.date.strftime("%Y/%m/%d (%a)") : fallback
+  end
+
+  def stage_performance_artist_cell(stage_performance)
+    artist = stage_performance&.artist
+    return "-" if artist.blank?
+
+    link_to(artist.name, admin_artist_path(artist), class: "text-slate-900 hover:underline")
+  end
+
+  def stage_performance_stage_cell(stage_performance)
+    stage = stage_performance&.stage
+    return "(未定)" if stage.blank?
+
+    safe_join([
+      content_tag(:span, stage.name, class: "text-slate-900"),
+      stage_color_badge(stage)
+    ].compact)
+  end
+
   def stage_performance_festival_day_options(festival_days)
     [ [ "すべて", nil ] ] + festival_days.map do |day|
       [ "#{day.festival.name} / #{day.date.strftime('%Y/%m/%d')}", day.id ]
