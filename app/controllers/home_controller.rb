@@ -13,4 +13,7 @@ class HomeController < ApplicationController
 
   def guide
   end
+
+  def contact
+  end
 end

@@ -32,4 +32,10 @@ module ApplicationHelper
 
     [ date_range, festival.prefecture.presence ].compact_blank.join(" / ")
   end
+
+  def meta_description
+    return content_for(:description) if content_for?(:description)
+
+    "音楽フェスの開催情報・出演アーティスト・タイムテーブル・予習曲・持ち物リストをまとめて準備できるFES READY。"
+  end
 end

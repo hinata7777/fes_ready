@@ -13,6 +13,7 @@ Rails.application.routes.draw do
   get "/privacy", to: "home#privacy", as: :privacy
   get "/operator", to: "home#operator", as: :operator
   get "/guide", to: "home#guide", as: :guide
+  get "/contact", to: "home#contact", as: :contact
   resource :prep, only: [ :show ], controller: "prep"
   namespace :prep, path: "prep" do
     resources :festivals, only: [ :index, :show ]
